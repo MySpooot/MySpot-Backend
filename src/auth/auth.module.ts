@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { HttpModule } from '@nestjs/axios';
 import Joi from 'joi';
 
-import configration from '../configration';
-import { ChanHee } from './entities/chanhee';
-import { UserController } from './user.controller';
-import { UserService } from './user.service';
+import configration from '../../configration';
+import { ChanHee } from '../entities/chanhee';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
 
 @Module({
   imports: [
@@ -34,8 +35,10 @@ import { UserService } from './user.service';
         rejectUnauthorized: false
       }
     }),
+    HttpModule,
+    ConfigService
   ],
-  controllers: [UserController],
-  providers: [UserService],
+  controllers: [AuthController],
+  providers: [AuthService],
 })
-export class UserModule {}
+export class AuthModule {}
