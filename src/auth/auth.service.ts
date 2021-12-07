@@ -25,6 +25,8 @@ export class AuthService {
     )
     .toPromise(); // observable to promise
 
+    // test 123454
+
     console.log(data)
 
     if (data.error) {
