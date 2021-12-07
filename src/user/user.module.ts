@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import Joi from 'joi';
 
-import configration from '../../configration';
+import configration from '../configration';
 import { ChanHee } from '../entities/chanhee';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';

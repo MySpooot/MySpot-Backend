@@ -4,7 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 import Joi from 'joi';
 
-import configration from '../../configration';
+import configration from '../configration';
 import { ChanHee } from '../entities/chanhee';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
