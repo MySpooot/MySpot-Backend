@@ -13,13 +13,19 @@ export class AuthService {
   async logIn(body) {
     const { code } = body;
 
-    
+    // 1. 로그인 버튼 클릭 
+    // 2. 카카오서버에서 redirect url로 access code 전송 
+    // 3. 프론트에서 code를 body에 담아 백엔드로 전송
+    // 4. 백엔드에서 code, redirect url을 가지고 token 요청 -> reponse
+    // 5. 프론트에서 localStorage에 token 저장
 
-    const {data} = await this.httpService
-        .post(
-            `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${this.configService.get('kakao.clientId')}&redirect_uri=${this.configService.get('kakao.rediretUrl')}&code=${code}}`
-        )
-        .toPromise();
+    const { data } = await this.httpService
+    .post(
+        `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=025b493068d0d400f8c6b9f91b175936&redirect_uri=http://localhost:3000/auth/kakao&code=${code}}`
+    )
+    .toPromise(); // observable to promise
+
+    console.log(data)
 
     if (data.error) {
         console.error(data.error);

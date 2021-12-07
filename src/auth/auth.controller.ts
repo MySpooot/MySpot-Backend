@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('/login')
+  @Post('/logIn')
   kakao(@Body() body){
     return this.authService.logIn(body);
   }
