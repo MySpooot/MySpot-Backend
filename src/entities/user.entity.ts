@@ -9,6 +9,11 @@ export enum UserProvider {
     Kakao = 'kakao'
 }
 
+export enum UserActive {
+    Inactive = 0,
+    Active = 1
+}
+
 @Entity('user')
 export class User {
     @PrimaryGeneratedColumn('increment', { type: 'integer', unsigned: true })
@@ -26,9 +31,12 @@ export class User {
     @Column({ type: 'varchar', length: 128, nullable: true })
     thumbnail?: string;
 
-    @Column({ type: 'integer', unsigned: true, default: UserLevel.User})
+    @Column({ type: 'integer', default: UserLevel.User})
     level: UserLevel
 
     @Column({ type: 'varchar', length: 7, default: UserProvider.Kakao })
     provider: UserProvider
+
+    @Column({ type: 'integer', default: UserActive.Active})
+    active: UserActive;
 }
