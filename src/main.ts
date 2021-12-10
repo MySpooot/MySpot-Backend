@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { Module } from '@nestjs/common';
 
-import { UserModule } from './user/user.module'
-import { AuthModule } from './auth/auth.module';
+import { AppModule as UserModule } from './user/app.module'
+import { AppModule as AuthModule } from './auth/app.module';
 
 @Module({
   imports: [UserModule, AuthModule],

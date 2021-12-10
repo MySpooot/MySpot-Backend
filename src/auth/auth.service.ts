@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { Connection, Not } from 'typeorm';
@@ -17,35 +17,35 @@ export class AuthService {
      * 5. 프론트에서 localStorage에 token 저장
      */
   async logIn(body) {
-    const {code} = body;
+    // const {code} = body;
 
-    const {data} = await this.httpService
-        .post(
-            `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${this.configService.get('kakao.clientId')}&redirect_uri=${this.configService.get('kakao.redirectUrl')}&code=${code}}`
-        )
-        .toPromise(); // observable to promise
+    // const {data} = await this.httpService
+    //     .post(
+    //         `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${this.configService.get('kakao.clientId')}&redirect_uri=${this.configService.get('kakao.redirectUrl')}&code=${code}}`
+    //     )
+    //     .toPromise(); // observable to promise
 
-    console.log(data)
+    // console.log(data)
 
-    if (data.error) {
-        console.error(data.error);
-    }
+    // if (data.error) {
+    //     console.error(data.error);
+    // }
 
-    // 카카오에서 개인정보 가져오기
-    const {data: profile} = await this.httpService
-        .get('https://kapi.kakao.com/v2/user/me', {
-            headers: { Authorization: `Bearer ${data.access_token}` }
-        })
-        .toPromise();
+    // // 카카오에서 개인정보 가져오기
+    // const {data: profile} = await this.httpService
+    //     .get('https://kapi.kakao.com/v2/user/me', {
+    //         headers: { Authorization: `Bearer ${data.access_token}` }
+    //     })
+    //     .toPromise();
     
-    const snsId = profile.id;
-    const name = profile.kakao_account.profile.nickname;
-    const thumbnail = profile.kakao_account.profile.thumbnail_image_url;
+    // const snsId = profile.id;
+    // const name = profile.kakao_account.profile.nickname;
+    // const thumbnail = profile.kakao_account.profile.thumbnail_image_url;
 
-    console.log({snsId, name, thumbnail})
+    // console.log({snsId, name, thumbnail})
 
     // 이미 가입한 유저인지 검증
-    const user = await this.connection.getRepository(User).findOne({snsId: snsId, active: UserActive.Active});
+    const user = await this.connection.getRepository(User).findOne({ active: UserActive.Active});
 
     console.log('user ::', user);
 
