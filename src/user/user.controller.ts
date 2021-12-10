@@ -1,5 +1,4 @@
-import { Controller, Get, Post } from '@nestjs/common';
-import { Connection } from 'typeorm';
+import { Controller, Get } from '@nestjs/common';
 
 import { UserService } from './user.service';
 
@@ -7,7 +6,7 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
+  @Get()
   getHello(): Promise<void> {
     return this.userService.getHello();
   }

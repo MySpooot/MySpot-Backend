@@ -46,18 +46,6 @@ import { ChanHee } from './entities/chanhee.entity';
       }),
     }),
     HttpModule,
-    // TypeOrmModule.forRoot({ //connection에 필요한 정보 입력
-    //   type: 'postgres',
-    //   host: process.env.DATABASE_HOST,
-    //   port: Number(process.env.DATABASE_PORT),
-    //   username: process.env.DATABASE_USER,
-    //   password: process.env.DATABASE_PASSWORD,
-    //   database: process.env.DATABASE_NAME,
-    //   synchronize: true,
-    //   ssl: {
-    //     rejectUnauthorized: false
-    //   }
-    // })
   ],
   controllers: [AuthController, UserController],
   providers: [AuthService, UserService],

@@ -8,8 +8,7 @@ export class UserService {
 
   async getHello(): Promise<void> {
     console.log('test')
-    await this.connection.getRepository(ChanHee).insert({
-      name: 'chanhee_test'
-    })
+    const test = await this.connection.getRepository(ChanHee).find({})
+    console.log(test)
   }
 }
