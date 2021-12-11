@@ -4,7 +4,8 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Connection, Not } from 'typeorm';
 
-import { User, UserActive, UserLevel, UserProvider } from 'src/entities/user.entity';
+import { User, UserActive, UserProvider } from '../entities/user.entity';
+import { UserLevel } from '../lib/user_decorator';
 
 
 @Injectable()
@@ -21,13 +22,9 @@ export class AuthService {
   async logIn(body) {
     const {code} = body;
 
-    const {data} = await this.httpService
-        .post(
-            `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${this.configService.get('kakao.clientId')}&redirect_uri=${this.configService.get('kakao.redirectUrl')}&code=${code}}`
-        )
-        .toPromise(); // observable to promise
+        const {data} = await this.httpService.post(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${this.configService.get('kakao.clientId')}&redirect_uri=${this.configService.get('kakao.redirectUrl')}&code=${code}}`).toPromise(); // observable to promise
 
-    console.log(data)
+        console.log(data);
 
     if (data.error) {
         console.error(data.error);
@@ -35,11 +32,11 @@ export class AuthService {
 
     // 카카오에서 개인정보 가져오기
     const {data: profile} = await this.httpService
-        .get('https://kapi.kakao.com/v2/user/me', {
-            headers: { Authorization: `Bearer ${data.access_token}` }
+            .get('https://kapi.kakao.com/v2/user/me', {
+                headers: {Authorization: `Bearer ${data.access_token}`}
         })
-        .toPromise()
-        .catch(e => {
+            .toPromise()
+        .catch(() => {
             throw new BadRequestException('사용자 정보가 없습니다.')
         });
 
@@ -54,29 +51,45 @@ export class AuthService {
 
     if(user){
         return {
-            token: this.jwtService.sign({userId: user.id}, {secret: process.env.JWT_SECRET, expiresIn: this.configService.get('jwt.signOptions.expiresIn')}),
+            token: this.jwtService.sign({userId: user.id, userLevel: user.level}, {secret: this.configService.get('JWT_SECRET'), expiresIn: this.configService.get('jwt.signOptions.expiresIn')}),
             id: user.id,
             name: user.name,
             thumbnail: user.thumbnail
         }
-    }else{
-        const newUser = await this.connection.getRepository(User).insert({
-            name: name,
-            sns_id: snsId,
-            thumbnail: thumbnail,
-            level: UserLevel.User,
-            provider: UserProvider.Kakao,
-            active: UserActive.Active
-        });
-
-        return {
-            token: this.jwtService.sign({userId: newUser.generatedMaps[0].id}, {secret: process.env.JWT_SECRET, expiresIn: this.configService.get('jwt.signOptions.expiresIn')}),
-            id: newUser.generatedMaps[0].id,
-            name: newUser.generatedMaps[0].name,
-            thumbnail: newUser.generatedMaps[0].thumbnail
+    }else{ 
+        const newUser = 
+            await this.connection.getRepository(User).insert({
+                name: name,
+                sns_id: snsId,
+                thumbnail: thumbnail,
+                level: UserLevel.User,
+                provider: UserProvider.Kakao,
+                active: UserActive.Active
+            });
+                 
+            return {
+                token: this.jwtService.sign({userId: newUser.generatedMaps[0].id, userLevel: newUser.generatedMaps[0].level}, {secret: this.configService.get('JWT_SECRET'), expiresIn: this.configService.get('jwt.signOptions.expiresIn')}),
+                id: newUser.generatedMaps[0].id,
+                name: newUser.generatedMaps[0].name,
+                thumbnail: newUser.generatedMaps[0].thumbnail
+            }
         }
     }
 
-}
+    // me api
+    async me (headers) {
+        const {userId, userLevel} = headers;
+
+        return await 
+            this.connection.getRepository(User).findOne({id: userId, level: userLevel})
+            .then(userInfo => ({
+                id: userInfo.id,
+                name: userInfo.name,
+                thumbnail: userInfo.thumbnail
+            }))
+        
+
+        
+    }
 }
 

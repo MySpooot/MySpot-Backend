@@ -1,9 +1,7 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-export enum UserLevel {
-    User = 1,
-    Admin = 10
-}
+import { UserLevel } from '../lib/user_decorator';
+
 
 export enum UserProvider {
     Kakao = 'kakao'
