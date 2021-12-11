@@ -1,13 +1,15 @@
 import { BadRequestException, Injectable, } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { Connection, Not } from 'typeorm';
 
 import { User, UserActive, UserLevel, UserProvider } from 'src/entities/user.entity';
 
+
 @Injectable()
 export class AuthService {
-  constructor(private readonly connection: Connection, private readonly configService: ConfigService, private readonly httpService: HttpService){}
+  constructor(private readonly connection: Connection, private readonly configService: ConfigService, private readonly httpService: HttpService, private readonly jwtService: JwtService){}
 
    /**
      * 1. 로그인 버튼 클릭 
@@ -50,34 +52,31 @@ export class AuthService {
     // 이미 가입한 유저인지 검증
     const user = await this.connection.getRepository(User).findOne({ active: UserActive.Active});
 
-    // 존재하는 유저라면
     if(user){
-
+        return {
+            token: this.jwtService.sign({userId: user.id}, {secret: process.env.JWT_SECRET, expiresIn: this.configService.get('jwt.signOptions.expiresIn')}),
+            id: user.id,
+            name: user.name,
+            thumbnail: user.thumbnail
+        }
     }else{
+        const newUser = await this.connection.getRepository(User).insert({
+            name: name,
+            sns_id: snsId,
+            thumbnail: thumbnail,
+            level: UserLevel.User,
+            provider: UserProvider.Kakao,
+            active: UserActive.Active
+        });
 
+        return {
+            token: this.jwtService.sign({userId: newUser.generatedMaps[0].id}, {secret: process.env.JWT_SECRET, expiresIn: this.configService.get('jwt.signOptions.expiresIn')}),
+            id: newUser.generatedMaps[0].id,
+            name: newUser.generatedMaps[0].name,
+            thumbnail: newUser.generatedMaps[0].thumbnail
+        }
     }
 
-    // // 가입되어 있지 않다면 user에 insert
-    // if(!user){
-    //     // 먼저 insert하고
-    //     await this.connection.getRepository(User).insert({
-    //         nickname: name,
-    //         snsId: snsId,
-    //         thumbnail: thumbnail,
-    //         level: UserLevel.User,
-    //         provider: UserProvider.Kakao,
-    //         active: UserActive.Active
-    //     });
-
-    //     // 토큰을 검증한 이후 return
-    //     return {
-            
-    //     }
-
-    }
-
-
-
-    // 프론트에 유저 정보 전달
-    }
 }
+}
+

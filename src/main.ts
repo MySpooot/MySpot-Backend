@@ -2,17 +2,19 @@ import { NestFactory } from '@nestjs/core';
 import { Module } from '@nestjs/common';
 import express from 'express';
 import Joi from 'joi';
-
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import configration from './configration';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
-import { HttpModule } from '@nestjs/axios';
+
+import configration from './configration';
 import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { UserController } from './user/user.controller';
 import { UserService } from './user/user.service';
+import { UserModule } from './user/user.modul';
+import { AuthModule } from './auth/auth.module';
+
+import { User } from './entities/user.entity';
 import { ChanHee } from './entities/chanhee.entity';
 
 @Module({
@@ -45,11 +47,11 @@ import { ChanHee } from './entities/chanhee.entity';
         },
       }),
     }),
-    HttpModule,
+    UserModule,
+    AuthModule
   ],
-  controllers: [AuthController, UserController],
-  providers: [AuthService, UserService],
 })
+
 class AppModule {}
 
 async function bootstrap() {
@@ -63,5 +65,5 @@ async function bootstrap() {
 }
 
 bootstrap().then(() => {
-  console.log('adsasfsafs');
+  console.log('server start');
 });

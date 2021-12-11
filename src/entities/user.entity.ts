@@ -23,10 +23,10 @@ export class User {
     created: Date;
 
     @Column({ type: 'varchar', length: 12 })
-    nickname: string;
+    name: string;
 
     @Column({ type: 'integer' })
-    snsId: number; //@TODO snake_case로 수정
+    sns_id: number; //@TODO snake_case로 수정
 
     @Column({ type: 'varchar', length: 128, nullable: true })
     thumbnail?: string;
