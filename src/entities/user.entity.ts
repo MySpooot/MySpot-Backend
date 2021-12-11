@@ -26,7 +26,7 @@ export class User {
     nickname: string;
 
     @Column({ type: 'integer' })
-    snsId: number;
+    snsId: number; //@TODO snake_case로 수정
 
     @Column({ type: 'varchar', length: 128, nullable: true })
     thumbnail?: string;

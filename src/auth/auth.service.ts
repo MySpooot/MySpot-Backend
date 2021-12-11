@@ -1,9 +1,9 @@
-import { Injectable, } from '@nestjs/common';
+import { BadRequestException, Injectable, } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { Connection, Not } from 'typeorm';
 
-import { User, UserActive } from 'src/entities/user.entity';
+import { User, UserActive, UserLevel, UserProvider } from 'src/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -36,8 +36,11 @@ export class AuthService {
         .get('https://kapi.kakao.com/v2/user/me', {
             headers: { Authorization: `Bearer ${data.access_token}` }
         })
-        .toPromise();
-    
+        .toPromise()
+        .catch(e => {
+            throw new BadRequestException('사용자 정보가 없습니다.')
+        });
+
     const snsId = profile.id;
     const name = profile.kakao_account.profile.nickname;
     const thumbnail = profile.kakao_account.profile.thumbnail_image_url;
@@ -47,9 +50,34 @@ export class AuthService {
     // 이미 가입한 유저인지 검증
     const user = await this.connection.getRepository(User).findOne({ active: UserActive.Active});
 
-    console.log('user ::', user);
+    // 존재하는 유저라면
+    if(user){
+
+    }else{
+
+    }
+
+    // // 가입되어 있지 않다면 user에 insert
+    // if(!user){
+    //     // 먼저 insert하고
+    //     await this.connection.getRepository(User).insert({
+    //         nickname: name,
+    //         snsId: snsId,
+    //         thumbnail: thumbnail,
+    //         level: UserLevel.User,
+    //         provider: UserProvider.Kakao,
+    //         active: UserActive.Active
+    //     });
+
+    //     // 토큰을 검증한 이후 return
+    //     return {
+            
+    //     }
+
+    }
 
 
-    
+
+    // 프론트에 유저 정보 전달
     }
 }
