@@ -5,7 +5,10 @@ import { JwtService } from '@nestjs/jwt';
 import { Connection, Not } from 'typeorm';
 
 import { User, UserActive, UserProvider } from '../entities/user.entity';
-import { UserLevel } from '../lib/user_decorator';
+import { UserLevel, AuthUser } from '../lib/user_decorator';
+import { PostLoginBody, PostLoginResponse } from './dto/post_login.dto';
+import { GetMeResponse } from './dto/get_me.dto';
+import { PutUserBody, PutUserParam, PutUserReponse } from './dto/put_user.dto';
 
 
 @Injectable()
@@ -19,23 +22,21 @@ export class AuthService {
      * 4. 백엔드에서 code, redirect url을 가지고 token 요청 -> reponse
      * 5. 프론트에서 localStorage에 token 저장
      */
-  async logIn(body) {
-    const {code} = body;
+  async logIn({code}: PostLoginBody): Promise<PostLoginResponse> {
 
         const {data} = await this.httpService.post(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${this.configService.get('kakao.clientId')}&redirect_uri=${this.configService.get('kakao.redirectUrl')}&code=${code}}`).toPromise(); // observable to promise
 
         console.log(data);
 
     if (data.error) {
-        console.error(data.error);
+        throw new BadRequestException('카카오 로그인 에러')
     }
 
     // 카카오에서 개인정보 가져오기
     const {data: profile} = await this.httpService
             .get('https://kapi.kakao.com/v2/user/me', {
                 headers: {Authorization: `Bearer ${data.access_token}`}
-        })
-            .toPromise()
+        }).toPromise()
         .catch(() => {
             throw new BadRequestException('사용자 정보가 없습니다.')
         });
@@ -44,52 +45,73 @@ export class AuthService {
     const name = profile.kakao_account.profile.nickname;
     const thumbnail = profile.kakao_account.profile.thumbnail_image_url;
 
-    console.log({snsId, name, thumbnail})
+    // 이미 가입함 + 닉네임까지 입력을 다 한 유저인지 확인
+    const user = await this.connection.getRepository(User).findOne({sns_id: snsId, active: UserActive.Active});
 
-    // 이미 가입한 유저인지 검증
-    const user = await this.connection.getRepository(User).findOne({ active: UserActive.Active});
-
+    // 가입함 + 닉네임 완료인 유저일 시 
     if(user){
+        console.log('가입함 + 닉네임 완료인 유저일 시 ')
         return {
             token: this.jwtService.sign({userId: user.id, userLevel: user.level}, {secret: this.configService.get('JWT_SECRET'), expiresIn: this.configService.get('jwt.signOptions.expiresIn')}),
             id: user.id,
-            name: user.name,
-            thumbnail: user.thumbnail
+            nickname: user.nickname,
+            thumbnail: user.thumbnail,
+            active: user.active
         }
     }else{ 
-        const newUser = 
-            await this.connection.getRepository(User).insert({
-                name: name,
-                sns_id: snsId,
-                thumbnail: thumbnail,
-                level: UserLevel.User,
-                provider: UserProvider.Kakao,
-                active: UserActive.Active
-            });
-                 
+        // 가입 + 닉네임 입력 안한 유저인지 확인
+        const pendingUser = await this.connection.getRepository(User).findOne({sns_id: snsId, active: UserActive.Pending});
+
+        // 가입은 했는데 닉네임을 입력하지 않은 유저인 경우, db에 insert하지 않고 바로 return
+        if(pendingUser){
+            console.log('가입은 했는데 닉네임을 입력하지 않은 유저인 경우, db에 insert하지 않고 바로 return')
             return {
-                token: this.jwtService.sign({userId: newUser.generatedMaps[0].id, userLevel: newUser.generatedMaps[0].level}, {secret: this.configService.get('JWT_SECRET'), expiresIn: this.configService.get('jwt.signOptions.expiresIn')}),
-                id: newUser.generatedMaps[0].id,
-                name: newUser.generatedMaps[0].name,
-                thumbnail: newUser.generatedMaps[0].thumbnail
+                id: pendingUser.id,
+                nickname: name, // 카카오 닉네임을 return한다. (프론트에서 사용)
+                active: pendingUser.active
+            }
+        }else{
+            // 아예 첫 가입인 유저인 경우
+            console.log('아예 첫 가입인 유저인 경우')
+            const newUser = 
+                await this.connection.getRepository(User).insert({
+                    sns_id: snsId,
+                    thumbnail: thumbnail,
+                    level: UserLevel.User,
+                    provider: UserProvider.Kakao,
+                    active: UserActive.Pending // 닉네임을 입력받기 전이라 pending상태로 insert한다.
+                });
+                // 닉네임 입력을 받아야 로그인이 되기 때문에 토큰은 닉네임 입력 이후에 전달
+                return {
+                    id: newUser.generatedMaps[0].id,
+                    nickname: name, // 카카오 닉네임을 return한다. (프론트에서 사용)
+                    active: newUser.generatedMaps[0].active
+                }
             }
         }
     }
 
     // me api
-    async me (headers) {
-        const {userId, userLevel} = headers;
+    async me ({id, level}: AuthUser): Promise<GetMeResponse> {
+        const user = await this.connection.getRepository(User).findOne({id: id, level: level})
 
-        return await 
-            this.connection.getRepository(User).findOne({id: userId, level: userLevel})
-            .then(userInfo => ({
-                id: userInfo.id,
-                name: userInfo.name,
-                thumbnail: userInfo.thumbnail
-            }))
-        
+        return GetMeResponse.from(user)    
+    }
 
-        
+    // insert nickname
+    async updateUser({userId}: PutUserParam, {nickname}: PutUserBody): Promise<PutUserReponse>{
+        await this.connection.getRepository(User).update({id: userId}, {nickname: nickname, active: UserActive.Active});
+
+        // update된 user 재조회
+        const user = await this.connection.getRepository(User).findOne({id: userId})
+
+        return {
+            token: this.jwtService.sign({userId: user.id, userLevel: user.level}, {secret: this.configService.get('JWT_SECRET'), expiresIn: this.configService.get('jwt.signOptions.expiresIn')}),
+            id: user.id,
+            nickname: user.nickname,
+            thumbnail: user.thumbnail,
+            active: user.active
+        }
     }
 }
 

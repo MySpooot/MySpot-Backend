@@ -10,7 +10,7 @@ export interface AuthUser {
     level: UserLevel;
 }
 
-export const User = createParamDecorator(
+export const User_ = createParamDecorator(
     (_, input: ExecutionContext): AuthUser => {
         return input.switchToHttp().getRequest().user;
     }

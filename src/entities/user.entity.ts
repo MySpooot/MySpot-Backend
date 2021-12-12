@@ -9,7 +9,8 @@ export enum UserProvider {
 
 export enum UserActive {
     Inactive = 0,
-    Active = 1
+    Active = 1,
+    Pending = 2
 }
 
 @Entity('user')
@@ -20,21 +21,21 @@ export class User {
     @CreateDateColumn({ type: 'timestamp' })
     created: Date;
 
-    @Column({ type: 'varchar', length: 12 })
-    name: string;
+    @Column({ type: 'varchar', length: 12 , nullable: true })
+    nickname?: string;
 
     @Column({ type: 'integer' })
-    sns_id: number; //@TODO snake_case로 수정
+    sns_id: number;
 
     @Column({ type: 'varchar', length: 128, nullable: true })
     thumbnail?: string;
 
-    @Column({ type: 'integer', default: UserLevel.User})
+    @Column({ type: 'integer', default: UserLevel.User })
     level: UserLevel
 
     @Column({ type: 'varchar', length: 7, default: UserProvider.Kakao })
     provider: UserProvider
 
-    @Column({ type: 'integer', default: UserActive.Active})
+    @Column({ type: 'integer', default: UserActive.Pending })
     active: UserActive;
 }
