@@ -10,9 +10,9 @@ import { PutUserBody, PutUserParam } from './dto/put_user.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('/logIn')
-  kakao(@Body() body: PostLoginBody){
-    return this.authService.logIn(body);
+  @Post('/login')
+  login(@Body() body: PostLoginBody){
+    return this.authService.login(body);
   }
 
   @Get('/me') 
@@ -24,5 +24,11 @@ export class AuthController {
   @Put('/user/:userId')
   updateUser(@Param() param: PutUserParam, @Body() body: PutUserBody){
     return this.authService.updateUser(param, body)
+  }
+
+  @Post('/logout')
+  @UseGuards(JwtAuthGuard)
+  logout(@Body() body){
+    return this.authService.logout(body)
   }
 }

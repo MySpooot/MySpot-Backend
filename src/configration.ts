@@ -12,7 +12,7 @@ export default () => ({
   },
   jwt: {
     signOptions: {
-        expiresIn: '10h'
+        expiresIn: '30d'
     }
 },
 });
