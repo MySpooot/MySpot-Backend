@@ -1,16 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { Module } from '@nestjs/common';
-import express from 'express';
 import Joi from 'joi';
-import { ExpressAdapter } from '@nestjs/platform-express';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import https from 'https';
 
 import configration from './configration';
-import { AuthController } from './auth/auth.controller';
-import { AuthService } from './auth/auth.service';
-import { UserController } from './user/user.controller';
-import { UserService } from './user/user.service';
 import { UserModule } from './user/user.modul';
 import { AuthModule } from './auth/auth.module';
 
@@ -54,16 +49,14 @@ import { ChanHee } from './entities/chanhee.entity';
 
 class AppModule {}
 
-async function bootstrap() {
-  const expressApp = express();
+(async () => {
+  const app = await NestFactory.create(AppModule);
+  app.enableCors();
 
-  const app = await NestFactory.create(
-    AppModule,
-    new ExpressAdapter(expressApp),
-  );
-  await app.listen(3001);
-}
+  await app.listen(process.env.PORT || 3001);
 
-bootstrap().then(() => {
-  console.log('server start');
-});
+  if (process.env.NODE_ENV === 'production')
+      setInterval(() => {
+          https.get('https://nestjs-map.herokuapp.com/');
+      }, 1200000);
+})();
