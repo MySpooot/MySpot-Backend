@@ -32,7 +32,7 @@ export class AuthService {
     if (data.error) {
         throw new BadRequestException('카카오 로그인 에러')
     }
-
+    console.log(data.access_token)
     // 카카오에서 개인정보 가져오기
     const kakaoUser = await this.getKaKaoUserData(data);
 
@@ -85,6 +85,7 @@ export class AuthService {
 
     // 카카오 유저 정보 가져오기
     async getKaKaoUserData(data){
+        console.log(data.access_token)
         const {data: profile} = await this.httpService
             .get('https://kapi.kakao.com/v2/user/me', {
                 headers: {Authorization: `Bearer ${data.access_token}`}
@@ -101,8 +102,9 @@ export class AuthService {
     }
 
     // me api
-    async me ({id, level}: AuthUser): Promise<GetMeResponse> {
-        const user = await this.connection.getRepository(User).findOne({id: id, level: level})
+    async me ({userId, userLevel}: AuthUser): Promise<GetMeResponse> {
+        console.log('test', userId, userLevel)
+        const user = await this.connection.getRepository(User).findOne({id: userId, level: userLevel})
 
         return GetMeResponse.from(user)    
     }

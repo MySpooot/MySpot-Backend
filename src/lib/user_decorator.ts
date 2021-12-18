@@ -6,8 +6,8 @@ export enum UserLevel {
 }
 
 export interface AuthUser {
-    id: number;
-    level: UserLevel;
+    userId: number;
+    userLevel: UserLevel;
 }
 
 export const User_ = createParamDecorator(
