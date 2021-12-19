@@ -2,14 +2,15 @@ import { BadRequestException, Injectable, } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { Connection, Not } from 'typeorm';
+import { Connection } from 'typeorm';
 
 import { User, UserActive, UserProvider } from '../entities/user.entity';
 import { UserLevel, AuthUser } from '../lib/user_decorator';
-import { PostLoginBody, PostLoginResponse } from './dto/post_login.dto';
+import { PostLoginBody, PostLoginHeaders, PostLoginResponse } from './dto/post_login.dto';
 import { GetMeResponse } from './dto/get_me.dto';
 import { PutUserBody, PutUserParam, PutUserReponse } from './dto/put_user.dto';
 import { PostLogOutBody } from './dto/post_logout.dto';
+import { OriginType } from './types/origin_type';
 
 
 @Injectable()
@@ -23,16 +24,28 @@ export class AuthService {
      * 4. 백엔드에서 code, redirect url을 가지고 token 요청 -> reponse
      * 5. 프론트에서 localStorage에 token 저장
      */
-  async login({code}: PostLoginBody): Promise<PostLoginResponse> {
+  async login({origin}: PostLoginHeaders, {code}: PostLoginBody): Promise<PostLoginResponse> {
 
-        const {data} = await this.httpService.post(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${this.configService.get('kakao.clientId')}&redirect_uri=${this.configService.get('kakao.redirectUrl')}&code=${code}}`).toPromise(); // observable to promise
+    console.log('origin ::' ,origin)
 
-        console.log(data);
+    let kakaoRedirectUrl;
+
+    if(origin.includes('local')){
+        kakaoRedirectUrl = 'http://localhost:3000'
+    }else{
+        kakaoRedirectUrl =' https://peaceful-jones-055a8a.netlify.app'
+    }
+
+    const {data} = await this.httpService.post(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${this.configService.get('kakao.clientId')}&redirect_uri=${kakaoRedirectUrl}/auth/kakao&code=${code}}`).toPromise(); // observable to promise
+
+    console.log(data);
 
     if (data.error) {
         throw new BadRequestException('카카오 로그인 에러')
     }
+
     console.log(data.access_token)
+
     // 카카오에서 개인정보 가져오기
     const kakaoUser = await this.getKaKaoUserData(data);
 

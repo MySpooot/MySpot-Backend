@@ -1,9 +1,9 @@
-import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UseGuards ,Headers} from '@nestjs/common';
 
 import { JwtAuthGuard } from '../lib/jwt_guard';
 import { AuthUser, User_ } from '../lib/user_decorator'
 import { AuthService } from './auth.service';
-import { PostLoginBody } from './dto/post_login.dto';
+import { PostLoginBody, PostLoginHeaders } from './dto/post_login.dto';
 import { PutUserBody, PutUserParam } from './dto/put_user.dto';
 
 @Controller('/auth')
@@ -11,8 +11,8 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/login')
-  login(@Body() body: PostLoginBody){
-    return this.authService.login(body);
+  login(@Headers() headers: PostLoginHeaders, @Body() body: PostLoginBody){
+    return this.authService.login(headers, body);
   }
 
   @Get('/me') 

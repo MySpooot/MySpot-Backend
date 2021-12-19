@@ -1,9 +1,15 @@
-import {IsNotEmpty, IsNumber, IsString} from 'class-validator';
+import {IsNotEmpty, IsNumber, IsString, IsUrl} from 'class-validator';
 
 export class PostLoginBody {
     @IsString()
     @IsNotEmpty()
     readonly code: string;
+}
+
+export class PostLoginHeaders {
+    @IsString()
+    @IsNotEmpty()
+    readonly origin: string;
 }
 
 export class PostLoginResponse {
