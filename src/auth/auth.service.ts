@@ -30,10 +30,10 @@ export class AuthService {
 
     if(origin.includes('local')){
         console.log('local#@#@#@')
-        kakaoRedirectUrl = 'http://localhost:3000'
+        kakaoRedirectUrl = this.configService.get('kakao.localRedirectUrl')
     }else{
-        console.log('dev@!#@!#')
-        kakaoRedirectUrl = 'https://peaceful-jones-055a8a.netlify.app'
+        console.log('dev@!#@!#');
+        kakaoRedirectUrl = this.configService.get('kakao.devRedirectUrl') 
     }
 
     console.log('kakaoRedirectUrl :: ', kakaoRedirectUrl)
