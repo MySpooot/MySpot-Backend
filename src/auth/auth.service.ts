@@ -29,10 +29,14 @@ export class AuthService {
     let kakaoRedirectUrl;
 
     if(origin.includes('local')){
-        kakaoRedirectUrl = this.configService.get('localRedirectUrl')
+        console.log('local#@#@#@')
+        kakaoRedirectUrl = 'http://localhost:3000'
     }else{
-        kakaoRedirectUrl = this.configService.get('devRedirectUrl')
+        console.log('dev@!#@!#')
+        kakaoRedirectUrl = 'https://peaceful-jones-055a8a.netlify.app'
     }
+
+    console.log('kakaoRedirectUrl :: ', kakaoRedirectUrl)
 
     const {data} = await this.httpService.post(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${this.configService.get('kakao.clientId')}&redirect_uri=${kakaoRedirectUrl}/auth/kakao&code=${code}}`).toPromise(); // observable to promise
 
