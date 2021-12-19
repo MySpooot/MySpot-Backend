@@ -15,7 +15,7 @@ import { PostLogOutBody } from './dto/post_logout.dto';
 export class AuthService {
   constructor(private readonly connection: Connection, private readonly configService: ConfigService, private readonly httpService: HttpService, private readonly jwtService: JwtService){}
 
-   /**
+    /**
      * 1. 로그인 버튼 클릭 
      * 2. 카카오서버에서 redirect url로 access code 전송 
      * 3. 프론트에서 code를 body에 담아 백엔드로 전송
@@ -24,29 +24,19 @@ export class AuthService {
      */
   async login({origin}: PostLoginHeaders, {code}: PostLoginBody): Promise<PostLoginResponse> {
 
-    console.log('origin ::' ,origin)
-
     let kakaoRedirectUrl;
 
     if(origin.includes('local')){
-        console.log('local#@#@#@')
         kakaoRedirectUrl = this.configService.get('kakao.localRedirectUrl')
     }else{
-        console.log('dev@!#@!#');
         kakaoRedirectUrl = this.configService.get('kakao.devRedirectUrl') 
     }
 
-    console.log('kakaoRedirectUrl :: ', kakaoRedirectUrl)
-
     const {data} = await this.httpService.post(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${this.configService.get('kakao.clientId')}&redirect_uri=${kakaoRedirectUrl}/auth/kakao&code=${code}}`).toPromise(); // observable to promise
-
-    console.log(data);
 
     if (data.error) {
         throw new BadRequestException('카카오 로그인 에러')
     }
-
-    console.log(data.access_token)
 
     // 카카오에서 개인정보 가져오기
     const kakaoUser = await this.getKaKaoUserData(data);
@@ -79,7 +69,6 @@ export class AuthService {
         }else{
             // 아예 첫 가입인 유저인 경우
             console.log('아예 첫 가입인 유저인 경우')
-            console.log(kakaoUser)
             const newUser = 
                 await this.connection.getRepository(User).insert({
                     sns_id: kakaoUser.snsId,
@@ -100,7 +89,6 @@ export class AuthService {
 
     // 카카오 유저 정보 가져오기
     async getKaKaoUserData(data){
-        console.log(data.access_token)
         const {data: profile} = await this.httpService
             .get('https://kapi.kakao.com/v2/user/me', {
                 headers: {Authorization: `Bearer ${data.access_token}`}
@@ -118,7 +106,6 @@ export class AuthService {
 
     // me api
     async me ({userId, userLevel}: AuthUser): Promise<GetMeResponse> {
-        console.log('test', userId, userLevel)
         const user = await this.connection.getRepository(User).findOne({id: userId, level: userLevel})
 
         return GetMeResponse.from(user)    

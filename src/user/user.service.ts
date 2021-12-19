@@ -7,8 +7,6 @@ export class UserService {
   constructor(private readonly connection: Connection){}
 
   async getHello(): Promise<void> {
-    console.log('test')
     const test = await this.connection.getRepository(ChanHee).find({})
-    console.log(test)
   }
 }
