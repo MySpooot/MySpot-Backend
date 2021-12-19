@@ -26,7 +26,7 @@ export class AuthService {
 
     console.log('origin ::' ,origin)
 
-    let kakaoRedirectUrl: string;
+    let kakaoRedirectUrl;
 
     if(origin.includes('local')){
         kakaoRedirectUrl = this.configService.get('localRedirectUrl')
