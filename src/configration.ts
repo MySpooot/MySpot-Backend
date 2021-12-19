@@ -8,7 +8,8 @@ export default () => ({
     },
     kakao: {
       clientId: '025b493068d0d400f8c6b9f91b175936',
-      redirectUrl: 'http://localhost:3000/auth/kakao'
+      localRedirectUrl: 'http://localhost:3000',
+      devRedirectUrl: 'https://peaceful-jones-055a8a.netlify.app'
     },
     jwt: {
       signOptions: {

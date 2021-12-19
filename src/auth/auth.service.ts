@@ -10,8 +10,6 @@ import { PostLoginBody, PostLoginHeaders, PostLoginResponse } from './dto/post_l
 import { GetMeResponse } from './dto/get_me.dto';
 import { PutUserBody, PutUserParam, PutUserReponse } from './dto/put_user.dto';
 import { PostLogOutBody } from './dto/post_logout.dto';
-import { OriginType } from './types/origin_type';
-
 
 @Injectable()
 export class AuthService {
@@ -28,15 +26,15 @@ export class AuthService {
 
     console.log('origin ::' ,origin)
 
-    let kakaoRedirectUrl;
+    let kakaoRedirectUrl: string;
 
     if(origin.includes('local')){
-        kakaoRedirectUrl = 'http://localhost:3000'
+        kakaoRedirectUrl = this.configService.get('localRedirectUrl')
     }else{
-        kakaoRedirectUrl = 'https://peaceful-jones-055a8a.netlify.app'
+        kakaoRedirectUrl = this.configService.get('devRedirectUrl')
     }
 
-    const {data} = await this.httpService.post(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${this.configService.get('kakao.clientId')}&redirect_uri=https://peaceful-jones-055a8a.netlify.app/auth/kakao&code=${code}}`).toPromise(); // observable to promise
+    const {data} = await this.httpService.post(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${this.configService.get('kakao.clientId')}&redirect_uri=${kakaoRedirectUrl}/auth/kakao&code=${code}}`).toPromise(); // observable to promise
 
     console.log(data);
 
