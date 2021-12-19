@@ -129,7 +129,7 @@ export class AuthService {
 
     // logout
     async logout({code}: PostLogOutBody) {
-        console.log('logout')
+        console.log('logout22')
     }   
 }
 
