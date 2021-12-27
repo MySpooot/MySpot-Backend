@@ -1,16 +1,17 @@
 import { NestFactory } from '@nestjs/core';
 import { Module } from '@nestjs/common';
-import Joi from 'joi';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import https from 'https';
+import Joi from 'joi';
 
 import configration from './configration';
-import { UserModule } from './user/user.modul';
+import { MapModule } from './map/map.modul';
 import { AuthModule } from './auth/auth.module';
 
 import { User } from './entities/user.entity';
-import { ChanHee } from './entities/chanhee.entity';
+import { Map } from './entities/map.entity';
+import { Marker } from './entities/marker.entity';
 
 @Module({
   imports: [
@@ -36,14 +37,14 @@ import { ChanHee } from './entities/chanhee.entity';
         host: configService.get('database.host'),
         port: configService.get('database.port'),
         database: configService.get('database.database'),
-        entities: [User, ChanHee],
+        entities: [User, Map, Marker],
         ssl: {
           rejectUnauthorized: false,
         },
       }),
     }),
-    UserModule,
-    AuthModule
+    AuthModule,
+    MapModule
   ],
 })
 
