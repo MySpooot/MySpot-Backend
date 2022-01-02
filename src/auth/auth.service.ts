@@ -108,7 +108,7 @@ export class AuthService {
     async me ({userId, userLevel}: AuthUser): Promise<GetMeResponse> {
         const user = await this.connection.getRepository(User).findOne({id: userId, level: userLevel})
 
-        return GetMeResponse.from(user)    
+        return GetMeResponse.from(user);
     }
 
     // insert nickname
@@ -129,7 +129,7 @@ export class AuthService {
 
     // logout
     async logout({code}: PostLogOutBody) {
-        console.log('logout22')
+        console.log('아직 안만들었음');
     }   
 }
 

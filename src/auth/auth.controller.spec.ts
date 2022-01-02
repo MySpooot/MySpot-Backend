@@ -35,9 +35,7 @@ describe('AuthController', () => {
 
   describe('root', () => {
     it('should return "Hello World!"', () => {
-        console.log(123)
         expect(0).toEqual(0)
-
     });
   });
 });
