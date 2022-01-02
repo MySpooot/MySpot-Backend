@@ -14,10 +14,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         });
     }
 
-   // 토큰 검증
+    // 토큰 검증
     async validate(payload: any) {
-      if(!payload.userId || !payload.userLevel) throw new BadRequestException('JWT Token 검증에 실패하였습니다.')
-      
+        if (!payload.userId || !payload.userLevel) throw new BadRequestException('JWT Token 검증에 실패하였습니다.');
+
         return {
             userId: payload.userId,
             userLevel: payload.userLevel

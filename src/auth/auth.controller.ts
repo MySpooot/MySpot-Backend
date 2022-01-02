@@ -1,10 +1,10 @@
-import {Body, Controller, Get, Param, Post, Put, UseGuards, Headers} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UseGuards, Headers } from '@nestjs/common';
 
-import {JwtAuthGuard} from '../lib/jwt_guard';
-import {AuthUser, User_} from '../lib/user_decorator';
-import {AuthService} from './auth.service';
-import {PostLoginBody, PostLoginHeaders} from './dto/post_login.dto';
-import {PutUserBody, PutUserParam} from './dto/put_user.dto';
+import { JwtAuthGuard } from '../lib/jwt_guard';
+import { AuthUser, User_ } from '../lib/user_decorator';
+import { AuthService } from './auth.service';
+import { PostLoginBody, PostLoginHeaders } from './dto/post_login.dto';
+import { PutUserBody, PutUserParam } from './dto/put_user.dto';
 
 @Controller('/auth')
 export class AuthController {
@@ -26,14 +26,15 @@ export class AuthController {
         return this.authService.updateUser(param, body);
     }
 
-    @Post('/logout')
-    @UseGuards(JwtAuthGuard)
-    logout(@Body() body) {
-        return this.authService.logout(body);
-    }
-
     @Post('/appLogin')
     appLogin(@Body() body) {
         return this.authService.loginProcess(body);
     }
+
+    // @TODO 로그아웃 추후 개발 예정
+    // @Post('/logout')
+    // @UseGuards(JwtAuthGuard)
+    // logout(@Body() body) {
+    //     return this.authService.logout(body);
+    // }
 }
