@@ -6,6 +6,7 @@ export class MapService {
     constructor(private readonly connection: Connection) {}
 
     async getHello() {
-        return await this.connection.getRepository(Map).find({});
+        return 1;
+        // return await this.connection.getRepository(Map).find({});
     }
 }
