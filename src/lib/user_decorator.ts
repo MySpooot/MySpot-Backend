@@ -1,4 +1,4 @@
-import {createParamDecorator, ExecutionContext} from '@nestjs/common';
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 export enum UserLevel {
     User = 1,
@@ -10,8 +10,6 @@ export interface AuthUser {
     userLevel: UserLevel;
 }
 
-export const User_ = createParamDecorator(
-    (_, input: ExecutionContext): AuthUser => {
-        return input.switchToHttp().getRequest().user;
-    }
-);
+export const User_ = createParamDecorator((_, input: ExecutionContext): AuthUser => {
+    return input.switchToHttp().getRequest().user;
+});

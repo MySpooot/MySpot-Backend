@@ -1,19 +1,23 @@
-import {BadRequestException, Injectable} from '@nestjs/common';
-import {HttpService} from '@nestjs/axios';
-import {ConfigService} from '@nestjs/config';
-import {JwtService} from '@nestjs/jwt';
-import {Connection} from 'typeorm';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { Connection } from 'typeorm';
 
-import {User, UserActive, UserProvider} from '../entities/user.entity';
-import {UserLevel, AuthUser} from '../lib/user_decorator';
-import {PostLoginBody, PostLoginHeaders, PostLoginResponse} from './dto/post_login.dto';
-import {GetMeResponse} from './dto/get_me.dto';
-import {PutUserBody, PutUserParam, PutUserReponse} from './dto/put_user.dto';
-import {PostLogOutBody} from './dto/post_logout.dto';
+import { User, UserActive, UserProvider } from '../entities/user.entity';
+import { UserLevel, AuthUser } from '../lib/user_decorator';
+import { PostLoginBody, PostLoginHeaders, PostLoginResponse } from './dto/post_login.dto';
+import { GetMeResponse } from './dto/get_me.dto';
+import { PutUserBody, PutUserParam, PutUserReponse } from './dto/put_user.dto';
 
 @Injectable()
 export class AuthService {
-    constructor(private readonly connection: Connection, private readonly configService: ConfigService, private readonly httpService: HttpService, private readonly jwtService: JwtService) {}
+    constructor(
+        private readonly connection: Connection,
+        private readonly configService: ConfigService,
+        private readonly httpService: HttpService,
+        private readonly jwtService: JwtService
+    ) {}
 
     /**
      * 1. 로그인 버튼 클릭
@@ -22,7 +26,7 @@ export class AuthService {
      * 4. 백엔드에서 code, redirect url을 가지고 token 요청 -> reponse
      * 5. 프론트에서 localStorage에 token 저장
      */
-    async login({origin}: PostLoginHeaders, {code}: PostLoginBody): Promise<PostLoginResponse> {
+    async login({ origin }: PostLoginHeaders, { code }: PostLoginBody): Promise<PostLoginResponse> {
         let kakaoRedirectUrl;
 
         if (origin.includes('local')) {
@@ -31,7 +35,13 @@ export class AuthService {
             kakaoRedirectUrl = this.configService.get('kakao.devRedirectUrl');
         }
 
-        const {data} = await this.httpService.post(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${this.configService.get('kakao.clientId')}&redirect_uri=${kakaoRedirectUrl}/auth/kakao&code=${code}}`).toPromise(); // observable to promise
+        const { data } = await this.httpService
+            .post(
+                `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${this.configService.get(
+                    'kakao.clientId'
+                )}&redirect_uri=${kakaoRedirectUrl}/auth/kakao&code=${code}}`
+            )
+            .toPromise(); // observable to promise
 
         if (data.error) {
             throw new BadRequestException('카카오 로그인 에러');
@@ -42,9 +52,9 @@ export class AuthService {
 
     // 카카오 유저 정보 가져오기
     async getKaKaoUserData(data) {
-        const {data: profile} = await this.httpService
+        const { data: profile } = await this.httpService
             .get('https://kapi.kakao.com/v2/user/me', {
-                headers: {Authorization: `Bearer ${data.access_token}`}
+                headers: { Authorization: `Bearer ${data.access_token}` }
             })
             .toPromise()
             .catch(() => {
@@ -59,21 +69,24 @@ export class AuthService {
     }
 
     // me api
-    async me({userId, userLevel}: AuthUser): Promise<GetMeResponse> {
-        const user = await this.connection.getRepository(User).findOne({id: userId, level: userLevel});
+    async me({ userId, userLevel }: AuthUser): Promise<GetMeResponse> {
+        const user = await this.connection.getRepository(User).findOne({ id: userId, level: userLevel });
 
         return GetMeResponse.from(user);
     }
 
     // insert nickname
-    async updateUser({userId}: PutUserParam, {nickname}: PutUserBody): Promise<PutUserReponse> {
-        await this.connection.getRepository(User).update({id: userId}, {nickname: nickname, active: UserActive.Active});
+    async updateUser({ userId }: PutUserParam, { nickname }: PutUserBody): Promise<PutUserReponse> {
+        await this.connection.getRepository(User).update({ id: userId }, { nickname: nickname, active: UserActive.Active });
 
         // update된 user 재조회
-        const user = await this.connection.getRepository(User).findOne({id: userId});
+        const user = await this.connection.getRepository(User).findOne({ id: userId });
 
         return {
-            token: this.jwtService.sign({userId: user.id, userLevel: user.level}, {secret: this.configService.get('JWT_SECRET'), expiresIn: this.configService.get('jwt.signOptions.expiresIn')}),
+            token: this.jwtService.sign(
+                { userId: user.id, userLevel: user.level },
+                { secret: this.configService.get('JWT_SECRET'), expiresIn: this.configService.get('jwt.signOptions.expiresIn') }
+            ),
             id: user.id,
             nickname: user.nickname,
             thumbnail: user.thumbnail,
@@ -81,23 +94,21 @@ export class AuthService {
         };
     }
 
-    // logout
-    async logout({code}: PostLogOutBody) {
-        console.log('아직 안만들었음');
-    }
-
-    async loginProcess(data: {access_token: string}) {
+    async loginProcess(data: { access_token: string }) {
         // 카카오에서 개인정보 가져오기
         const kakaoUser = await this.getKaKaoUserData(data);
 
         // 이미 가입함 + 닉네임까지 입력을 다 한 유저인지 확인
-        const user = await this.connection.getRepository(User).findOne({sns_id: kakaoUser.snsId, active: UserActive.Active});
+        const user = await this.connection.getRepository(User).findOne({ sns_id: kakaoUser.snsId, active: UserActive.Active });
 
         // 가입함 + 닉네임 완료인 유저일 시
         if (user) {
             console.log('가입함 + 닉네임 완료인 유저일 시 ');
             return {
-                token: this.jwtService.sign({userId: user.id, userLevel: user.level}, {secret: this.configService.get('JWT_SECRET'), expiresIn: this.configService.get('jwt.signOptions.expiresIn')}),
+                token: this.jwtService.sign(
+                    { userId: user.id, userLevel: user.level },
+                    { secret: this.configService.get('JWT_SECRET'), expiresIn: this.configService.get('jwt.signOptions.expiresIn') }
+                ),
                 id: user.id,
                 nickname: user.nickname,
                 thumbnail: user.thumbnail,
@@ -105,7 +116,7 @@ export class AuthService {
             };
         } else {
             // 가입 + 닉네임 입력 안한 유저인지 확인
-            const pendingUser = await this.connection.getRepository(User).findOne({sns_id: kakaoUser.snsId, active: UserActive.Pending});
+            const pendingUser = await this.connection.getRepository(User).findOne({ sns_id: kakaoUser.snsId, active: UserActive.Pending });
 
             // 가입은 했는데 닉네임을 입력하지 않은 유저인 경우, db에 insert하지 않고 바로 return
             if (pendingUser) {
@@ -134,4 +145,7 @@ export class AuthService {
             }
         }
     }
+
+    // // @TODO 로그아웃 추후 개발 예정
+    // async logout({ code }: PostLogOutBody) {}
 }

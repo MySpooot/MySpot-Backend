@@ -1,4 +1,4 @@
-import { User } from "../../entities/user.entity"
+import { User } from '../../entities/user.entity';
 
 export class GetMeResponse {
     id: number;
@@ -6,12 +6,12 @@ export class GetMeResponse {
     thumbnail: string;
 
     static from(me?: User): GetMeResponse | undefined {
-        return me && new GetMeResponse(me)
+        return me && new GetMeResponse(me);
     }
 
-    constructor(me: User){
+    constructor(me: User) {
         this.id = me.id;
         this.nickname = me.nickname;
-        this.thumbnail = me.thumbnail
+        this.thumbnail = me.thumbnail;
     }
 }

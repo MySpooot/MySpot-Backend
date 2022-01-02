@@ -2,7 +2,6 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeor
 
 import { UserLevel } from '../lib/user_decorator';
 
-
 export enum UserProvider {
     Kakao = 'kakao'
 }
@@ -21,7 +20,7 @@ export class User {
     @CreateDateColumn({ type: 'timestamp' })
     created: Date;
 
-    @Column({ type: 'varchar', length: 12 , nullable: true })
+    @Column({ type: 'varchar', length: 12, nullable: true })
     nickname?: string;
 
     @Column({ type: 'integer' })
@@ -31,10 +30,10 @@ export class User {
     thumbnail?: string;
 
     @Column({ type: 'integer', default: UserLevel.User })
-    level: UserLevel
+    level: UserLevel;
 
     @Column({ type: 'varchar', length: 7, default: UserProvider.Kakao })
-    provider: UserProvider
+    provider: UserProvider;
 
     @Column({ type: 'integer', default: UserActive.Pending })
     active: UserActive;

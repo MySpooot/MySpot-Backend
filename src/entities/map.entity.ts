@@ -15,7 +15,7 @@ export class Map {
     @CreateDateColumn({ type: 'timestamp' })
     created: Date;
 
-    @Column({ type: 'integer'})
+    @Column({ type: 'integer' })
     user_id: number;
 
     @Column({ type: 'varchar', length: 24 })
@@ -25,6 +25,6 @@ export class Map {
     active: MapActive;
 
     @ManyToOne(() => User)
-    @JoinColumn({'name': 'user_id'})
-    user?: User
+    @JoinColumn({ name: 'user_id' })
+    user?: User;
 }
