@@ -5,7 +5,7 @@ import { Connection } from 'typeorm';
 export class MapService {
   constructor(private readonly connection: Connection){}
 
-  async getHello(): Promise<void> {
-    // const test = await this.connection.getRepository(ChanHee).find({})
+  async getHello() {
+    return await this.connection.getRepository(Map).find({});
   }
 }

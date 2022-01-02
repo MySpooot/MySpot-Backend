@@ -1,23 +1,43 @@
-// import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigModule } from '@nestjs/config';
+import { Test, TestingModule } from '@nestjs/testing';
 
-// import { UserController } from './user.controller';
-// import { UserService } from './user.service';
+import { MapController } from './map.controller';
+import { MapModule } from './map.module';
+import { MapService } from './map.service';
+import configuration from '../configration';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-// describe('UserController', () => {
-//   let userController: UserController;
+describe('MapController', () => {
+  let mapController: MapController;
 
-//   beforeEach(async () => {
-//     const app: TestingModule = await Test.createTestingModule({
-//       controllers: [UserController],
-//       providers: [UserService],
-//     }).compile();
+  beforeEach(async () => {
+    const app: TestingModule = await Test.createTestingModule({
+      imports:[
+        MapModule,
+        ConfigModule.forRoot({
+            load: [configuration],
+            cache: true,
+            isGlobal: true
+        }),
+        TypeOrmModule.forRoot({
+            type: 'sqlite',
+            database: ':memory:',
+            autoLoadEntities: true,
+            synchronize: true,
+            logging: false
+        })
+      ] 
+    
+    }).compile();
 
-//     userController = app.get<UserController>(UserController);
-//   });
+    mapController = app.get<MapController>(MapController);
+  });
 
-//   describe('root', () => {
-//     it('should return "Hello World!"', () => {
-//       expect(userController.getHello()).toBe('Hello World!');
-//     });
-//   });
-// });
+  describe('root', () => {
+    it('should return "Hello World!"', () => {
+        console.log(123)
+        expect(0).toEqual(0)
+
+    });
+  });
+});

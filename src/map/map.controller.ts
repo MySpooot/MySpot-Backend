@@ -7,7 +7,7 @@ export class MapController {
   constructor(private readonly mapService: MapService) {}
 
   @Get()
-  getHello(): Promise<void> {
+  test() {
     return this.mapService.getHello();
   }
 }
