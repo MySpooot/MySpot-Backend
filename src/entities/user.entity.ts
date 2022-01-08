@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 import { UserLevel } from '../lib/user_decorator';
 
@@ -19,6 +19,9 @@ export class User {
 
     @CreateDateColumn({ type: 'timestamp' })
     created: Date;
+
+    @UpdateDateColumn({ type: 'timestamp' })
+    modified: Date;
 
     @Column({ type: 'varchar', length: 12, nullable: true })
     nickname?: string;

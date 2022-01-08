@@ -8,7 +8,7 @@ import { User, UserActive, UserProvider } from '../entities/user.entity';
 import { UserLevel, AuthUser } from '../lib/user_decorator';
 import { PostLoginBody, PostLoginHeaders, PostLoginResponse } from './dto/post_login.dto';
 import { GetMeResponse } from './dto/get_me.dto';
-import { PutUserBody, PutUserParam, PutUserReponse } from './dto/put_user.dto';
+import { PutUserBody, PutUserParam, PutUserResponse } from './dto/put_user.dto';
 
 @Injectable()
 export class AuthService {
@@ -76,7 +76,7 @@ export class AuthService {
     }
 
     // insert nickname
-    async updateUser({ userId }: PutUserParam, { nickname }: PutUserBody): Promise<PutUserReponse> {
+    async updateUser({ userId }: PutUserParam, { nickname }: PutUserBody): Promise<PutUserResponse> {
         await this.connection.getRepository(User).update({ id: userId }, { nickname: nickname, active: UserActive.Active });
 
         // update된 user 재조회

@@ -3,13 +3,13 @@ import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGenerat
 import { Map } from './map.entity';
 import { User } from './user.entity';
 
-export enum MarkerActive {
+export enum MapReplyActive {
     Inactive = 0,
     Active = 1
 }
 
-@Entity('marker')
-export class Marker {
+@Entity('map_reply')
+export class MapReply {
     @PrimaryGeneratedColumn('increment', { type: 'integer', unsigned: true })
     id: number;
 
@@ -25,17 +25,17 @@ export class Marker {
     @Column({ type: 'integer' })
     map_id: number;
 
-    @Column({ type: 'varchar', length: 24 })
-    name: string;
+    @Column({ type: 'integer' })
+    marker_id: number;
 
-    @Column({ type: 'varchar', length: 32 })
-    latitude: string;
+    @Column({ type: 'varchar', length: 64 })
+    message: string;
 
-    @Column({ type: 'varchar', length: 32 })
-    longitude: string;
+    @Column({ type: 'integer' })
+    like_count: number;
 
-    @Column({ type: 'integer', default: MarkerActive.Active })
-    active: MarkerActive;
+    @Column({ type: 'integer', default: MapReplyActive.Active })
+    active: MapReplyActive;
 
     @ManyToOne(() => User)
     @JoinColumn({ name: 'user_id' })
