@@ -57,8 +57,8 @@ class AppModule {}
 
     await app.listen(process.env.PORT || 3001);
 
-    // if (process.env.NODE_ENV === 'dev')
-    //     setInterval(() => {
-    //         https.get('https://nestjs-map.herokuapp.com/');
-    //     }, 1200000);
+    if (process.env.NODE_ENV === 'dev')
+        setInterval(() => {
+            https.get('https://nestjs-map.herokuapp.com/');
+        }, 1200000);
 })();
