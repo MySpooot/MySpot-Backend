@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 import { User } from './user.entity';
 
@@ -14,6 +14,9 @@ export class Map {
 
     @CreateDateColumn({ type: 'timestamp' })
     created: Date;
+
+    @UpdateDateColumn({ type: 'timestamp' })
+    modified: Date;
 
     @Column({ type: 'integer' })
     user_id: number;

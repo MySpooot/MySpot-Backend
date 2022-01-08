@@ -3,7 +3,7 @@
 
 // import { AuthController } from './auth.controller';
 // import { AuthModule } from './auth.module';
-// import configuration from '../configration';
+// import configuration from '../configuration';
 // import { TypeOrmModule } from '@nestjs/typeorm';
 
 // describe('AuthController', () => {

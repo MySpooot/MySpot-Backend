@@ -1,15 +1,15 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-import { Map } from './map.entity';
+import { MapReply } from './map_reply.entity';
 import { User } from './user.entity';
 
-export enum MarkerActive {
+export enum MapReplyLikeActive {
     Inactive = 0,
     Active = 1
 }
 
-@Entity('marker')
-export class Marker {
+@Entity('map_reply_like')
+export class MapReplyLike {
     @PrimaryGeneratedColumn('increment', { type: 'integer', unsigned: true })
     id: number;
 
@@ -23,25 +23,16 @@ export class Marker {
     user_id: number;
 
     @Column({ type: 'integer' })
-    map_id: number;
+    map_reply_id: number;
 
-    @Column({ type: 'varchar', length: 24 })
-    name: string;
-
-    @Column({ type: 'varchar', length: 32 })
-    latitude: string;
-
-    @Column({ type: 'varchar', length: 32 })
-    longitude: string;
-
-    @Column({ type: 'integer', default: MarkerActive.Active })
-    active: MarkerActive;
+    @Column({ type: 'integer', default: MapReplyLikeActive.Active })
+    active: MapReplyLikeActive;
 
     @ManyToOne(() => User)
     @JoinColumn({ name: 'user_id' })
     user?: User;
 
-    @ManyToOne(() => Map)
-    @JoinColumn({ name: 'map_id' })
-    map?: Map;
+    @ManyToOne(() => MapReply)
+    @JoinColumn({ name: 'map_reply_id' })
+    mapReply?: MapReply;
 }
