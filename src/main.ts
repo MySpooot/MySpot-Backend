@@ -13,6 +13,7 @@ import { CommonModule } from './common/common.module';
 import { User } from './entities/user.entity';
 import { Map } from './entities/map.entity';
 import { Marker } from './entities/marker.entity';
+import { UserRecentMap } from './entities/user_recent_map.entity';
 
 @Module({
     imports: [
@@ -38,7 +39,7 @@ import { Marker } from './entities/marker.entity';
                 host: configService.get('database.host'),
                 port: configService.get('database.port'),
                 database: configService.get('database.database'),
-                entities: [Map, User, Marker],
+                entities: [Map, User, Marker, UserRecentMap],
                 ssl: {
                     rejectUnauthorized: false
                 }

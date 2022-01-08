@@ -3,33 +3,52 @@ import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@n
 import { JwtAuthGuard } from '../lib/jwt_guard';
 import { MapService } from './map.service';
 import { User_, AuthUser } from '../lib/user_decorator';
-import { DeleteMyMapParam } from './dto/delete_my_map.dto';
-import { GetMyMapsQuery } from './dto/get_my_map.dto';
-import { PostMyMapBody } from './dto/post_my_map.dto';
+import { DeleteUserMapParam } from './dto/delete_user_map.dto';
+import { GetUserMapsQuery } from './dto/get_user_map.dto';
+import { PostUserMapBody } from './dto/post_user_map.dto';
+import { GetUserRecentMapsQuery } from './dto/get_user_recent_maps.dto';
+import { PostUserRecentMapParam } from './dto/post_user_recent_map.dto';
+import { DeleteUserRecentMapParam } from './dto/delete_user_recent_map.dto';
 
 @Controller('/map')
 export class MapController {
     constructor(private readonly mapService: MapService) {}
 
-    @Get('/my')
+    @Get('')
     @UseGuards(JwtAuthGuard)
-    getMyMaps(@User_() user: AuthUser, @Query() query: GetMyMapsQuery) {
-        return this.mapService.getMyMaps(user, query);
+    getUserMaps(@User_() user: AuthUser, @Query() query: GetUserMapsQuery) {
+        return this.mapService.getUserMaps(user, query);
     }
 
-    @Post('/my')
+    @Post('')
     @UseGuards(JwtAuthGuard)
-    insertMyMap(@User_() user, @Body() body: PostMyMapBody) {
-        return this.mapService.insertMyMap(user, body);
+    insertUserMap(@User_() user, @Body() body: PostUserMapBody) {
+        return this.mapService.insertUserMap(user, body);
     }
 
-    @Delete('/my/:mapId')
+    @Delete('/:mapId')
     @UseGuards(JwtAuthGuard)
-    deleteMyMap(@Param() param: DeleteMyMapParam) {
-        return this.mapService.deleteMyMap(param);
+    deleteUserMap(@Param() param: DeleteUserMapParam) {
+        return this.mapService.deleteUserMap(param);
+    }
+
+    @Get('/recent')
+    @UseGuards(JwtAuthGuard)
+    getUserMapLogs(@User_() user: AuthUser, @Query() query: GetUserRecentMapsQuery) {
+        return this.mapService.getUserRecentMaps(user, query);
+    }
+
+    @Post('/recent/:recentMapId')
+    @UseGuards(JwtAuthGuard)
+    insertUserRecentMap(@User_() user, @Param() param: PostUserRecentMapParam) {
+        return this.mapService.insertUserRecentMap(user, param);
+    }
+
+    @Delete('/recent/:recentMapId')
+    @UseGuards(JwtAuthGuard)
+    deleteUserRecentMap(@Param() param: DeleteUserRecentMapParam) {
+        return this.mapService.deleteUserRecentMap(param);
     }
 
     // @Get('/favorite')
-
-    // @Get('/recent')
 }

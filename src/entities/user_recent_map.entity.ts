@@ -1,15 +1,16 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
 
 import { Map } from './map.entity';
 import { User } from './user.entity';
 
-export enum UserMapLogActive {
+export enum UserRecentMapActive {
     Inactive = 0,
     Active = 1
 }
 
-@Entity('user_map_log')
-export class UserMapLog {
+@Entity('user_recent_map')
+@Unique(['user_id', 'map_id'])
+export class UserRecentMap {
     @PrimaryGeneratedColumn('increment', { type: 'integer', unsigned: true })
     id: number;
 
@@ -25,8 +26,8 @@ export class UserMapLog {
     @Column({ type: 'integer' })
     map_id: number;
 
-    @Column({ type: 'integer', default: UserMapLogActive.Active })
-    active: UserMapLogActive;
+    @Column({ type: 'integer', default: UserRecentMapActive.Active })
+    active: UserRecentMapActive;
 
     @ManyToOne(() => User)
     @JoinColumn({ name: 'user_id' })
