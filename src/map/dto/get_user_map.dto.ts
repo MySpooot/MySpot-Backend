@@ -1,7 +1,7 @@
 import { IsNumber, IsOptional } from 'class-validator';
 import { IsMapPublic, Map } from 'src/entities/map.entity';
 
-export class GetMyMapsQuery {
+export class GetUserMapsQuery {
     @IsNumber()
     @IsOptional()
     readonly offset?: number;
@@ -11,14 +11,14 @@ export class GetMyMapsQuery {
     readonly limit?: number;
 }
 
-export class GetMyMapsResponse {
+export class GetUserMapsResponse {
     id: number;
     userId: number;
     mapName: string;
     isPublic: boolean;
 
-    static from(map: Map): GetMyMapsResponse {
-        return new GetMyMapsResponse(map);
+    static from(map: Map): GetUserMapsResponse {
+        return new GetUserMapsResponse(map);
     }
 
     constructor(map: Map) {
