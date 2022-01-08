@@ -13,7 +13,7 @@ export class PutUserBody {
     readonly nickname: string;
 }
 
-export class PutUserReponse {
+export class PutUserResponse {
     token: string;
     id: number;
     nickname: string;

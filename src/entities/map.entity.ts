@@ -1,10 +1,15 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 import { User } from './user.entity';
 
 export enum MapActive {
     Inactive = 0,
     Active = 1
+}
+
+export enum IsPublic {
+    Private = 0,
+    Public = 1
 }
 
 @Entity('map')
@@ -15,11 +20,17 @@ export class Map {
     @CreateDateColumn({ type: 'timestamp' })
     created: Date;
 
+    @UpdateDateColumn({ type: 'timestamp' })
+    modified: Date;
+
     @Column({ type: 'integer' })
     user_id: number;
 
     @Column({ type: 'varchar', length: 24 })
     name: string;
+
+    @Column({ type: 'integer', default: IsPublic.Public })
+    is_public: IsPublic;
 
     @Column({ type: 'integer', default: MapActive.Active })
     active: MapActive;

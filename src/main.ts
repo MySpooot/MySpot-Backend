@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import https from 'https';
 import Joi from 'joi';
 
-import configration from './configration';
+import configuration from './configuration';
 import { MapModule } from './map/map.module';
 import { AuthModule } from './auth/auth.module';
+import { CommonModule } from './common/common.module';
 
 import { User } from './entities/user.entity';
 import { Map } from './entities/map.entity';
@@ -25,7 +26,7 @@ import { Marker } from './entities/marker.entity';
                 POSTGRES_PASSWORD: Joi.string().required(),
                 POSTGRES_DATABASE: Joi.string().required()
             }),
-            load: [configration]
+            load: [configuration]
         }),
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
@@ -44,7 +45,8 @@ import { Marker } from './entities/marker.entity';
             })
         }),
         MapModule,
-        AuthModule
+        AuthModule,
+        CommonModule
     ]
 })
 class AppModule {}

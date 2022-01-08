@@ -3,13 +3,13 @@ import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGenerat
 import { Map } from './map.entity';
 import { User } from './user.entity';
 
-export enum MarkerActive {
+export enum UserMapLogActive {
     Inactive = 0,
     Active = 1
 }
 
-@Entity('marker')
-export class Marker {
+@Entity('user_map_log')
+export class UserMapLog {
     @PrimaryGeneratedColumn('increment', { type: 'integer', unsigned: true })
     id: number;
 
@@ -25,17 +25,8 @@ export class Marker {
     @Column({ type: 'integer' })
     map_id: number;
 
-    @Column({ type: 'varchar', length: 24 })
-    name: string;
-
-    @Column({ type: 'varchar', length: 32 })
-    latitude: string;
-
-    @Column({ type: 'varchar', length: 32 })
-    longitude: string;
-
-    @Column({ type: 'integer', default: MarkerActive.Active })
-    active: MarkerActive;
+    @Column({ type: 'integer', default: UserMapLogActive.Active })
+    active: UserMapLogActive;
 
     @ManyToOne(() => User)
     @JoinColumn({ name: 'user_id' })
