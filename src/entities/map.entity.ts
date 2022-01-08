@@ -7,7 +7,7 @@ export enum MapActive {
     Active = 1
 }
 
-export enum IsPublic {
+export enum IsMapPublic {
     Private = 0,
     Public = 1
 }
@@ -29,8 +29,8 @@ export class Map {
     @Column({ type: 'varchar', length: 24 })
     name: string;
 
-    @Column({ type: 'integer', default: IsPublic.Public })
-    is_public: IsPublic;
+    @Column({ type: 'integer', default: IsMapPublic.Public })
+    is_public: IsMapPublic;
 
     @Column({ type: 'integer', default: MapActive.Active })
     active: MapActive;
