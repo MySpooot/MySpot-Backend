@@ -8,6 +8,7 @@ export class MapService {
 
     async getHello() {
         // return 1;
+        console.log('test');
         await this.connection.getRepository(User).update({ id: 1 }, { nickname: '1111' });
     }
 }
