@@ -1,5 +1,5 @@
 import { IsNumber, IsOptional } from 'class-validator';
-import { IsMapPublic, Map } from 'src/entities/map.entity';
+import { Map } from 'src/entities/map.entity';
 
 export class GetUserMapsQuery {
     @IsNumber()
@@ -15,7 +15,7 @@ export class GetUserMapsResponse {
     id: number;
     userId: number;
     mapName: string;
-    isPublic: boolean;
+    isPrivate: boolean;
 
     static from(map: Map): GetUserMapsResponse {
         return new GetUserMapsResponse(map);
@@ -25,6 +25,6 @@ export class GetUserMapsResponse {
         this.id = map.id;
         this.userId = map.user_id;
         this.mapName = map.name;
-        this.isPublic = map.is_public === IsMapPublic.Public;
+        this.isPrivate = map.is_private;
     }
 }

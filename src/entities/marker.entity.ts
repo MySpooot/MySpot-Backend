@@ -34,6 +34,9 @@ export class Marker {
     @Column({ type: 'varchar', length: 32 })
     longitude: string;
 
+    @Column({ type: 'integer', default: 0 })
+    like_count: number;
+
     @Column({ type: 'integer', default: MarkerActive.Active })
     active: MarkerActive;
 

@@ -16,7 +16,7 @@ export class MapService {
     constructor(private readonly connection: Connection) {}
 
     // select my maps
-    async getUserMaps({ userId }: AuthUser, { offset = 0, limit = 3 }: GetUserMapsQuery) {
+    async getUserMaps({ userId }: AuthUser, { offset = 0, limit = 6 }: GetUserMapsQuery) {
         //@TODO 정렬기준, offset, limit 정하기
         const myMaps = await this.connection
             .getRepository(Map)
@@ -26,9 +26,8 @@ export class MapService {
     }
 
     // insert my map
-    async insertUserMap({ userId }: AuthUser, { mapName }: PostUserMapBody) {
-        // @TODO isPublic 추가
-        await this.connection.getRepository(Map).insert({ user_id: userId, name: mapName });
+    async insertUserMap({ userId }: AuthUser, { mapName, isPrivate }: PostUserMapBody) {
+        await this.connection.getRepository(Map).insert({ user_id: userId, name: mapName, is_private: isPrivate });
     }
 
     // delete my map
@@ -37,7 +36,7 @@ export class MapService {
     }
 
     // select recent maps
-    async getUserRecentMaps({ userId }: AuthUser, { offset = 0, limit = 3 }: GetUserRecentMapsQuery) {
+    async getUserRecentMaps({ userId }: AuthUser, { offset = 0, limit = 6 }: GetUserRecentMapsQuery) {
         //@TODO offset, limit 정하기
         const recentMaps = await this.connection
             .getRepository(UserRecentMap)
@@ -67,7 +66,6 @@ export class MapService {
 
     // delete recent map
     async deleteUserRecentMap({ recentMapId }: DeleteUserRecentMapParam) {
-        console.log(recentMapId);
         await this.connection.getRepository(UserRecentMap).update({ id: recentMapId }, { active: UserRecentMapActive.Inactive });
     }
 }

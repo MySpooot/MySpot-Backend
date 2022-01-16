@@ -7,11 +7,6 @@ export enum MapActive {
     Active = 1
 }
 
-export enum IsMapPublic {
-    Private = 0,
-    Public = 1
-}
-
 @Entity('map')
 export class Map {
     @PrimaryGeneratedColumn('increment', { type: 'integer', unsigned: true })
@@ -29,8 +24,8 @@ export class Map {
     @Column({ type: 'varchar', length: 24 })
     name: string;
 
-    @Column({ type: 'integer', default: IsMapPublic.Public })
-    is_public: IsMapPublic;
+    @Column({ type: 'boolean', default: true })
+    is_private: boolean;
 
     @Column({ type: 'integer', default: MapActive.Active })
     active: MapActive;
