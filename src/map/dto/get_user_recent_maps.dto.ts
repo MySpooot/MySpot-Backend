@@ -1,6 +1,6 @@
 import { IsNumber, IsOptional } from 'class-validator';
 
-import { UserRecentMap } from 'src/entities/user_recent_map.entity';
+import { UserRecentMap } from '../../entities/user_recent_map.entity';
 
 export class GetUserRecentMapsQuery {
     @IsNumber()
