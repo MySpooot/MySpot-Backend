@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Connection } from 'typeorm';
 
 import { AuthUser } from '../lib/user_decorator';
-import { GetUserMapsQuery, GetUserMapsResponse } from './dto/get_user_map.dto';
+import { GetUserMapsQuery, GetUserMapsResponse } from './dto/get_user_maps.dto';
 import { PostUserMapBody } from './dto/post_user_map.dto';
 import { DeleteUserMapParam } from './dto/delete_user_map.dto';
 import { GetUserRecentMapsQuery, GetUserRecentMapsResponse } from './dto/get_user_recent_maps.dto';
@@ -10,6 +10,8 @@ import { UserRecentMap, UserRecentMapActive } from '../entities/user_recent_map.
 import { Map, MapActive } from '../entities/map.entity';
 import { PostUserRecentMapParam } from './dto/post_user_recent_map.dto';
 import { DeleteUserRecentMapParam } from './dto/delete_user_recent_map.dto';
+import { GetUserFavoriteMapsQuery, GetUserFavoriteMapsResponse } from './dto/get_user_favorite_maps.dto';
+import { UserFavoriteMap, UserFavoriteMapActive } from '../entities/user_favorite_map.entity';
 
 @Injectable()
 export class MapService {
@@ -67,5 +69,20 @@ export class MapService {
     // delete recent map
     async deleteUserRecentMap({ recentMapId }: DeleteUserRecentMapParam) {
         await this.connection.getRepository(UserRecentMap).update({ id: recentMapId }, { active: UserRecentMapActive.Inactive });
+    }
+
+    // get favorite maps
+    async getUserFavoriteMaps({ userId }: AuthUser, { offset = 0, limit = 6 }: GetUserFavoriteMapsQuery) {
+        const favoriteMaps = await this.connection
+            .getRepository(UserFavoriteMap)
+            .createQueryBuilder('user_favorite_map')
+            .innerJoinAndSelect('user_favorite_map.map', 'map', 'map.active=:mActive', { mActive: MapActive.Active })
+            .where('user_favorite_map.user_id=:userId AND user_favorite_map.active=:ufmActive', { userId, ufmActive: UserFavoriteMapActive.Active })
+            .orderBy({ 'user_favorite_map.modified': 'DESC' })
+            .skip(offset)
+            .take(limit)
+            .getMany();
+
+        return favoriteMaps.map(GetUserFavoriteMapsResponse.from);
     }
 }

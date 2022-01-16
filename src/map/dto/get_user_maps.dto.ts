@@ -1,5 +1,5 @@
 import { IsNumber, IsOptional } from 'class-validator';
-import { Map } from 'src/entities/map.entity';
+import { Map } from '../../entities/map.entity';
 
 export class GetUserMapsQuery {
     @IsNumber()
