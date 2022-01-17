@@ -12,6 +12,8 @@ import { PostUserRecentMapParam } from './dto/post_user_recent_map.dto';
 import { DeleteUserRecentMapParam } from './dto/delete_user_recent_map.dto';
 import { GetUserFavoriteMapsQuery, GetUserFavoriteMapsResponse } from './dto/get_user_favorite_maps.dto';
 import { UserFavoriteMap, UserFavoriteMapActive } from '../entities/user_favorite_map.entity';
+import { PostUserFavoriteMapParam } from './dto/post_user_favorite_map.dto';
+import { DeleteUserFavoriteMapParam } from './dto/delete_user_favorite_map.dto';
 
 @Injectable()
 export class MapService {
@@ -84,5 +86,17 @@ export class MapService {
             .getMany();
 
         return favoriteMaps.map(GetUserFavoriteMapsResponse.from);
+    }
+
+    // insert favorite map
+    async insertUserFavoriteMap({ userId }: AuthUser, { favoriteMapId }: PostUserFavoriteMapParam) {
+        await this.connection.getRepository(UserFavoriteMap).insert({ user_id: userId, map_id: favoriteMapId });
+    }
+
+    // delete favorite map
+    async deleteUserFavoriteMap({ userId }: AuthUser, { favoriteMapId }: DeleteUserFavoriteMapParam) {
+        await this.connection
+            .getRepository(UserFavoriteMap)
+            .update({ user_id: userId, map_id: favoriteMapId }, { active: UserFavoriteMapActive.Inactive });
     }
 }
