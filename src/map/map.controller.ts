@@ -49,8 +49,8 @@ export class MapController {
 
     @Delete('/recent/:recentMapId')
     @UseGuards(JwtAuthGuard)
-    deleteUserRecentMap(@Param() param: DeleteUserRecentMapParam) {
-        return this.mapService.deleteUserRecentMap(param);
+    deleteUserRecentMap(@User_() user: AuthUser, @Param() param: DeleteUserRecentMapParam) {
+        return this.mapService.deleteUserRecentMap(user, param);
     }
 
     @Get('/favorite')
