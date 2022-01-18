@@ -29,9 +29,6 @@ export class MapMarkerLike {
     @Column({ type: 'integer' })
     marker_id: number;
 
-    @Column({ type: 'integer' })
-    like_count: number;
-
     @Column({ type: 'integer', default: MapMarkerLikeActive.Active })
     active: MapMarkerLikeActive;
 
