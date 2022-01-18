@@ -12,6 +12,8 @@ import { PostUserRecentMapParam } from './dto/post_user_recent_map.dto';
 import { DeleteUserRecentMapParam } from './dto/delete_user_recent_map.dto';
 import { GetUserFavoriteMapsQuery, GetUserFavoriteMapsResponse } from './dto/get_user_favorite_maps.dto';
 import { UserFavoriteMap, UserFavoriteMapActive } from '../entities/user_favorite_map.entity';
+import { PostUserFavoriteMapParam } from './dto/post_user_favorite_map.dto';
+import { DeleteUserFavoriteMapParam } from './dto/delete_user_favorite_map.dto';
 
 @Injectable()
 export class MapService {
@@ -54,21 +56,21 @@ export class MapService {
     }
 
     // insert recent map
-    async insertUserRecentMap({ userId }: AuthUser, { mapId }: PostUserRecentMapParam) {
+    async insertUserRecentMap({ userId }: AuthUser, { recentMapId }: PostUserRecentMapParam) {
         // 1. recent mpa이 존재하는지 조회
-        const recentMap = await this.connection.getRepository(UserRecentMap).findOne({ user_id: userId, map_id: mapId });
+        const recentMap = await this.connection.getRepository(UserRecentMap).findOne({ user_id: userId, map_id: recentMapId });
 
         // 2. 이미 존재한다면 update modified, 존재하지 않는다면 insert
         if (recentMap) {
             await this.connection.getRepository(UserRecentMap).update({}, {});
         } else {
-            await this.connection.getRepository(UserRecentMap).insert({ user_id: userId, map_id: mapId });
+            await this.connection.getRepository(UserRecentMap).insert({ user_id: userId, map_id: recentMapId });
         }
     }
 
     // delete recent map
-    async deleteUserRecentMap({ recentMapId }: DeleteUserRecentMapParam) {
-        await this.connection.getRepository(UserRecentMap).update({ id: recentMapId }, { active: UserRecentMapActive.Inactive });
+    async deleteUserRecentMap({ userId }: AuthUser, { recentMapId }: DeleteUserRecentMapParam) {
+        await this.connection.getRepository(UserRecentMap).update({ user_id: userId, map_id: recentMapId }, { active: UserRecentMapActive.Inactive });
     }
 
     // get favorite maps
@@ -84,5 +86,17 @@ export class MapService {
             .getMany();
 
         return favoriteMaps.map(GetUserFavoriteMapsResponse.from);
+    }
+
+    // insert favorite map
+    async insertUserFavoriteMap({ userId }: AuthUser, { favoriteMapId }: PostUserFavoriteMapParam) {
+        await this.connection.getRepository(UserFavoriteMap).insert({ user_id: userId, map_id: favoriteMapId });
+    }
+
+    // delete favorite map
+    async deleteUserFavoriteMap({ userId }: AuthUser, { favoriteMapId }: DeleteUserFavoriteMapParam) {
+        await this.connection
+            .getRepository(UserFavoriteMap)
+            .update({ user_id: userId, map_id: favoriteMapId }, { active: UserFavoriteMapActive.Inactive });
     }
 }

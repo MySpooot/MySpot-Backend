@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsNumber } from 'class-validator';
 
-export class PostUserRecentMapParam {
+export class DeleteUserFavoriteMapParam {
     @IsNumber()
     @IsNotEmpty()
-    readonly recentMapId: number;
+    readonly favoriteMapId: number;
 }
