@@ -37,6 +37,9 @@ export class Marker {
     @Column({ type: 'integer', default: 0 })
     like_count: number;
 
+    @Column({ type: 'integer' })
+    location_uniq_num: number;
+
     @Column({ type: 'integer', default: MarkerActive.Active })
     active: MarkerActive;
 

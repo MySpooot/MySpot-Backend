@@ -27,6 +27,9 @@ export class Map {
     @Column({ type: 'boolean', default: true })
     is_private: boolean;
 
+    @Column({ type: 'varchar', length: 4, nullable: true })
+    code?: string;
+
     @Column({ type: 'integer', default: MapActive.Active })
     active: MapActive;
 

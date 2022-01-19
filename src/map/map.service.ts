@@ -30,8 +30,10 @@ export class MapService {
     }
 
     // insert my map
-    async insertUserMap({ userId }: AuthUser, { mapName, isPrivate }: PostUserMapBody) {
-        await this.connection.getRepository(Map).insert({ user_id: userId, name: mapName, is_private: isPrivate });
+    async insertUserMap({ userId }: AuthUser, { mapName, isPrivate, code }: PostUserMapBody) {
+        await this.connection
+            .getRepository(Map)
+            .insert(Object.assign({ user_id: userId, name: mapName, is_private: isPrivate }, isPrivate === true ? { code: code } : {}));
     }
 
     // delete my map
