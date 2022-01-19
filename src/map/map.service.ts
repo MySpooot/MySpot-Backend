@@ -31,6 +31,7 @@ export class MapService {
 
     // insert my map
     async insertUserMap({ userId }: AuthUser, { mapName, isPrivate, code }: PostUserMapBody) {
+        console.log(code);
         await this.connection
             .getRepository(Map)
             .insert(Object.assign({ user_id: userId, name: mapName, is_private: isPrivate }, isPrivate === true ? { code: code } : {}));

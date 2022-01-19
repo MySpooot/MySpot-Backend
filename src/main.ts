@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { Module } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import https from 'https';
@@ -56,6 +56,9 @@ class AppModule {}
 (async () => {
     const app = await NestFactory.create(AppModule);
     app.enableCors();
+    app.useGlobalPipes(
+        new ValidationPipe({ whitelist: true, transform: true, transformOptions: { enableImplicitConversion: true }, disableErrorMessages: false })
+    );
 
     await app.listen(process.env.PORT || 3001);
 
