@@ -1,4 +1,4 @@
-import { IsBoolean, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsNumberString, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class PostUserMapBody {
     @IsString()
@@ -9,4 +9,9 @@ export class PostUserMapBody {
     @IsBoolean()
     @IsNotEmpty()
     readonly isPrivate: boolean;
+
+    @IsNumberString()
+    @IsOptional()
+    @MaxLength(4)
+    readonly code?: string;
 }
