@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
 
 import { Map } from './map.entity';
 import { User } from './user.entity';
@@ -8,6 +8,7 @@ export enum MarkerActive {
     Active = 1
 }
 
+@Unique(['location_uniq_num', 'map_id'])
 @Entity('marker')
 export class Marker {
     @PrimaryGeneratedColumn('increment', { type: 'integer', unsigned: true })
