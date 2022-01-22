@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Connection } from 'typeorm';
 
 import { AuthUser } from '../lib/user_decorator';
@@ -15,7 +15,7 @@ import { UserFavoriteMap, UserFavoriteMapActive } from '../entities/user_favorit
 import { PostUserFavoriteMapParam } from './dto/post_user_favorite_map.dto';
 import { DeleteUserFavoriteMapParam } from './dto/delete_user_favorite_map.dto';
 import { UserAccessibleMap, UserAccessibleMapActive } from '../entities/user_accessible_map.entity';
-import { GetMapAccessibleParam } from './dto/get_map_accessible.dto';
+import { GetMapDetailParam, GetMapDetailResponse } from './dto/get_map_detail.dto';
 
 @Injectable()
 export class MapService {
@@ -111,22 +111,18 @@ export class MapService {
     }
 
     // get map detail
-    async getMapDetail({ userId }: AuthUser, { mapId }: GetMapAccessibleParam) {
-        return await this.connection.getRepository(Map).createQueryBuilder('map').leftJoinAndSelect('map.accessible', 'accessible', 'accessible');
+    async getMapDetail({ userId }: AuthUser, { mapId }: GetMapDetailParam) {
+        const mapDetail = await this.connection
+            .getRepository(Map)
+            .createQueryBuilder('map')
+            .leftJoinAndSelect('map.accessible', 'accessible', 'accessible.user_id=:userId AND accessible.active=:aActive', {
+                userId,
+                aActive: UserAccessibleMapActive.Active
+            })
+            .where('map.id=:mapId AND map.active=:active', { mapId, active: MapActive.Active })
+            .getOne();
 
-        // 1. active map 조회
-        const map = await this.connection.getRepository(Map).findOne({ id: mapId, active: MapActive.Active });
-
-        // 2. map이 active가 아니라면 throw
-        if (!map) throw new BadRequestException('Invalid Map Id');
-
-        // 3. public map이라면 true
-        if (map.is_private === false) return true;
-
-        // 4. private map이라면 user accessible 검사
-        return !!(await this.connection
-            .getRepository(UserAccessibleMap)
-            .findOne({ user_id: userId, map_id: mapId, active: UserAccessibleMapActive.Active }));
+        return GetMapDetailResponse.from(mapDetail);
     }
 
     // private map일 시 난수 4자리 생성

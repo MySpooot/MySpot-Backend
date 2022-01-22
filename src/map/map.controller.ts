@@ -12,7 +12,7 @@ import { DeleteUserRecentMapParam } from './dto/delete_user_recent_map.dto';
 import { GetUserFavoriteMapsQuery } from './dto/get_user_favorite_maps.dto';
 import { PostUserFavoriteMapParam } from './dto/post_user_favorite_map.dto';
 import { DeleteUserFavoriteMapParam } from './dto/delete_user_favorite_map.dto';
-import { GetMapAccessibleParam } from './dto/get_map_accessible.dto';
+import { GetMapDetailParam } from './dto/get_map_detail.dto';
 
 @Controller('/map')
 export class MapController {
@@ -74,7 +74,7 @@ export class MapController {
 
     @Get('/:mapId/detail/')
     @UseGuards(JwtAuthGuard)
-    getMapAccessible(@User_() user: AuthUser, @Param() param: GetMapAccessibleParam) {
+    getMapAccessible(@User_() user: AuthUser, @Param() param: GetMapDetailParam) {
         return this.mapService.getMapDetail(user, param);
     }
 }
