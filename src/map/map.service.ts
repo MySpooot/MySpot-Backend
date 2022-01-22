@@ -30,11 +30,12 @@ export class MapService {
     }
 
     // insert my map
-    async insertUserMap({ userId }: AuthUser, { mapName, isPrivate, code }: PostUserMapBody) {
-        console.log(code);
+    async insertUserMap({ userId }: AuthUser, { mapName, isPrivate }: PostUserMapBody) {
         await this.connection
             .getRepository(Map)
-            .insert(Object.assign({ user_id: userId, name: mapName, is_private: isPrivate }, isPrivate === true ? { code: code } : {}));
+            .insert(
+                Object.assign({ user_id: userId, name: mapName, is_private: isPrivate }, isPrivate === true ? { code: this.makePrivateCode() } : {})
+            );
     }
 
     // delete my map
@@ -101,5 +102,16 @@ export class MapService {
         await this.connection
             .getRepository(UserFavoriteMap)
             .update({ user_id: userId, map_id: favoriteMapId }, { active: UserFavoriteMapActive.Inactive });
+    }
+
+    // private map일 시 난수 4자리 생성
+    makePrivateCode(): string {
+        let code = '';
+
+        for (let i = 0; i < 4; i++) {
+            code += Math.floor(Math.random() * 10);
+        }
+
+        return code;
     }
 }
