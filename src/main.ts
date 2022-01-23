@@ -15,6 +15,7 @@ import { Map } from './entities/map.entity';
 import { Marker } from './entities/marker.entity';
 import { UserRecentMap } from './entities/user_recent_map.entity';
 import { UserFavoriteMap } from './entities/user_favorite_map.entity';
+import { UserAccessibleMap } from './entities/user_accessible_map.entity';
 
 @Module({
     imports: [
@@ -40,7 +41,7 @@ import { UserFavoriteMap } from './entities/user_favorite_map.entity';
                 host: configService.get('database.host'),
                 port: configService.get('database.port'),
                 database: configService.get('database.database'),
-                entities: [Map, User, Marker, UserRecentMap, UserFavoriteMap],
+                entities: [Map, User, Marker, UserRecentMap, UserFavoriteMap, UserAccessibleMap],
                 ssl: {
                     rejectUnauthorized: false
                 }

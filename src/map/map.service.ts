@@ -14,6 +14,8 @@ import { GetUserFavoriteMapsQuery, GetUserFavoriteMapsResponse } from './dto/get
 import { UserFavoriteMap, UserFavoriteMapActive } from '../entities/user_favorite_map.entity';
 import { PostUserFavoriteMapParam } from './dto/post_user_favorite_map.dto';
 import { DeleteUserFavoriteMapParam } from './dto/delete_user_favorite_map.dto';
+import { UserAccessibleMap, UserAccessibleMapActive } from '../entities/user_accessible_map.entity';
+import { GetMapDetailParam, GetMapDetailResponse } from './dto/get_map_detail.dto';
 
 @Injectable()
 export class MapService {
@@ -31,11 +33,15 @@ export class MapService {
 
     // insert my map
     async insertUserMap({ userId }: AuthUser, { mapName, isPrivate }: PostUserMapBody) {
-        await this.connection
+        // 1. map insert
+        const insertMap = await this.connection
             .getRepository(Map)
             .insert(
                 Object.assign({ user_id: userId, name: mapName, is_private: isPrivate }, isPrivate === true ? { code: this.makePrivateCode() } : {})
             );
+
+        // 2. accessible insert
+        await this.connection.getRepository(UserAccessibleMap).insert({ user_id: userId, map_id: insertMap.generatedMaps[0].id });
     }
 
     // delete my map
@@ -102,6 +108,21 @@ export class MapService {
         await this.connection
             .getRepository(UserFavoriteMap)
             .update({ user_id: userId, map_id: favoriteMapId }, { active: UserFavoriteMapActive.Inactive });
+    }
+
+    // get map detail
+    async getMapDetail({ userId }: AuthUser, { mapId }: GetMapDetailParam) {
+        const mapDetail = await this.connection
+            .getRepository(Map)
+            .createQueryBuilder('map')
+            .leftJoinAndSelect('map.accessible', 'accessible', 'accessible.user_id=:userId AND accessible.active=:aActive', {
+                userId,
+                aActive: UserAccessibleMapActive.Active
+            })
+            .where('map.id=:mapId AND map.active=:active', { mapId, active: MapActive.Active })
+            .getOne();
+
+        return GetMapDetailResponse.from(mapDetail);
     }
 
     // private map일 시 난수 4자리 생성

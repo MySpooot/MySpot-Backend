@@ -1,6 +1,7 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 import { User } from './user.entity';
+import { UserAccessibleMap } from './user_accessible_map.entity';
 
 export enum MapActive {
     Inactive = 0,
@@ -36,4 +37,7 @@ export class Map {
     @ManyToOne(() => User)
     @JoinColumn({ name: 'user_id' })
     user?: User;
+
+    @OneToMany(() => UserAccessibleMap, accessible => accessible.map)
+    accessible?: UserAccessibleMap[];
 }
