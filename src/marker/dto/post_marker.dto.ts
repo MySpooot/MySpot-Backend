@@ -21,13 +21,13 @@ export class PostMarkerBody {
 
     @IsNumber()
     @IsNotEmpty()
-    readonly kakaoAddressId: number;
+    readonly addressId: number;
 
     @IsString()
     @IsOptional()
-    readonly kakaoAddress?: string;
+    readonly address?: string;
 
     @IsString()
     @IsOptional()
-    readonly kakaoOpeningHours?: string;
+    readonly openingHours?: string;
 }

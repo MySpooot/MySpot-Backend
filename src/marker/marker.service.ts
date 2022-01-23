@@ -24,7 +24,7 @@ export class MarkerService {
     async insertMarker(
         { userId }: AuthUser,
         { mapId }: PostMarkerParam,
-        { locationName, latitude, longitude, kakaoAddressId, kakaoAddress, kakaoOpeningHours }: PostMarkerBody
+        { locationName, latitude, longitude, addressId, address, openingHours }: PostMarkerBody
     ) {
         const map = await this.connection.getRepository(Map).findOne({ id: mapId, active: MapActive.Active });
 
@@ -39,9 +39,9 @@ export class MarkerService {
             name: locationName,
             latitude,
             longitude,
-            kakao_address_id: kakaoAddressId,
-            kakao_address: kakaoAddress,
-            kakao_opening_hours: kakaoOpeningHours
+            address_id: addressId,
+            address,
+            opening_hours: openingHours
         });
     }
 
