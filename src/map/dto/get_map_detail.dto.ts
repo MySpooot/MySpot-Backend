@@ -11,6 +11,7 @@ export class GetMapDetailParam {
 export class GetMapDetailResponse {
     isOwner: boolean; // 맵을 만든 유저인지
     userId: number; // 맵을 조회한 유저
+    mapId: number;
     isPrivate: boolean;
     mapName: string;
     accessible: boolean;
@@ -22,6 +23,7 @@ export class GetMapDetailResponse {
     constructor(map: Map) {
         this.isOwner = map.user_id === map.accessible[0]?.user_id;
         this.userId = map.accessible[0]?.user_id;
+        this.mapId = map.id;
         this.isPrivate = map.is_private;
         this.mapName = map.name;
         this.accessible = !!map.accessible[0] ?? false;
