@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class PostMarkerParam {
     @IsNumber()
@@ -21,5 +21,13 @@ export class PostMarkerBody {
 
     @IsNumber()
     @IsNotEmpty()
-    readonly locationUniqNum: number;
+    readonly kakaoAddressId: number;
+
+    @IsString()
+    @IsOptional()
+    readonly kakaoAddress?: string;
+
+    @IsString()
+    @IsOptional()
+    readonly kakaoOpeningHours?: string;
 }

@@ -13,6 +13,9 @@ export class GetMarkersResponse {
     name: string;
     latitude: string;
     longitude: string;
+    kakaoAddressId: number;
+    kakaoAddress?: string;
+    kakaoOpeningHours?: string;
 
     static from(marker: Marker): GetMarkersResponse {
         return new GetMarkersResponse(marker);
@@ -23,5 +26,8 @@ export class GetMarkersResponse {
         this.name = marker.name;
         this.latitude = marker.latitude;
         this.longitude = marker.longitude;
+        this.kakaoAddressId = marker.kakao_address_id;
+        this.kakaoAddress = marker.kakao_address;
+        this.kakaoOpeningHours = marker.kakao_opening_hours;
     }
 }

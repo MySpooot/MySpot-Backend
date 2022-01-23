@@ -8,7 +8,7 @@ export enum MarkerActive {
     Active = 1
 }
 
-@Unique(['location_uniq_num', 'map_id'])
+@Unique(['kakao_address_id', 'map_id'])
 @Entity('marker')
 export class Marker {
     @PrimaryGeneratedColumn('increment', { type: 'integer', unsigned: true })
@@ -39,7 +39,13 @@ export class Marker {
     like_count: number;
 
     @Column({ type: 'integer' })
-    location_uniq_num: number;
+    kakao_address_id: number;
+
+    @Column({ type: 'varchar', length: 128, nullable: true })
+    kakao_address?: string;
+
+    @Column({ type: 'varchar', length: 32, nullable: true })
+    kakao_opening_hours?: string;
 
     @Column({ type: 'integer', default: MarkerActive.Active })
     active: MarkerActive;

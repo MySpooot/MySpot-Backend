@@ -21,7 +21,11 @@ export class MarkerService {
         return markers.map(GetMarkersResponse.from);
     }
 
-    async insertMarker({ userId }: AuthUser, { mapId }: PostMarkerParam, { locationName, latitude, longitude, locationUniqNum }: PostMarkerBody) {
+    async insertMarker(
+        { userId }: AuthUser,
+        { mapId }: PostMarkerParam,
+        { locationName, latitude, longitude, kakaoAddressId, kakaoAddress, kakaoOpeningHours }: PostMarkerBody
+    ) {
         const map = await this.connection.getRepository(Map).findOne({ id: mapId, active: MapActive.Active });
 
         if (!map) throw new BadRequestException('Invalid Map Id');
@@ -29,9 +33,16 @@ export class MarkerService {
         // (private map && !accessible) 인 경우 throw BadRequestException
         if (map.is_private && !(await this.getUserAccessible(userId, mapId))) throw new BadRequestException('No Accessible');
 
-        await this.connection
-            .getRepository(Marker)
-            .insert({ user_id: userId, map_id: mapId, name: locationName, latitude, longitude, location_uniq_num: locationUniqNum });
+        await this.connection.getRepository(Marker).insert({
+            user_id: userId,
+            map_id: mapId,
+            name: locationName,
+            latitude,
+            longitude,
+            kakao_address_id: kakaoAddressId,
+            kakao_address: kakaoAddress,
+            kakao_opening_hours: kakaoOpeningHours
+        });
     }
 
     async deleteMarker({ userId }: AuthUser, { markerId }: DeleteMarkerParam) {
