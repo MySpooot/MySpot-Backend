@@ -9,6 +9,7 @@ import configuration from './configuration';
 import { MapModule } from './map/map.module';
 import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common/common.module';
+import { MarkerModule } from './marker/marker.module';
 
 import { User } from './entities/user.entity';
 import { Map } from './entities/map.entity';
@@ -49,7 +50,8 @@ import { UserAccessibleMap } from './entities/user_accessible_map.entity';
         }),
         MapModule,
         AuthModule,
-        CommonModule
+        CommonModule,
+        MarkerModule
     ]
 })
 class AppModule {}
