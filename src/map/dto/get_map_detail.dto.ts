@@ -1,23 +1,36 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber } from 'class-validator';
 
 import { Map } from '../../entities/map.entity';
 
 export class GetMapDetailParam {
+    @ApiProperty()
     @IsNumber()
     @IsNotEmpty()
     readonly mapId: number;
 }
 
 export class GetMapDetailResponse {
+    @ApiProperty()
     isOwner: boolean; // 맵을 만든 유저인지
+
+    @ApiProperty()
     userId: number; // 맵을 조회한 유저
+
+    @ApiProperty()
     mapId: number;
+
+    @ApiProperty()
     isPrivate: boolean;
+
+    @ApiProperty()
     mapName: string;
+
+    @ApiProperty()
     accessible: boolean;
 
-    static from(map: Map): GetMapDetailResponse {
-        return new GetMapDetailResponse(map);
+    static from(map?: Map): GetMapDetailResponse | undefined {
+        return map && new GetMapDetailResponse(map);
     }
 
     constructor(map: Map) {

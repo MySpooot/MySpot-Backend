@@ -1,9 +1,16 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 import { User } from '../../entities/user.entity';
 
 export class GetMeResponse {
+    @ApiProperty()
     id: number;
+
+    @ApiProperty()
     nickname: string;
-    thumbnail: string;
+
+    @ApiProperty({ required: false, format: 'url' })
+    thumbnail?: string;
 
     static from(me?: User): GetMeResponse | undefined {
         return me && new GetMeResponse(me);

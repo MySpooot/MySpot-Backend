@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import https from 'https';
 import Joi from 'joi';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import configuration from './configuration';
 import { MapModule } from './map/map.module';
@@ -17,6 +18,8 @@ import { Marker } from './entities/marker.entity';
 import { UserRecentMap } from './entities/user_recent_map.entity';
 import { UserFavoriteMap } from './entities/user_favorite_map.entity';
 import { UserAccessibleMap } from './entities/user_accessible_map.entity';
+
+import { version } from 'package.json';
 
 @Module({
     imports: [
@@ -62,6 +65,10 @@ class AppModule {}
     app.useGlobalPipes(
         new ValidationPipe({ whitelist: true, transform: true, transformOptions: { enableImplicitConversion: true }, disableErrorMessages: false })
     );
+
+    const config = new DocumentBuilder().setTitle('Map').setDescription('The Map API description').setVersion(version).build();
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api', app, document);
 
     await app.listen(process.env.PORT || 3001);
 
