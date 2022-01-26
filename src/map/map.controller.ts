@@ -90,9 +90,9 @@ export class MapController {
         return this.mapService.getMapDetail(user, param);
     }
 
-    @Get('/:mapId/code/')
+    @Get('/:mapId/code')
     @UseGuards(JwtAuthGuard)
-    getMapCode(@User_() user: AuthUser, @Param() param: GetMapCodeParam) {
-        return this.mapService.getMapCode(user, param);
+    getMapCode(@Param() param: GetMapCodeParam) {
+        return this.mapService.getMapCode(param);
     }
 }

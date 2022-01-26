@@ -138,16 +138,8 @@ export class MapService {
     }
 
     // get map code
-    async getMapCode({ userId }: AuthUser, { mapId }: GetMapCodeParam) {
-        const mapCode = await this.connection
-            .getRepository(Map)
-            .createQueryBuilder('map')
-            .leftJoinAndSelect('map.accessible', 'accessible', 'accessible.user_id=:userId AND accessible.active=:aActive', {
-                userId,
-                aActive: UserAccessibleMapActive.Active
-            })
-            .where('map.id=:mapId AND map.active=:active', { mapId, active: MapActive.Active })
-            .getOne();
+    async getMapCode({ mapId }: GetMapCodeParam) {
+        const mapCode = await this.connection.getRepository(Map).createQueryBuilder('map').where('map.id=:mapId', { mapId }).getOne();
 
         return GetMapCodeResponse.from(mapCode);
     }
