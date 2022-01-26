@@ -80,7 +80,7 @@ export class AuthService {
         await this.connection.getRepository(User).update({ id: userId }, { nickname: nickname, active: UserActive.Active });
 
         // update된 user 재조회
-        const user = await this.connection.getRepository(User).findOne({ id: userId });
+        const user = await this.connection.getRepository(User).findOneOrFail({ id: userId });
 
         return {
             token: this.jwtService.sign(

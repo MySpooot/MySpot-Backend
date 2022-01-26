@@ -1,20 +1,30 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsOptional } from 'class-validator';
 import { Map } from '../../entities/map.entity';
 
 export class GetUserMapsQuery {
-    @IsNumber()
+    @ApiProperty({ required: false })
     @IsOptional()
+    @IsNumber()
     readonly offset?: number;
 
-    @IsNumber()
+    @ApiProperty({ required: false })
     @IsOptional()
+    @IsNumber()
     readonly limit?: number;
 }
 
 export class GetUserMapsResponse {
+    @ApiProperty()
     id: number;
+
+    @ApiProperty()
     userId: number;
+
+    @ApiProperty()
     mapName: string;
+
+    @ApiProperty()
     isPrivate: boolean;
 
     static from(map: Map): GetUserMapsResponse {

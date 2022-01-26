@@ -1,21 +1,31 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsOptional } from 'class-validator';
 
 import { UserFavoriteMap } from '../../entities/user_favorite_map.entity';
 
 export class GetUserFavoriteMapsQuery {
+    @ApiProperty({ required: false })
     @IsNumber()
     @IsOptional()
     readonly offset?: number;
 
+    @ApiProperty({ required: false })
     @IsNumber()
     @IsOptional()
     readonly limit?: number;
 }
 
 export class GetUserFavoriteMapsResponse {
+    @ApiProperty()
     id: number;
+
+    @ApiProperty()
     userId: number;
+
+    @ApiProperty()
     mapName: string;
+
+    @ApiProperty()
     isPrivate: boolean;
 
     static from(favoriteMap: UserFavoriteMap): GetUserFavoriteMapsResponse {
