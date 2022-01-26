@@ -12,8 +12,9 @@ export class GetMapCodeResponse {
     mapId: number;
     code: string; //맵 코드
 
-    static from(map: Map): GetMapCodeResponse {
-        return new GetMapCodeResponse(map);
+    // 조회할 떄 값이 없으면 에러방지(undefined처리)
+    static from(map?: Map): GetMapCodeResponse | undefined {
+        return map && new GetMapCodeResponse(map);
     }
 
     constructor(map: Map) {

@@ -139,7 +139,7 @@ export class MapService {
 
     // get map code
     async getMapCode({ mapId }: GetMapCodeParam) {
-        const mapCode = await this.connection.getRepository(Map).createQueryBuilder('map').where('map.id=:mapId', { mapId }).getOne();
+        const mapCode = await this.connection.getRepository(Map).findOne({ id: mapId });
 
         return GetMapCodeResponse.from(mapCode);
     }
