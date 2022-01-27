@@ -11,6 +11,7 @@ import { MapModule } from './map/map.module';
 import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common/common.module';
 import { MarkerModule } from './marker/marker.module';
+import { ReplyModule } from './reply/reply.module';
 
 import { User } from './entities/user.entity';
 import { Map } from './entities/map.entity';
@@ -18,6 +19,8 @@ import { Marker } from './entities/marker.entity';
 import { UserRecentMap } from './entities/user_recent_map.entity';
 import { UserFavoriteMap } from './entities/user_favorite_map.entity';
 import { UserAccessibleMap } from './entities/user_accessible_map.entity';
+import { MapMarkerReply } from './entities/map_marker_reply.entity';
+import { MapMarkerLike } from './entities/map_marker_like.entity';
 
 import { version } from 'package.json';
 
@@ -45,7 +48,7 @@ import { version } from 'package.json';
                 host: configService.get('database.host'),
                 port: configService.get('database.port'),
                 database: configService.get('database.database'),
-                entities: [Map, User, Marker, UserRecentMap, UserFavoriteMap, UserAccessibleMap],
+                entities: [Map, User, Marker, UserRecentMap, UserFavoriteMap, UserAccessibleMap, MapMarkerReply, MapMarkerLike],
                 ssl: {
                     rejectUnauthorized: false
                 }
@@ -54,7 +57,8 @@ import { version } from 'package.json';
         MapModule,
         AuthModule,
         CommonModule,
-        MarkerModule
+        MarkerModule,
+        ReplyModule
     ]
 })
 class AppModule {}
