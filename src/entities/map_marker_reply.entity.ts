@@ -1,15 +1,16 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 import { Map } from './map.entity';
+import { Marker } from './marker.entity';
 import { User } from './user.entity';
 
-export enum MapReplyActive {
+export enum MapMarkerReplyActive {
     Inactive = 0,
     Active = 1
 }
 
-@Entity('map_reply')
-export class MapReply {
+@Entity('map_marker_reply')
+export class MapMarkerReply {
     @PrimaryGeneratedColumn('increment', { type: 'integer', unsigned: true })
     id: number;
 
@@ -31,11 +32,8 @@ export class MapReply {
     @Column({ type: 'varchar', length: 64 })
     message: string;
 
-    @Column({ type: 'integer' })
-    like_count: number;
-
-    @Column({ type: 'integer', default: MapReplyActive.Active })
-    active: MapReplyActive;
+    @Column({ type: 'integer', default: MapMarkerReplyActive.Active })
+    active: MapMarkerReplyActive;
 
     @ManyToOne(() => User)
     @JoinColumn({ name: 'user_id' })
@@ -44,4 +42,8 @@ export class MapReply {
     @ManyToOne(() => Map)
     @JoinColumn({ name: 'map_id' })
     map?: Map;
+
+    @ManyToOne(() => Marker)
+    @JoinColumn({ name: 'marker_id' })
+    marker?: Marker;
 }

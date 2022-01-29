@@ -30,8 +30,8 @@ export class MarkerService {
 
         if (!map) throw new BadRequestException('Invalid Map Id');
 
-        // (private map && !accessible) 인 경우 throw BadRequestException
-        if (map.is_private && !(await this.getUserAccessible(userId, mapId))) throw new BadRequestException('No Accessible');
+        // (private map && !accessible) 인 경우 throw UnauthorizedException
+        if (map.is_private && !(await this.getUserAccessible(userId, mapId))) throw new UnauthorizedException();
 
         await this.connection.getRepository(Marker).insert({
             user_id: userId,
