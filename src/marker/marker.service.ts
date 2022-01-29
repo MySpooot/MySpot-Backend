@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { Connection } from 'typeorm';
+import { Connection, In } from 'typeorm';
 
 import { AuthUser } from '../lib/user_decorator';
 import { PostMarkerBody, PostMarkerParam } from './dto/post_marker.dto';
@@ -8,17 +8,33 @@ import { UserAccessibleMap, UserAccessibleMapActive } from '../entities/user_acc
 import { Marker, MarkerActive } from '../entities/marker.entity';
 import { GetMarkersParam, GetMarkersResponse } from './dto/get_markers.dto';
 import { DeleteMarkerParam } from './dto/delete_marker.dto';
+import { MapMarkerLike, MapMarkerLikeActive } from '../entities/map_marker_like.entity';
 
 @Injectable()
 export class MarkerService {
     constructor(private readonly connection: Connection) {}
 
-    async getMarkers({ mapId }: GetMarkersParam) {
+    async getMarkers({ userId }: AuthUser, { mapId }: GetMarkersParam) {
         const markers = await this.connection
             .getRepository(Marker)
             .find({ where: { map_id: mapId, active: MarkerActive.Active }, order: { id: 'DESC' } });
 
-        return markers.map(GetMarkersResponse.from);
+        console.log('marker', markers);
+
+        // 유저가 좋아요 한 marker 조회
+        const likes = await this.connection
+            .getRepository(MapMarkerLike)
+            .find({ marker_id: In(markers.map(marker => marker.id)), active: MapMarkerLikeActive.Active, user_id: userId });
+
+        console.log('likes', likes);
+
+        return markers.map(
+            marker =>
+                new GetMarkersResponse(
+                    marker,
+                    likes.some(({ marker_id }) => marker.id === marker_id)
+                )
+        );
     }
 
     async insertMarker(

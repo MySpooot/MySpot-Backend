@@ -32,11 +32,17 @@ export class GetMarkersResponse {
     @ApiProperty({ required: false })
     openingHours?: string;
 
-    static from(marker: Marker): GetMarkersResponse {
-        return new GetMarkersResponse(marker);
-    }
+    @ApiProperty()
+    likeCount: number;
 
-    constructor(marker: Marker) {
+    @ApiProperty()
+    isLike: boolean;
+
+    // static from(marker: Marker, isLike: boolean): GetMarkersResponse {
+    //     return new GetMarkersResponse(marker, isLike);
+    // }
+
+    constructor(marker: Marker, isLike: boolean) {
         this.id = marker.id;
         this.name = marker.name;
         this.latitude = marker.latitude;
@@ -44,5 +50,7 @@ export class GetMarkersResponse {
         this.addressId = marker.address_id;
         this.address = marker.address;
         this.openingHours = marker.opening_hours;
+        this.likeCount = marker.like_count;
+        this.isLike = !!isLike;
     }
 }
