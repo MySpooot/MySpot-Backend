@@ -15,8 +15,8 @@ export class MarkerController {
     @Get('/:mapId/marker')
     @UseGuards(JwtAuthGuard)
     @ApiOkResponse({ type: [GetMarkersResponse] })
-    getMarkers(@Param() param: GetMarkersParam) {
-        return this.markerService.getMarkers(param);
+    getMarkers(@User_() user, @Param() param: GetMarkersParam) {
+        return this.markerService.getMarkers(user, param);
     }
 
     @Post('/:mapId/marker')
@@ -32,4 +32,5 @@ export class MarkerController {
     deleteMarker(@User_() user: AuthUser, @Param() param: DeleteMarkerParam) {
         return this.markerService.deleteMarker(user, param);
     }
+
 }
