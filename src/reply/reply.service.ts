@@ -43,8 +43,6 @@ export class ReplyService {
             message: message.trim()
         });
 
-        console.log('insertResult', insertResult);
-
         // insert된 댓글 재 조회
         const reply = await this.connection
             .getRepository(MapMarkerReply)
