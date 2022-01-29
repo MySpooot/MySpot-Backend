@@ -44,8 +44,8 @@ export class Marker {
     @Column({ type: 'varchar', length: 128, nullable: true })
     address?: string;
 
-    @Column({ type: 'varchar', length: 32, nullable: true })
-    opening_hours?: string;
+    @Column({ type: 'varchar', length: 128, nullable: true })
+    road_address?: string;
 
     @Column({ type: 'integer', default: MarkerActive.Active })
     active: MarkerActive;

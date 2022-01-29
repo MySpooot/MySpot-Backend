@@ -30,7 +30,7 @@ export class GetMarkersResponse {
     address?: string;
 
     @ApiProperty({ required: false })
-    openingHours?: string;
+    roadAddress?: string;
 
     @ApiProperty()
     likeCount: number;
@@ -49,7 +49,7 @@ export class GetMarkersResponse {
         this.longitude = marker.longitude;
         this.addressId = marker.address_id;
         this.address = marker.address;
-        this.openingHours = marker.opening_hours;
+        this.roadAddress = marker.road_address;
         this.likeCount = marker.like_count;
         this.isLike = !!isLike;
     }

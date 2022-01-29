@@ -40,7 +40,7 @@ export class MarkerService {
     async insertMarker(
         { userId }: AuthUser,
         { mapId }: PostMarkerParam,
-        { locationName, latitude, longitude, addressId, address, openingHours }: PostMarkerBody
+        { locationName, latitude, longitude, addressId, address, roadAddress }: PostMarkerBody
     ) {
         const map = await this.connection.getRepository(Map).findOne({ id: mapId, active: MapActive.Active });
 
@@ -57,7 +57,7 @@ export class MarkerService {
             longitude,
             address_id: addressId,
             address,
-            opening_hours: openingHours
+            road_address: roadAddress
         });
     }
 

@@ -33,10 +33,4 @@ export class MarkerController {
         return this.markerService.deleteMarker(user, param);
     }
 
-    // @Get('/marker/:markerId/like')
-    // @UseGuards(JwtAuthGuard)
-    // @ApiOkResponse()
-    // getMarkerLikes(@User_() user) {
-
-    // }
 }

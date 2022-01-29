@@ -41,6 +41,6 @@ export class PostMarkerBody {
     @ApiProperty({ required: false })
     @IsString()
     @IsOptional()
-    @MaxLength(32)
-    readonly openingHours?: string;
+    @MaxLength(128)
+    readonly roadAddress?: string;
 }
