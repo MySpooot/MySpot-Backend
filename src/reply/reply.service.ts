@@ -2,11 +2,13 @@ import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/
 import { Connection } from 'typeorm';
 
 import { AuthUser } from '../lib/user_decorator';
-import { PostMarkerReplyBody, PostMarkerReplyResponse } from './dto/post_map_marker_reply.dto';
+import { PostMarkerReplyBody, PostMarkerReplyResponse } from './dto/post_marker_reply.dto';
 import { Map, MapActive } from '../entities/map.entity';
 import { MarkerService } from '../marker/marker.service';
 import { MapMarkerReply, MapMarkerReplyActive } from '../entities/map_marker_reply.entity';
 import { GetMarkerRepliesQuery, GetMarkerRepliesResponse } from './dto/get_marker_replies.dto';
+import { DeleteMarkerReplyParam } from './dto/delete_marker_reply.dto';
+import { PutMarkerReplyBody, PutMarkerReplyParam, PutMarkerReplyResponse } from './dto/put_marker_reply.dto';
 
 @Injectable()
 export class ReplyService {
@@ -41,6 +43,8 @@ export class ReplyService {
             message: message.trim()
         });
 
+        console.log('insertResult', insertResult);
+
         // insert된 댓글 재 조회
         const reply = await this.connection
             .getRepository(MapMarkerReply)
@@ -50,5 +54,30 @@ export class ReplyService {
             .getOne();
 
         return PostMarkerReplyResponse.from(reply);
+    }
+
+    async updateMarkerReply({ userId }: AuthUser, { replyId }: PutMarkerReplyParam, { message }: PutMarkerReplyBody) {
+        const reply = await this.connection.getRepository(MapMarkerReply).findOne({ id: replyId, active: MapMarkerReplyActive.Active });
+
+        if (reply.user_id !== userId) throw new UnauthorizedException();
+
+        await this.connection.getRepository(MapMarkerReply).update({ id: replyId }, { message });
+
+        const updateReply = await this.connection
+            .getRepository(MapMarkerReply)
+            .createQueryBuilder('map_marker_reply')
+            .innerJoinAndSelect('map_marker_reply.user', 'user')
+            .where('map_marker_reply.id=:replyId AND map_marker_reply.active=:active', { replyId, active: MapMarkerReplyActive.Active })
+            .getOne();
+
+        return PutMarkerReplyResponse.from(updateReply);
+    }
+
+    async deleteMarkerReply({ userId }: AuthUser, { replyId }: DeleteMarkerReplyParam) {
+        const reply = await this.connection.getRepository(MapMarkerReply).findOne({ id: replyId, active: MapMarkerReplyActive.Active });
+
+        if (reply.user_id !== userId) throw new UnauthorizedException();
+
+        await this.connection.getRepository(MapMarkerReply).update({ id: replyId }, { active: MapMarkerReplyActive.Inactive });
     }
 }

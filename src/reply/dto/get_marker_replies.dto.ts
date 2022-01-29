@@ -9,12 +9,12 @@ export class GetMarkerRepliesQuery {
     @IsNotEmpty()
     readonly markerId: number;
 
-    @ApiProperty()
+    @ApiProperty({ required: false })
     @IsNumber()
     @IsOptional()
     readonly offset?: number;
 
-    @ApiProperty()
+    @ApiProperty({ required: false })
     @IsNumber()
     @IsOptional()
     readonly limit?: number;
@@ -34,6 +34,9 @@ export class GetMarkerRepliesResponse {
     userNickName: string;
 
     @ApiProperty()
+    mapId: number;
+
+    @ApiProperty()
     markerId: number;
 
     @ApiProperty()
@@ -48,6 +51,7 @@ export class GetMarkerRepliesResponse {
         this.created = replies.created.getTime();
         this.userId = replies.user_id;
         this.userNickName = replies.user.nickname;
+        this.mapId = replies.map_id;
         this.markerId = replies.marker_id;
         this.message = replies.message;
     }

@@ -29,10 +29,16 @@ export class PostMarkerReplyResponse {
     created: number;
 
     @ApiProperty()
+    message: string;
+
+    @ApiProperty()
     userId: number;
 
     @ApiProperty()
     mapId: number;
+
+    @ApiProperty()
+    markerId: number;
 
     @ApiProperty()
     userNickName: string;
@@ -44,8 +50,10 @@ export class PostMarkerReplyResponse {
     constructor(reply: MapMarkerReply) {
         this.id = reply.id;
         this.created = reply.created.getTime();
+        this.message = reply.message;
         this.userId = reply.user_id;
         this.mapId = reply.map_id;
+        this.markerId = reply.marker_id;
         this.userNickName = reply.user.nickname;
     }
 }
