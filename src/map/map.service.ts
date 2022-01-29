@@ -16,6 +16,7 @@ import { PostUserFavoriteMapParam } from './dto/post_user_favorite_map.dto';
 import { DeleteUserFavoriteMapParam } from './dto/delete_user_favorite_map.dto';
 import { UserAccessibleMap, UserAccessibleMapActive } from '../entities/user_accessible_map.entity';
 import { GetMapDetailParam, GetMapDetailResponse } from './dto/get_map_detail.dto';
+import { GetMapCodeParam, GetMapCodeResponse } from './dto/get_map_code.dto';
 
 @Injectable()
 export class MapService {
@@ -134,5 +135,12 @@ export class MapService {
         }
 
         return code;
+    }
+
+    // get map code
+    async getMapCode({ mapId }: GetMapCodeParam) {
+        const mapCode = await this.connection.getRepository(Map).findOne({ id: mapId });
+
+        return GetMapCodeResponse.from(mapCode);
     }
 }

@@ -14,6 +14,7 @@ import { PostUserFavoriteMapParam } from './dto/post_user_favorite_map.dto';
 import { DeleteUserFavoriteMapParam } from './dto/delete_user_favorite_map.dto';
 import { GetMapDetailParam, GetMapDetailResponse } from './dto/get_map_detail.dto';
 import { ApiOkResponse } from '@nestjs/swagger';
+import { GetMapCodeParam, GetMapCodeResponse } from './dto/get_map_code.dto';
 
 @Controller('/map')
 export class MapController {
@@ -87,5 +88,12 @@ export class MapController {
     @ApiOkResponse({ type: GetMapDetailResponse })
     getMapAccessible(@User_() user: AuthUser, @Param() param: GetMapDetailParam) {
         return this.mapService.getMapDetail(user, param);
+    }
+
+    @Get('/:mapId/code')
+    @UseGuards(JwtAuthGuard)
+    @ApiOkResponse({ type: GetMapCodeResponse})
+    getMapCode(@Param() param: GetMapCodeParam) {
+        return this.mapService.getMapCode(param);
     }
 }
