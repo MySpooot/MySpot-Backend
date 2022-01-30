@@ -92,7 +92,7 @@ export class MapController {
 
     @Get('/:mapId/code')
     @UseGuards(JwtAuthGuard)
-    @ApiOkResponse({ type: GetMapCodeResponse})
+    @ApiOkResponse({ type: GetMapCodeResponse })
     getMapCode(@Param() param: GetMapCodeParam) {
         return this.mapService.getMapCode(param);
     }
