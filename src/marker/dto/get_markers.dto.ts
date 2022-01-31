@@ -38,10 +38,6 @@ export class GetMarkersResponse {
     @ApiProperty()
     isLike: boolean;
 
-    // static from(marker: Marker, isLike: boolean): GetMarkersResponse {
-    //     return new GetMarkersResponse(marker, isLike);
-    // }
-
     constructor(marker: Marker, isLike: boolean) {
         this.id = marker.id;
         this.name = marker.name;

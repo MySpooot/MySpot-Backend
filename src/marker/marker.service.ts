@@ -9,6 +9,8 @@ import { Marker, MarkerActive } from '../entities/marker.entity';
 import { GetMarkersParam, GetMarkersResponse } from './dto/get_markers.dto';
 import { DeleteMarkerParam } from './dto/delete_marker.dto';
 import { MapMarkerLike, MapMarkerLikeActive } from '../entities/map_marker_like.entity';
+import { PostMarkerLikeParam } from './dto/post_marker_like.dto';
+import { DeleteMarkerLikeParam } from './dto/delete_marker_like.dto';
 
 @Injectable()
 export class MarkerService {
@@ -19,14 +21,10 @@ export class MarkerService {
             .getRepository(Marker)
             .find({ where: { map_id: mapId, active: MarkerActive.Active }, order: { id: 'DESC' } });
 
-        console.log('marker', markers);
-
         // 유저가 좋아요 한 marker 조회
         const likes = await this.connection
             .getRepository(MapMarkerLike)
             .find({ marker_id: In(markers.map(marker => marker.id)), active: MapMarkerLikeActive.Active, user_id: userId });
-
-        console.log('likes', likes);
 
         return markers.map(
             marker =>
@@ -71,10 +69,44 @@ export class MarkerService {
         await this.connection.getRepository(Marker).update({ id: markerId }, { active: MarkerActive.Inactive });
     }
 
-    // user의 권한 검증, insert marker에서 사용한다.
+    // user의 권한 검증
     async getUserAccessible(userId: number, mapId: number) {
         return await this.connection
             .getRepository(UserAccessibleMap)
             .findOne({ map_id: mapId, user_id: userId, active: UserAccessibleMapActive.Active });
+    }
+
+    async insertMarkerLike({ userId }: AuthUser, { markerId }: PostMarkerLikeParam) {
+        // 1. marker 조회
+        const marker = await this.connection.getRepository(Marker).findOne({ id: markerId, active: MarkerActive.Active });
+
+        // 2. marker가 없다면 throw
+        if (!marker) throw new BadRequestException('Invalid Marker Id');
+
+        // 3. 해당 marker의 map 조회
+        const map = await this.connection.getRepository(Map).findOne({ id: marker.map_id, active: MapActive.Active });
+
+        // 4. map이 private이고 user의 권한이 없다면 throw (map에 권한이 없으면 map에 접근 자체가 불가능하지만 혹시 모르니 해당 로직 추가함)
+        if (map.is_private && !(await this.getUserAccessible(userId, map.id))) throw new UnauthorizedException();
+
+        // 5. insert marker like
+        await this.connection.getRepository(MapMarkerLike).insert({ user_id: userId, marker_id: markerId });
+    }
+
+    async deleteMarkerLike({ userId }: AuthUser, { markerId }: DeleteMarkerLikeParam) {
+        // 1. marker 조회
+        const marker = await this.connection.getRepository(Marker).findOne({ id: markerId, active: MarkerActive.Active });
+
+        // 2. marker가 없다면 throw
+        if (!marker) throw new BadRequestException('Invalid Marker Id');
+
+        // 3. 해당 marker의 map 조회
+        const map = await this.connection.getRepository(Map).findOne({ id: marker.map_id, active: MapActive.Active });
+
+        // 4. map이 private이고 user의 권한이 없다면 throw (map에 권한이 없으면 map에 접근 자체가 불가능하지만 혹시 모르니 해당 로직 추가함)
+        if (map.is_private && !(await this.getUserAccessible(userId, map.id))) throw new UnauthorizedException();
+
+        // 5. delete marker like
+        await this.connection.getRepository(MapMarkerLike).update({ user_id: userId, marker_id: markerId }, { active: MapMarkerLikeActive.Inactive });
     }
 }
