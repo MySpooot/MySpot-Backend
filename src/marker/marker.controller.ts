@@ -52,5 +52,7 @@ export class MarkerController {
     @Post('/marker/location')
     @UseGuards(JwtAuthGuard)
     @ApiOkResponse()
-    insertMylocation(@User_() user: AuthUser, @Param() param) {}
+    insertMylocation(@User_() user: AuthUser, @Param() param) {
+        return this.markerService.
+    }
 }
