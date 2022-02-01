@@ -48,4 +48,9 @@ export class MarkerController {
     deleteMarkerLike(@User_() user: AuthUser, @Param() param: DeleteMarkerLikeParam) {
         return this.markerService.deleteMarkerLike(user, param);
     }
+
+    @Post('/marker/location')
+    @UseGuards(JwtAuthGuard)
+    @ApiOkResponse()
+    insertMylocation(@User_() user: AuthUser, @Param() param) {}
 }
