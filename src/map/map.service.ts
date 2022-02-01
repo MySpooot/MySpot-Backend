@@ -73,7 +73,7 @@ export class MapService {
 
         // 2. 이미 존재한다면 update modified, 존재하지 않는다면 insert
         if (recentMap) {
-            await this.connection.getRepository(UserRecentMap).update({}, {});
+            await this.connection.getRepository(UserRecentMap).update({ user_id: userId, map_id: recentMapId }, {});
         } else {
             await this.connection.getRepository(UserRecentMap).insert({ user_id: userId, map_id: recentMapId });
         }
