@@ -116,10 +116,20 @@ export class MapService {
         const mapDetail = await this.connection
             .getRepository(Map)
             .createQueryBuilder('map')
-            .leftJoinAndSelect('map.accessible', 'accessible', 'accessible.user_id=:userId AND accessible.active=:aActive', {
-                userId,
+            .leftJoinAndSelect('map.accessible', 'accessible', 'accessible.user_id=:aUserId AND accessible.active=:aActive', {
+                aUserId: userId,
                 aActive: UserAccessibleMapActive.Active
             })
+            .leftJoinAndSelect(
+                'map.favoriteMap',
+                'favoriteMap',
+                'favoriteMap.user_id=:userId AND favoriteMap.map_id=:mapId AND favoriteMap.active=:active',
+                {
+                    userId,
+                    mapId,
+                    active: UserFavoriteMapActive.Active
+                }
+            )
             .where('map.id=:mapId AND map.active=:active', { mapId, active: MapActive.Active })
             .getOne();
 
