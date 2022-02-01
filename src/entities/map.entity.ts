@@ -2,6 +2,7 @@ import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, Pri
 
 import { User } from './user.entity';
 import { UserAccessibleMap } from './user_accessible_map.entity';
+import { UserFavoriteMap } from './user_favorite_map.entity';
 
 export enum MapActive {
     Inactive = 0,
@@ -40,4 +41,7 @@ export class Map {
 
     @OneToMany(() => UserAccessibleMap, accessible => accessible.map)
     accessible?: UserAccessibleMap[];
+
+    @OneToMany(() => UserFavoriteMap, favoriteMap => favoriteMap.map)
+    favoriteMap?: UserFavoriteMap[];
 }
