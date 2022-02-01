@@ -38,7 +38,7 @@ export class GetMapDetailResponse {
         this.mapId = map.id;
         this.isPrivate = map.is_private;
         this.mapName = map.name;
-        this.accessible = !!map.accessible[0] ?? false;
+        this.accessible = map.is_private === true ? !!map.accessible[0] : true;
         this.isFavorite = !!map.favoriteMap[0] ?? false;
     }
 }
