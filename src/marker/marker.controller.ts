@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiOkResponse } from '@nestjs/swagger';
 
 import { AuthUser, User_ } from '../lib/user_decorator';
@@ -9,6 +9,9 @@ import { GetMarkersParam, GetMarkersResponse } from './dto/get_markers.dto';
 import { DeleteMarkerParam } from './dto/delete_marker.dto';
 import { PostMarkerLikeParam } from './dto/post_marker_like.dto';
 import { DeleteMarkerLikeParam } from './dto/delete_marker_like.dto';
+import { PostMyLocationBody } from './dto/post_my_location.dto';
+import { DeleteMyLocationParam } from './dto/delete_my_location.dto';
+import { GetMyLocationsQuery } from './dto/get_my_locations.dto';
 
 @Controller('/map')
 export class MarkerController {
@@ -49,10 +52,24 @@ export class MarkerController {
         return this.markerService.deleteMarkerLike(user, param);
     }
 
+    @Get('/marker/location')
+    @UseGuards(JwtAuthGuard)
+    @ApiOkResponse()
+    getMyLocations(@User_() user: AuthUser, @Query() query: GetMyLocationsQuery) {
+        return this.markerService.getMyLocations(user, query);
+    }
+
     @Post('/marker/location')
     @UseGuards(JwtAuthGuard)
     @ApiOkResponse()
-    insertMylocation(@User_() user: AuthUser, @Param() param) {
-        return this.markerService.
+    insertMyLocation(@User_() user: AuthUser, @Body() body: PostMyLocationBody) {
+        return this.markerService.insertMyLocation(user, body);
+    }
+
+    @Delete('/marker/location/:addressId')
+    @UseGuards(JwtAuthGuard)
+    @ApiOkResponse()
+    deleteMyLocation(@User_() user: AuthUser, @Param() param: DeleteMyLocationParam) {
+        return this.markerService.deleteMyLocation(user, param);
     }
 }

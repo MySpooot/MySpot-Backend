@@ -2,7 +2,7 @@ import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGenerat
 
 import { User } from './user.entity';
 
-export enum MarkerActive {
+export enum MyLocationActive {
     Inactive = 0,
     Active = 1
 }
@@ -34,8 +34,8 @@ export class MyLocation {
     @Column({ type: 'varchar', length: 128, nullable: true })
     road_address?: string;
 
-    @Column({ type: 'integer', default: MarkerActive.Active })
-    active: MarkerActive;
+    @Column({ type: 'integer', default: MyLocationActive.Active })
+    active: MyLocationActive;
 
     @ManyToOne(() => User)
     @JoinColumn({ name: 'user_id' })
