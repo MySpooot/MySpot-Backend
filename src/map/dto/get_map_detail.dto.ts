@@ -27,7 +27,7 @@ export class GetMapDetailResponse {
     accessible: boolean;
 
     @ApiProperty()
-    isMyLocation: boolean;
+    isFavorite: boolean;
 
     static from(map?: Map): GetMapDetailResponse | undefined {
         return map && new GetMapDetailResponse(map);
@@ -39,6 +39,6 @@ export class GetMapDetailResponse {
         this.isPrivate = map.is_private;
         this.mapName = map.name;
         this.accessible = !!map.accessible[0] ?? false;
-        this.isMyLocation = !!map.favoriteMap[0] ?? false;
+        this.isFavorite = !!map.favoriteMap[0] ?? false;
     }
 }
