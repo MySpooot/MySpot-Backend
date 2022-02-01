@@ -21,6 +21,7 @@ export class MarkerService {
     constructor(private readonly connection: Connection) {}
 
     // get markers
+    // @TODO 비로그인자도 조회할 수 있도록 header에 authorization 받아서 처리해야 함
     async getMarkers({ userId }: AuthUser, { mapId }: GetMarkersParam) {
         const markers = await this.connection
             .getRepository(Marker)
