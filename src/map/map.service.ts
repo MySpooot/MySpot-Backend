@@ -69,11 +69,13 @@ export class MapService {
     // insert recent map
     async insertUserRecentMap({ userId }: AuthUser, { recentMapId }: PostUserRecentMapParam) {
         // 1. recent mpa이 존재하는지 조회
-        const recentMap = await this.connection.getRepository(UserRecentMap).findOne({ user_id: userId, map_id: recentMapId });
+        const recentMap = await this.connection
+            .getRepository(UserRecentMap)
+            .findOne({ user_id: userId, map_id: recentMapId, active: UserRecentMapActive.Active });
 
         // 2. 이미 존재한다면 update modified, 존재하지 않는다면 insert
         if (recentMap) {
-            await this.connection.getRepository(UserRecentMap).update({}, {});
+            await this.connection.getRepository(UserRecentMap).update({ user_id: userId, map_id: recentMapId }, {});
         } else {
             await this.connection.getRepository(UserRecentMap).insert({ user_id: userId, map_id: recentMapId });
         }
