@@ -38,7 +38,10 @@ export class GetMarkersResponse {
     @ApiProperty()
     isLike: boolean;
 
-    constructor(marker: Marker, isLike: boolean) {
+    @ApiProperty()
+    isMyLocation: boolean;
+
+    constructor(marker: Marker, isLike: boolean, isMyLocation: boolean) {
         this.id = marker.id;
         this.name = marker.name;
         this.latitude = marker.latitude;
@@ -48,5 +51,6 @@ export class GetMarkersResponse {
         this.roadAddress = marker.road_address;
         this.likeCount = marker.like_count;
         this.isLike = !!isLike;
+        this.isMyLocation = !!isMyLocation;
     }
 }

@@ -21,6 +21,7 @@ import { UserFavoriteMap } from './entities/user_favorite_map.entity';
 import { UserAccessibleMap } from './entities/user_accessible_map.entity';
 import { MapMarkerReply } from './entities/map_marker_reply.entity';
 import { MapMarkerLike } from './entities/map_marker_like.entity';
+import { MyLocation } from './entities/my_location.entity';
 
 import { version } from 'package.json';
 
@@ -48,7 +49,7 @@ import { version } from 'package.json';
                 host: configService.get('database.host'),
                 port: configService.get('database.port'),
                 database: configService.get('database.database'),
-                entities: [Map, User, Marker, UserRecentMap, UserFavoriteMap, UserAccessibleMap, MapMarkerReply, MapMarkerLike],
+                entities: [Map, User, Marker, UserRecentMap, UserFavoriteMap, UserAccessibleMap, MapMarkerReply, MapMarkerLike, MyLocation],
                 ssl: {
                     rejectUnauthorized: false
                 }
