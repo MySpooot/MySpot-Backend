@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@n
 import { ApiOkResponse } from '@nestjs/swagger';
 
 import { AuthUser, User_ } from '../lib/user_decorator';
-import { JwtAuthGuard } from '../lib/jwt_guard';
+import { JwtAuthGuard } from '../lib/jwt';
 import { MarkerService } from './marker.service';
 import { PostMarkerBody, PostMarkerParam } from './dto/post_marker.dto';
 import { GetMarkersParam, GetMarkersResponse } from './dto/get_markers.dto';

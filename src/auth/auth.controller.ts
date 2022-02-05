@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, Put, UseGuards, Headers } from '@nestjs/common';
 import { ApiOkResponse } from '@nestjs/swagger';
 
-import { JwtAuthGuard } from '../lib/jwt_guard';
+import { JwtAuthGuard } from '../lib/jwt';
 import { AuthUser, User_ } from '../lib/user_decorator';
 import { AuthService } from './auth.service';
 import { GetMeResponse } from './dto/get_me.dto';
