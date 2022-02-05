@@ -1,11 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards, Headers } from '@nestjs/common';
 import { ApiOkResponse } from '@nestjs/swagger';
 
 import { AuthUser, User_ } from '../lib/user_decorator';
 import { JwtAuthGuard } from '../lib/jwt';
 import { MarkerService } from './marker.service';
 import { PostMarkerBody, PostMarkerParam } from './dto/post_marker.dto';
-import { GetMarkersParam, GetMarkersResponse } from './dto/get_markers.dto';
+import { GetMarkersHeaders, GetMarkersParam, GetMarkersResponse } from './dto/get_markers.dto';
 import { DeleteMarkerParam } from './dto/delete_marker.dto';
 import { PostMarkerLikeParam } from './dto/post_marker_like.dto';
 import { DeleteMarkerLikeParam } from './dto/delete_marker_like.dto';
@@ -18,10 +18,9 @@ export class MarkerController {
     constructor(private readonly markerService: MarkerService) {}
 
     @Get('/:mapId/marker')
-    @UseGuards(JwtAuthGuard)
     @ApiOkResponse({ type: [GetMarkersResponse] })
-    getMarkers(@User_() user, @Param() param: GetMarkersParam) {
-        return this.markerService.getMarkers(user, param);
+    getMarkers(@Headers() headers: GetMarkersHeaders, @Param() param: GetMarkersParam) {
+        return this.markerService.getMarkers(headers, param);
     }
 
     @Post('/:mapId/marker')

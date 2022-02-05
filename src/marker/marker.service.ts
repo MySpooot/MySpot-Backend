@@ -1,12 +1,14 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Connection, In } from 'typeorm';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 import { AuthUser } from '../lib/user_decorator';
 import { PostMarkerBody, PostMarkerParam } from './dto/post_marker.dto';
 import { Map, MapActive } from '../entities/map.entity';
 import { UserAccessibleMap, UserAccessibleMapActive } from '../entities/user_accessible_map.entity';
 import { Marker, MarkerActive } from '../entities/marker.entity';
-import { GetMarkersParam, GetMarkersResponse } from './dto/get_markers.dto';
+import { GetMarkersHeaders, GetMarkersParam, GetMarkersResponse } from './dto/get_markers.dto';
 import { DeleteMarkerParam } from './dto/delete_marker.dto';
 import { MapMarkerLike, MapMarkerLikeActive } from '../entities/map_marker_like.entity';
 import { PostMarkerLikeParam } from './dto/post_marker_like.dto';
@@ -18,31 +20,49 @@ import { DeleteMyLocationParam } from './dto/delete_my_location.dto';
 
 @Injectable()
 export class MarkerService {
-    constructor(private readonly connection: Connection) {}
+    constructor(private readonly connection: Connection, private readonly jwtService: JwtService, private readonly configService: ConfigService) {}
 
     // get markers
     // @TODO 비로그인자도 조회할 수 있도록 header에 authorization 받아서 처리해야 함
-    async getMarkers({ userId }: AuthUser, { mapId }: GetMarkersParam) {
+    async getMarkers({ authorization }: GetMarkersHeaders, { mapId }: GetMarkersParam) {
         const markers = await this.connection
             .getRepository(Marker)
             .find({ where: { map_id: mapId, active: MarkerActive.Active }, order: { id: 'DESC' } });
 
-        // 유저가 좋아요 한 marker 조회
-        const likes = await this.connection
-            .getRepository(MapMarkerLike)
-            .find({ marker_id: In(markers.map(marker => marker.id)), active: MapMarkerLikeActive.Active, user_id: userId });
+        let userId: number | undefined;
 
-        // 유저가 저장한 location 조회
-        const locations = await this.connection
-            .getRepository(MyLocation)
-            .find({ address_id: In(markers.map(marker => marker.address_id)), active: MyLocationActive.Active, user_id: userId });
+        try {
+            // userId가 있는 경우 userId를 빼옴
+            if (authorization) userId = await this.jwtService.verify(authorization, this.configService.get('jwt.secret')).userId;
+        } catch (e) {
+            console.error(e);
+        }
 
+        let likes: MapMarkerLike[];
+
+        // 로그인 한 유저의 경우 유저가 좋아요 한 marker 조회
+        if (markers.length > 0 && userId) {
+            likes = await this.connection
+                .getRepository(MapMarkerLike)
+                .find({ marker_id: In(markers.map(marker => marker.id)), active: MapMarkerLikeActive.Active, user_id: userId });
+        }
+
+        let locations: MyLocation[];
+
+        // 로그인 한 유저의 경우 유저가 저장한 location 조회
+        if (markers.length > 0 && userId) {
+            locations = await this.connection
+                .getRepository(MyLocation)
+                .find({ address_id: In(markers.map(marker => marker.address_id)), active: MyLocationActive.Active, user_id: userId });
+        }
+
+        // 비 로그인 유저면 isLike, isMyLocation이 모두 false
         return markers.map(
             marker =>
                 new GetMarkersResponse(
                     marker,
-                    likes.some(({ marker_id }) => marker.id === marker_id),
-                    locations.some(({ address_id }) => marker.address_id === address_id)
+                    likes?.some(({ marker_id }) => marker.id === marker_id),
+                    locations?.some(({ address_id }) => marker.address_id === address_id)
                 )
         );
     }
