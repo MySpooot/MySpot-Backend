@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } fro
 import { ApiOkResponse } from '@nestjs/swagger';
 
 import { AuthUser, User_ } from '../lib/user_decorator';
-import { JwtAuthGuard } from '../lib/jwt_guard';
+import { JwtAuthGuard } from '../lib/jwt';
 import { ReplyService } from './reply.service';
 import { PostMarkerReplyBody, PostMarkerReplyResponse } from './dto/post_marker_reply.dto';
 import { GetMarkerRepliesQuery, GetMarkerRepliesResponse } from './dto/get_marker_replies.dto';

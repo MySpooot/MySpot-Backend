@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 
-import { JwtAuthGuard } from '../lib/jwt_guard';
+import { JwtAuthGuard } from '../lib/jwt';
 import { MapService } from './map.service';
 import { User_, AuthUser } from '../lib/user_decorator';
 import { DeleteUserMapParam } from './dto/delete_user_map.dto';

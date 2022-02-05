@@ -19,13 +19,7 @@ export class AuthService {
         private readonly jwtService: JwtService
     ) {}
 
-    /**
-     * 1. 로그인 버튼 클릭
-     * 2. 카카오서버에서 redirect url로 access code 전송
-     * 3. 프론트에서 code를 body에 담아 백엔드로 전송
-     * 4. 백엔드에서 code, redirect url을 가지고 token 요청 -> reponse
-     * 5. 프론트에서 localStorage에 token 저장
-     */
+    // login
     async login({ origin }: PostLoginHeaders, { code }: PostLoginBody): Promise<PostLoginResponse> {
         let kakaoRedirectUrl;
 
