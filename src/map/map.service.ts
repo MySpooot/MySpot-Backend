@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Connection } from 'typeorm';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 import { AuthUser } from '../lib/user_decorator';
 import { GetUserMapsQuery, GetUserMapsResponse } from './dto/get_user_maps.dto';
@@ -15,12 +17,12 @@ import { UserFavoriteMap, UserFavoriteMapActive } from '../entities/user_favorit
 import { PostUserFavoriteMapParam } from './dto/post_user_favorite_map.dto';
 import { DeleteUserFavoriteMapParam } from './dto/delete_user_favorite_map.dto';
 import { UserAccessibleMap, UserAccessibleMapActive } from '../entities/user_accessible_map.entity';
-import { GetMapDetailParam, GetMapDetailResponse } from './dto/get_map_detail.dto';
+import { GetMapDetailHeaders, GetMapDetailParam, GetMapDetailResponse } from './dto/get_map_detail.dto';
 import { GetMapCodeParam, GetMapCodeResponse } from './dto/get_map_code.dto';
 
 @Injectable()
 export class MapService {
-    constructor(private readonly connection: Connection) {}
+    constructor(private readonly connection: Connection, private readonly jwtService: JwtService, private readonly configService: ConfigService) {}
 
     // select my maps
     async getUserMaps({ userId }: AuthUser, { offset = 0, limit = 6 }: GetUserMapsQuery) {
@@ -114,28 +116,54 @@ export class MapService {
     }
 
     // get map detail
-    async getMapDetail({ userId }: AuthUser, { mapId }: GetMapDetailParam) {
-        const mapDetail = await this.connection
-            .getRepository(Map)
-            .createQueryBuilder('map')
-            .leftJoinAndSelect('map.accessible', 'accessible', 'accessible.user_id=:aUserId AND accessible.active=:aActive', {
-                aUserId: userId,
-                aActive: UserAccessibleMapActive.Active
-            })
-            .leftJoinAndSelect(
-                'map.favoriteMap',
-                'favoriteMap',
-                'favoriteMap.user_id=:userId AND favoriteMap.map_id=:mapId AND favoriteMap.active=:active',
-                {
-                    userId,
-                    mapId,
-                    active: UserFavoriteMapActive.Active
-                }
-            )
-            .where('map.id=:mapId AND map.active=:active', { mapId, active: MapActive.Active })
-            .getOne();
+    async getMapDetail({ authorization }: GetMapDetailHeaders, { mapId }: GetMapDetailParam) {
+        let userId: number | undefined;
 
-        return GetMapDetailResponse.from(mapDetail);
+        try {
+            // userId가 있는 경우 userId를 빼옴
+            if (authorization) userId = await this.jwtService.verify(authorization, this.configService.get('jwt.secret')).userId;
+        } catch (e) {
+            console.error(e);
+        }
+
+        console.log(userId);
+
+        // 로그인 유저의 경우
+        if (userId) {
+            const mapDetail = await this.connection
+                .getRepository(Map)
+                .createQueryBuilder('map')
+                .leftJoinAndSelect('map.accessible', 'accessible', 'accessible.user_id=:aUserId AND accessible.active=:aActive', {
+                    aUserId: userId,
+                    aActive: UserAccessibleMapActive.Active
+                })
+                .leftJoinAndSelect(
+                    'map.favoriteMap',
+                    'favoriteMap',
+                    'favoriteMap.user_id=:userId AND favoriteMap.map_id=:mapId AND favoriteMap.active=:active',
+                    {
+                        userId,
+                        mapId,
+                        active: UserFavoriteMapActive.Active
+                    }
+                )
+                .where('map.id=:mapId AND map.active=:active', { mapId, active: MapActive.Active })
+                .getOne();
+
+            return GetMapDetailResponse.from(mapDetail);
+        }
+
+        // 비 로그인 유저의 경우
+        const map = await this.connection.getRepository(Map).findOne({ id: mapId, active: MapActive.Active });
+
+        return {
+            isOwner: false,
+            mapId: map.id,
+            isPrivate: map.is_private,
+            mapName: map.name,
+            accessible: map.is_private ? false : true,
+            isFavorite: false
+        };
     }
 
     // private map일 시 난수 4자리 생성

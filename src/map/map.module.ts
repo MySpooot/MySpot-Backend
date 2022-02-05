@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 
+import { JwtAuthModule } from '../lib/jwt';
 import { MapController } from './map.controller';
 import { MapService } from './map.service';
 
 @Module({
-    imports: [],
+    imports: [JwtAuthModule, ConfigModule],
     controllers: [MapController],
     providers: [MapService]
 })
