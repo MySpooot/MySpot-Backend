@@ -11,7 +11,7 @@ export class GetMarkersParam {
 }
 
 export class GetMarkersHeaders {
-    @ApiProperty()
+    @ApiProperty({ required: false })
     @IsOptional()
     @IsString()
     readonly authorization?: string;
