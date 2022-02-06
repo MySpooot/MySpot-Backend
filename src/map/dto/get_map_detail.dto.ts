@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 import { Map } from '../../entities/map.entity';
 
@@ -8,6 +8,13 @@ export class GetMapDetailParam {
     @IsNumber()
     @IsNotEmpty()
     readonly mapId: number;
+}
+
+export class GetMapDetailHeaders {
+    @ApiProperty({ required: false })
+    @IsString()
+    @IsOptional()
+    readonly authorization?: string;
 }
 
 export class GetMapDetailResponse {

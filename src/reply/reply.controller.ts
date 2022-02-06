@@ -14,7 +14,6 @@ export class ReplyController {
     constructor(private readonly replyService: ReplyService) {}
 
     @Get()
-    @UseGuards(JwtAuthGuard)
     @ApiOkResponse({ type: [GetMarkerRepliesResponse] })
     getMarkerReplies(@Query() query: GetMarkerRepliesQuery) {
         return this.replyService.getMarkerReplies(query);
