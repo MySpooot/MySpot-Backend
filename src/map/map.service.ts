@@ -151,19 +151,19 @@ export class MapService {
                 .getOne();
 
             return GetMapDetailResponse.from(mapDetail);
+        } else {
+            // 비 로그인 유저의 경우
+            const map = await this.connection.getRepository(Map).findOne({ id: mapId, active: MapActive.Active });
+
+            return {
+                isOwner: false,
+                mapId: map.id,
+                isPrivate: map.is_private,
+                mapName: map.name,
+                accessible: map.is_private ? false : true,
+                isFavorite: false
+            };
         }
-
-        // 비 로그인 유저의 경우
-        const map = await this.connection.getRepository(Map).findOne({ id: mapId, active: MapActive.Active });
-
-        return {
-            isOwner: false,
-            mapId: map.id,
-            isPrivate: map.is_private,
-            mapName: map.name,
-            accessible: map.is_private ? false : true,
-            isFavorite: false
-        };
     }
 
     // private map일 시 난수 4자리 생성
