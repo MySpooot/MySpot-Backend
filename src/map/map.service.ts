@@ -126,8 +126,6 @@ export class MapService {
             console.error(e);
         }
 
-        console.log(userId);
-
         // 로그인 유저의 경우
         if (userId) {
             const mapDetail = await this.connection
