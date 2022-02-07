@@ -19,6 +19,7 @@ import { DeleteUserFavoriteMapParam } from './dto/delete_user_favorite_map.dto';
 import { UserAccessibleMap, UserAccessibleMapActive } from '../entities/user_accessible_map.entity';
 import { GetMapDetailHeaders, GetMapDetailParam, GetMapDetailResponse } from './dto/get_map_detail.dto';
 import { GetMapCodeParam, GetMapCodeResponse } from './dto/get_map_code.dto';
+import { GetMapCodeMatchBody, GetMapCodeMatchParam } from './dto/get_map_code_match.dto';
 
 @Injectable()
 export class MapService {
@@ -180,5 +181,13 @@ export class MapService {
         const mapCode = await this.connection.getRepository(Map).findOne({ id: mapId });
 
         return GetMapCodeResponse.from(mapCode);
+    }
+
+    // map code 일치시 true 반환
+    async getMapCodeMatch({ mapId }: GetMapCodeMatchParam, { code }: GetMapCodeMatchBody) {
+        const mapCode = await this.connection.getRepository(Map).findOne({ id: mapId, active: MapActive.Active });
+
+        // 입력한 코드랑 맵 코드가 동일할 시 true 틀리면 false
+        return code === mapCode.code;
     }
 }
