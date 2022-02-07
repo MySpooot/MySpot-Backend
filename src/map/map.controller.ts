@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards, Headers } from '@nestjs/common';
+import { ApiOkResponse } from '@nestjs/swagger';
 
 import { JwtAuthGuard } from '../lib/jwt';
 import { MapService } from './map.service';
@@ -13,8 +14,8 @@ import { GetUserFavoriteMapsQuery, GetUserFavoriteMapsResponse } from './dto/get
 import { PostUserFavoriteMapParam } from './dto/post_user_favorite_map.dto';
 import { DeleteUserFavoriteMapParam } from './dto/delete_user_favorite_map.dto';
 import { GetMapDetailHeaders, GetMapDetailParam, GetMapDetailResponse } from './dto/get_map_detail.dto';
-import { ApiOkResponse } from '@nestjs/swagger';
 import { GetMapCodeParam, GetMapCodeResponse } from './dto/get_map_code.dto';
+import { GetMapCodeMatchBody, GetMapCodeMatchParam } from './dto/get_map_code_match.dto';
 
 @Controller('/map')
 export class MapController {
@@ -94,5 +95,12 @@ export class MapController {
     @ApiOkResponse({ type: GetMapCodeResponse })
     getMapCode(@Param() param: GetMapCodeParam) {
         return this.mapService.getMapCode(param);
+    }
+
+    @Get('/:mapId/code/match')
+    @UseGuards(JwtAuthGuard)
+    @ApiOkResponse({ type: Boolean })
+    getCodeMatch(@Param() param: GetMapCodeMatchParam, @Body() body: GetMapCodeMatchBody) {
+        return this.mapService.getMapCodeMatch(param, body);
     }
 }
