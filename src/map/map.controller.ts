@@ -100,7 +100,7 @@ export class MapController {
     @Post('/:mapId/code/match')
     @UseGuards(JwtAuthGuard)
     @ApiOkResponse({ type: Boolean })
-    getCodeMatch(@Param() param: PostMapCodeMatchParam, @Body() body: PostMapCodeMatchBody) {
+    getMapCodeMatch(@Param() param: PostMapCodeMatchParam, @Body() body: PostMapCodeMatchBody) {
         return this.mapService.getMapCodeMatch(param, body);
     }
 }
