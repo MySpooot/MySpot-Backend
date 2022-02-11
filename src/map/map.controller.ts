@@ -15,7 +15,7 @@ import { PostUserFavoriteMapParam } from './dto/post_user_favorite_map.dto';
 import { DeleteUserFavoriteMapParam } from './dto/delete_user_favorite_map.dto';
 import { GetMapDetailHeaders, GetMapDetailParam, GetMapDetailResponse } from './dto/get_map_detail.dto';
 import { GetMapCodeParam, GetMapCodeResponse } from './dto/get_map_code.dto';
-import { GetMapCodeMatchBody, GetMapCodeMatchParam } from './dto/get_map_code_match.dto';
+import { PostMapCodeMatchBody, PostMapCodeMatchParam } from './dto/post_map_code_match.dto';
 
 @Controller('/map')
 export class MapController {
@@ -100,7 +100,7 @@ export class MapController {
     @Post('/:mapId/code/match')
     @UseGuards(JwtAuthGuard)
     @ApiOkResponse({ type: Boolean })
-    getCodeMatch(@Param() param: GetMapCodeMatchParam, @Body() body: GetMapCodeMatchBody) {
+    getCodeMatch(@Param() param: PostMapCodeMatchParam, @Body() body: PostMapCodeMatchBody) {
         return this.mapService.getMapCodeMatch(param, body);
     }
 }
