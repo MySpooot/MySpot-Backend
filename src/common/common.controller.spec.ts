@@ -1,39 +1,42 @@
-// import { ConfigModule } from '@nestjs/config';
-// import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigModule } from '@nestjs/config';
+import { Test, TestingModule } from '@nestjs/testing';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-// import { MapController } from './map.controller';
-// import { MapModule } from './map.module';
-// import configuration from '../configuration';
-// import { TypeOrmModule } from '@nestjs/typeorm';
+import configuration from '../configuration';
+import { CommonModule } from './common.module';
+import { CommonController } from './common.controller';
 
-// describe('MapController', () => {
-//     let mapController: MapController;
+describe('CommonController', () => {
+    let commonController: CommonController;
 
-//     beforeEach(async () => {
-//         const app: TestingModule = await Test.createTestingModule({
-//             imports: [
-//                 MapModule,
-//                 ConfigModule.forRoot({
-//                     load: [configuration],
-//                     cache: true,
-//                     isGlobal: true
-//                 }),
-//                 TypeOrmModule.forRoot({
-//                     type: 'sqlite',
-//                     database: ':memory:',
-//                     autoLoadEntities: true,
-//                     synchronize: true,
-//                     logging: false
-//                 })
-//             ]
-//         }).compile();
+    beforeEach(async () => {
+        const app: TestingModule = await Test.createTestingModule({
+            imports: [
+                CommonModule,
+                ConfigModule.forRoot({
+                    load: [configuration],
+                    cache: true,
+                    isGlobal: true
+                }),
+                TypeOrmModule.forRoot({
+                    type: 'sqlite',
+                    database: ':memory:',
+                    autoLoadEntities: true,
+                    synchronize: true,
+                    logging: false
+                })
+            ]
+        }).compile();
 
-//         mapController = app.get<MapController>(MapController);
-//     });
+        commonController = app.get(CommonController);
+    });
 
-//     describe('root', () => {
-//         it('should return "Hello World!"', () => {
-//             expect(0).toEqual(0);
-//         });
-//     });
-// });
+    describe('GET /common/status', () => {
+        it('should return "healthy"', async () => {
+            const result = await commonController.getServerStatus();
+
+            expect(result).toBeDefined();
+            expect(result).toEqual('healthy');
+        });
+    });
+});
