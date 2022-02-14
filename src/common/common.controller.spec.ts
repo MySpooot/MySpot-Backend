@@ -9,7 +9,7 @@ import { CommonController } from './common.controller';
 describe('CommonController', () => {
     let commonController: CommonController;
 
-    beforeEach(async () => {
+    beforeAll(async () => {
         const app: TestingModule = await Test.createTestingModule({
             imports: [
                 CommonModule,
