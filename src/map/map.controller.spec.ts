@@ -3,15 +3,16 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
 
+import configuration from '../configuration';
 import { AuthUser } from '../lib/user_decorator';
 import { MapController } from './map.controller';
 import { MapModule } from './map.module';
-import configuration from '../configuration';
 import { User } from '../entities/user.entity';
-import { seedMe, seedUserMaps, seedUsers } from './map.seed';
-import { Map } from '../entities/map.entity';
+import { seedMe, seedGetUserMaps, seedUsers, seedPostUserMap } from './map.seed';
+import { Map, MapActive } from '../entities/map.entity';
 import { UserFavoriteMap } from '../entities/user_favorite_map.entity';
-import { UserAccessibleMap } from '../entities/user_accessible_map.entity';
+import { UserAccessibleMap, UserAccessibleMapActive } from '../entities/user_accessible_map.entity';
+import { isNumberString } from 'class-validator';
 
 describe('MapController', () => {
     let mapController: MapController;
@@ -20,6 +21,7 @@ describe('MapController', () => {
     let users: User[];
     let me: AuthUser[];
 
+    // 테스트 시작 전에 첫 실행
     beforeAll(async () => {
         const app: TestingModule = await Test.createTestingModule({
             imports: [
@@ -49,15 +51,17 @@ describe('MapController', () => {
         me = seedMe();
     });
 
+    /** GET /map */
     describe('GET /map', () => {
         let maps: Map[];
 
+        // 테스트 시작 전 데이터 생성
         beforeAll(async () => {
-            maps = await connection.getRepository(Map).save(seedUserMaps.maps(users[0].id));
+            maps = await connection.getRepository(Map).save(seedGetUserMaps.maps(users[0].id));
 
             // user_favorite_map, map과 OneToMany관계이기 때문에 선언
             await connection.getRepository(UserFavoriteMap).save(
-                seedUserMaps.favoriteMaps(
+                seedGetUserMaps.favoriteMaps(
                     maps.map(x => x.id),
                     users[0].id
                 )
@@ -65,13 +69,14 @@ describe('MapController', () => {
 
             // user_accessible_map, map과 OneToMany관계이기 때문에 선언
             await connection.getRepository(UserAccessibleMap).save(
-                seedUserMaps.accessible(
+                seedGetUserMaps.accessible(
                     maps.map(x => x.id),
                     users[0].id
                 )
             );
         });
 
+        // 테스트 케이스
         it('should return maps', async () => {
             const result = await mapController.getUserMaps(me[0], {});
 
@@ -96,6 +101,7 @@ describe('MapController', () => {
             }
         });
 
+        // 여기 내부에서 실행된 것들은 다음 테스트에도 적용
         afterAll(async () => {
             await connection.getRepository(UserAccessibleMap).clear();
             await connection.getRepository(UserFavoriteMap).clear();
@@ -103,17 +109,76 @@ describe('MapController', () => {
         });
     });
 
+    /** POST /map */
     describe('POST /map', () => {
+        let maps: Map[];
+
         beforeAll(async () => {
-            // @TODO
+            maps = await connection.getRepository(Map).save(seedPostUserMap.maps(users[0].id));
+
+            // user_favorite_map, map과 OneToMany관계이기 때문에 선언
+            await connection.getRepository(UserFavoriteMap).save(
+                seedPostUserMap.favoriteMaps(
+                    maps.map(x => x.id),
+                    users[0].id
+                )
+            );
+
+            // user_accessible_map, map과 OneToMany관계이기 때문에 선언
+            await connection.getRepository(UserAccessibleMap).save(
+                seedPostUserMap.accessible(
+                    maps.map(x => x.id),
+                    users[0].id
+                )
+            );
         });
 
-        it('...test', async () => {
-            // @TODO
+        it('should insert public map and insert accessible', async () => {
+            // 호출
+            await mapController.insertUserMap(me[1], { mapName: 'test_map', isPrivate: false });
+
+            const map = await connection.getRepository(Map).findOne({ user_id: 2, active: MapActive.Active, name: 'test_map' });
+
+            expect(map).toBeDefined();
+            expect(map?.code).toBeNull();
+
+            const accessible = await connection
+                .getRepository(UserAccessibleMap)
+                .findOne({ user_id: 2, active: UserAccessibleMapActive.Active, map_id: map.id });
+
+            expect(accessible).toBeDefined();
+        });
+
+        it('should insert private map and insert accessible', async () => {
+            // 호출
+            await mapController.insertUserMap(me[1], { mapName: 'test_private_map', isPrivate: true });
+
+            const map = await connection.getRepository(Map).findOne({ user_id: 2, active: MapActive.Active, name: 'test_private_map' });
+
+            expect(map).toBeDefined();
+            expect(map.code).toBeDefined();
+            expect(isNumberString(map.code)).toEqual(true);
+
+            const accessible = await connection
+                .getRepository(UserAccessibleMap)
+                .findOne({ user_id: 2, active: UserAccessibleMapActive.Active, map_id: map.id });
+
+            expect(accessible).toBeDefined();
         });
 
         afterAll(async () => {
-            // @TODO
+            await connection.getRepository(UserAccessibleMap).clear();
+            await connection.getRepository(UserFavoriteMap).clear();
+            await connection.getRepository(Map).clear();
         });
+    });
+
+    /** DELETE /map */
+    describe('DELETE /map', () => {
+        beforeAll(async () => {});
+
+        it('..test', async () => {});
+
+        afterAll(async () => {});
     });
 });
