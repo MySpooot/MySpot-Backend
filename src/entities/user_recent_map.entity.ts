@@ -14,10 +14,10 @@ export class UserRecentMap {
     @PrimaryGeneratedColumn('increment', { type: 'integer', unsigned: true })
     id: number;
 
-    @CreateDateColumn({ type: 'timestamp' })
+    @CreateDateColumn({ type: 'integer' })
     created: Date;
 
-    @UpdateDateColumn({ type: 'timestamp' })
+    @UpdateDateColumn({ type: 'integer' })
     modified: Date;
 
     @Column({ type: 'integer' })

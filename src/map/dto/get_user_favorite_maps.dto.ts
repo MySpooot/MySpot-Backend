@@ -19,6 +19,9 @@ export class GetUserFavoriteMapsResponse {
     @ApiProperty()
     id: number;
 
+    @ApiProperty({ format: 'timestamp' })
+    created: number;
+
     @ApiProperty()
     userId: number;
 
@@ -34,6 +37,7 @@ export class GetUserFavoriteMapsResponse {
 
     constructor(favoriteMap: UserFavoriteMap) {
         this.id = favoriteMap.id;
+        this.created = favoriteMap.created.getTime();
         this.userId = favoriteMap.user_id;
         this.mapName = favoriteMap.map.name;
         this.isPrivate = favoriteMap.map.is_private;

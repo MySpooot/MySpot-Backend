@@ -19,6 +19,9 @@ export class GetUserRecentMapsResponse {
     @ApiProperty()
     id: number;
 
+    @ApiProperty({ format: 'timestamp' })
+    created: number;
+
     @ApiProperty()
     userId: number;
 
@@ -31,6 +34,7 @@ export class GetUserRecentMapsResponse {
 
     constructor(recentMap: UserRecentMap) {
         this.id = recentMap.id;
+        this.created = recentMap.created.getTime();
         this.userId = recentMap.user_id;
         this.mapName = recentMap.map.name;
     }
