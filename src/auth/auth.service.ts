@@ -3,7 +3,10 @@ import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Connection } from 'typeorm';
+import AWS from 'aws-sdk';
+import multer from 'multer';
 
+import multerS3 from 'multer-s3';
 import { User, UserActive, UserProvider } from '../entities/user.entity';
 import { UserLevel, AuthUser } from '../lib/user_decorator';
 import { PostLoginBody, PostLoginHeaders, PostLoginResponse } from './dto/post_login.dto';
@@ -138,6 +141,40 @@ export class AuthService {
                 };
             }
         }
+    }
+
+    async uploadImage(file) {
+        console.log(file);
+        AWS.config.update({
+            region: 'ap-northeast-2',
+            accessKeyId: 'AKIAUZRO6TALVTQZU2V7',
+            secretAccessKey: '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'
+        });
+        const s3 = new AWS.S3();
+        // const s3 = new AWS.S3();
+        // const key = `user/thumbnail/${userId}_${Date.now()}`;
+        // const objectUrl = this.configService.get('s3Bucket') + key;
+        // console.log(objectUrl);
+        // console.log('service file', file);
+        // const upload = async () => {
+        //     multer({
+        //         storage: multerS3({
+        //             s3: s3,
+        //             bucket: 'dev-myspot',
+        //             acl: 'public-read',
+        //             key: function (request, file, cb) {
+        //                 cb(null, 'test');
+        //             }
+        //         })
+        //     });
+        // };
+        // try {
+        //     console.log('123');
+        //     await upload();
+        // } catch (e) {
+        //     console.log(e);
+        // }
+        // const signedUtl = await s3.getSignedUrlPromise('putObject', { key, Bucket: this.configService.get('s3Bucket'), expiresIn: 60 * 5 });
     }
 
     // // @TODO 로그아웃 추후 개발 예정

@@ -15,5 +15,9 @@ export default () => ({
         signOptions: {
             expiresIn: '30d'
         }
-    }
+    },
+    s3Bucket: process.env.AWS_BUCKET_NAME,
+    s3BucketUrl: `https://s3Bucket.myspot.kr`,
+    s3AccessKey: process.env.AWS_S3_ACCESS_KEY,
+    s3SecretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY
 });
