@@ -1,3 +1,5 @@
+import { MulterExtendedS3Options } from 'nestjs-multer-extended';
+
 export default () => ({
     database: {
         username: process.env.POSTGRES_USERNAME || '',
@@ -16,8 +18,12 @@ export default () => ({
             expiresIn: '30d'
         }
     },
-    s3Bucket: process.env.AWS_BUCKET_NAME,
-    s3BucketUrl: `https://s3Bucket.myspot.kr`,
-    s3AccessKey: process.env.AWS_S3_ACCESS_KEY,
-    s3SecretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY
+    s3Options: {
+        accessKeyId: process.env.ACCESS_KEY_ID,
+        secretAccessKey: process.env.SECRET_ACCESS_KEY,
+        region: 'ap-northeast-2',
+        bucket: process.env.BUCKET,
+        basePath: process.env.BASE_PATH,
+        fileSize: process.env.FILE_SIZE
+    } as MulterExtendedS3Options
 });
