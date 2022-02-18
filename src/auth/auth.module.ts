@@ -11,18 +11,19 @@ import { JwtAuthModule } from '../lib/jwt';
     imports: [
         ConfigModule,
         HttpModule,
-        JwtAuthModule
+        JwtAuthModule,
         // @TODO 추구 별도 모듈로 분리
-        // MulterExtendedModule.register({
-        //     awsConfig: {
-        //         accessKeyId: process.env.AWS_S3_ACCESS_KEY,
-        //         secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
-        //         region: process.env.REGION
-        //     },
-        //     bucket: 'dev-myspot',
-        //     basePath: 'user/thumbnail',
-        //     fileSize: 1 * 1024 * 1024 // 1MB
-        // })
+        MulterExtendedModule.register({
+            awsConfig: {
+                accessKeyId: process.env.AWS_S3_ACCESS_KEY,
+                secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
+                region: process.env.REGION
+            },
+            bucket: 'dev-myspot',
+            basePath: 'user/thumbnail',
+            fileSize: 1 * 1024 * 1024, // 1MB
+            acl: 'public-read'
+        })
     ],
     controllers: [AuthController],
     providers: [AuthService]
