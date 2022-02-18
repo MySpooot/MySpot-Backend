@@ -146,7 +146,6 @@ export class AuthService {
         await this.connection.getRepository(User).update(
             { id: userId },
             {
-                // user_id: userId,
                 thumbnail: file.Location
             }
         );
