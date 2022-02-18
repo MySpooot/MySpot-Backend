@@ -18,6 +18,7 @@ export default () => ({
             expiresIn: '30d'
         }
     },
+    // @TODO 모듈 분리 후 async injection 하기
     s3Options: {
         accessKeyId: process.env.ACCESS_KEY_ID,
         secretAccessKey: process.env.SECRET_ACCESS_KEY,

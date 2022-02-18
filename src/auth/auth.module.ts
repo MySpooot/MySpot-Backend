@@ -15,8 +15,8 @@ import { JwtAuthModule } from '../lib/jwt';
         // @TODO 추구 별도 모듈로 분리
         MulterExtendedModule.register({
             awsConfig: {
-                accessKeyId: process.env.AWS_S3_ACCESS_KEY,
-                secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
+                accessKeyId: process.env.ACCESS_KEY_ID,
+                secretAccessKey: process.env.SECRET_ACCESS_KEY,
                 region: process.env.REGION
             },
             bucket: 'dev-myspot',
