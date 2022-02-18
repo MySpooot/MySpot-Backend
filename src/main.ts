@@ -35,7 +35,10 @@ import { version } from 'package.json';
                 POSTGRES_PORT: Joi.string().required(),
                 POSTGRES_USERNAME: Joi.string().required(),
                 POSTGRES_PASSWORD: Joi.string().required(),
-                POSTGRES_DATABASE: Joi.string().required()
+                POSTGRES_DATABASE: Joi.string().required(),
+                ACCESS_KEY_ID: Joi.string().required(),
+                SECRET_ACCESS_KEY: Joi.string().required(),
+                REGION: Joi.string().required()
             }),
             load: [configuration]
         }),
