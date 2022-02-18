@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { MulterExtendedModule } from 'nestjs-multer-extended';
 
 import { AuthController } from './auth.controller';
@@ -21,12 +21,12 @@ import { JwtAuthModule } from '../lib/jwt';
             },
             bucket: 'dev-myspot',
             basePath: 'user/thumbnail',
-            fileSize: 1 * 1024 * 1024, // 1MB
-            acl: 'public-read'
+            fileSize: 1 * 1024 * 1024 // 1MB
+            // acl: 'public-read'
         })
     ],
     controllers: [AuthController],
-    providers: [AuthService, ConfigService]
+    providers: [AuthService]
 })
 export class AuthModule {}
 
