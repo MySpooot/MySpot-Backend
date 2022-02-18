@@ -9,7 +9,7 @@ import { JwtAuthModule } from '../lib/jwt';
 
 @Module({
     imports: [
-        // ConfigModule,
+        ConfigModule,
         HttpModule,
         JwtAuthModule,
         MulterExtendedModule.registerAsync({
