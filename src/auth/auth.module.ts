@@ -12,13 +12,28 @@ import { JwtAuthModule } from '../lib/jwt';
         ConfigModule,
         HttpModule,
         JwtAuthModule,
-        MulterExtendedModule.registerAsync({
-            imports: [ConfigModule],
-            inject: [ConfigService],
-            useFactory: (configService: ConfigService) => configService.get('s3Options')
+        // @TODO 추구 별도 모듈로 분리
+        MulterExtendedModule.register({
+            awsConfig: {
+                accessKeyId: process.env.AWS_S3_ACCESS_KEY,
+                secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
+                region: process.env.REGION
+            },
+            bucket: 'dev-myspot',
+            basePath: 'user/thumbnail',
+            fileSize: 1 * 1024 * 1024 // 1MB
         })
     ],
     controllers: [AuthController],
     providers: [AuthService, ConfigService]
 })
 export class AuthModule {}
+
+/**
+ *  @TODO 추구 별도 모듈로 분리
+ *  MulterExtendedModule.registerAsync({
+ *  imports: [ConfigModule],
+ *  inject: [ConfigService],
+ *  useFactory: (configService: ConfigService) => configService.get('s3Options')
+ * })
+ */
