@@ -24,6 +24,7 @@ import { MapMarkerLike } from './entities/map_marker_like.entity';
 import { MyLocation } from './entities/my_location.entity';
 
 import { version } from 'package.json';
+import { MulterExtendedModule } from 'nestjs-multer-extended';
 
 @Module({
     imports: [
@@ -62,7 +63,18 @@ import { version } from 'package.json';
         AuthModule,
         CommonModule,
         MarkerModule,
-        ReplyModule
+        ReplyModule,
+        MulterExtendedModule.register({
+            awsConfig: {
+                accessKeyId: process.env.ACCESS_KEY_ID,
+                secretAccessKey: process.env.SECRET_ACCESS_KEY,
+                region: process.env.REGION
+            },
+            bucket: 'dev-myspot',
+            basePath: 'user/thumbnail',
+            fileSize: 1 * 1024 * 1024 // 1MB
+            // acl: 'public-read'
+        })
     ]
 })
 class AppModule {}

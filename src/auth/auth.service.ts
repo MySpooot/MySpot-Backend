@@ -142,7 +142,7 @@ export class AuthService {
     }
 
     // 유저 썸네일 업로드
-    async uploadImage({ userId }: AuthUser, file) {
+    async uploadImage({ userId }: AuthUser, file): Promise<string> {
         await this.connection.getRepository(User).update(
             { id: userId },
             {
