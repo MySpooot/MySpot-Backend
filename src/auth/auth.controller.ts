@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, UseGuards, Headers, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UseGuards, Headers } from '@nestjs/common';
 import { ApiOkResponse } from '@nestjs/swagger';
 
 import { JwtAuthGuard } from '../lib/jwt';
@@ -7,7 +7,6 @@ import { AuthService } from './auth.service';
 import { GetMeResponse } from './dto/get_me.dto';
 import { PostLoginBody, PostLoginHeaders, PostLoginResponse } from './dto/post_login.dto';
 import { PutUserBody, PutUserParam, PutUserResponse } from './dto/put_user.dto';
-import { AmazonS3FileInterceptor } from 'nestjs-multer-extended';
 
 @Controller('/auth')
 export class AuthController {
@@ -37,18 +36,6 @@ export class AuthController {
     @ApiOkResponse()
     appLogin(@Body() body) {
         return this.authService.loginProcess(body);
-    }
-
-    @Post('/upload')
-    @UseGuards(JwtAuthGuard)
-    @ApiOkResponse({ type: String })
-    @UseInterceptors(
-        AmazonS3FileInterceptor('file', {
-            randomFilename: true
-        })
-    )
-    uploadFile(@User_() user: AuthUser, @UploadedFile() file) {
-        return this.authService.uploadImage(user, file);
     }
 
     // @TODO 로그아웃 추후 개발 예정

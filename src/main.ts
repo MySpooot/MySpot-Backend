@@ -12,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common/common.module';
 import { MarkerModule } from './marker/marker.module';
 import { ReplyModule } from './reply/reply.module';
+import { UserModule } from './user/user.module';
 
 import { User } from './entities/user.entity';
 import { Map } from './entities/map.entity';
@@ -62,7 +63,8 @@ import { version } from 'package.json';
         AuthModule,
         CommonModule,
         MarkerModule,
-        ReplyModule
+        ReplyModule,
+        UserModule
     ]
 })
 class AppModule {}

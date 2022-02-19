@@ -141,17 +141,6 @@ export class AuthService {
         }
     }
 
-    // 유저 썸네일 업로드
-    async uploadImage({ userId }: AuthUser, file): Promise<string> {
-        await this.connection.getRepository(User).update(
-            { id: userId },
-            {
-                thumbnail: file.Location
-            }
-        );
-        return file.Location;
-    }
-
     // // @TODO 로그아웃 추후 개발 예정
     // async logout({ code }: PostLogOutBody) {}
 }
