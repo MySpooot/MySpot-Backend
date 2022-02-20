@@ -7,10 +7,16 @@ import { UserService } from './user.service';
 
 @Module({
     imports: [
-        MulterExtendedModule.registerAsync({
-            imports: [ConfigModule],
-            inject: [ConfigService],
-            useFactory: (configService: ConfigService) => configService.get('s3Options')
+        MulterExtendedModule.register({
+            awsConfig: {
+                accessKeyId: process.env.ACCESS_KEY_ID,
+                secretAccessKey: process.env.SECRET_ACCESS_KEY,
+                region: process.env.REGION
+            },
+            bucket: 'dev-myspot',
+            basePath: 'user/thumbnail',
+            fileSize: 1 * 1024 * 1024 // 1MB
+            // acl: 'public-read'
         })
     ],
     controllers: [UserController],
