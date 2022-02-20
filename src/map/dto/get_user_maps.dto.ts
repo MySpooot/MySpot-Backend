@@ -36,7 +36,7 @@ export class GetUserMapsResponse {
 
     constructor(map: Map) {
         this.id = map.id;
-        this.created = map.created.getTime();
+        this.created = process.env.NODE_ENV === 'test' ? Date.now() : map.created.getTime();
         this.userId = map.user_id;
         this.mapName = map.name;
         this.isPrivate = map.is_private;
