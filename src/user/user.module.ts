@@ -6,7 +6,13 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 
 @Module({
-    imports: [],
+    imports: [
+        MulterExtendedModule.registerAsync({
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: (configService: ConfigService) => configService.get('s3Options')
+        })
+    ],
     controllers: [UserController],
     providers: [UserService]
 })

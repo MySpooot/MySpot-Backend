@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 // import https from 'https';
 import Joi from 'joi';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { MulterExtendedModule } from 'nestjs-multer-extended';
 
 import configuration from './configuration';
 import { MapModule } from './map/map.module';
@@ -25,7 +26,6 @@ import { MapMarkerLike } from './entities/map_marker_like.entity';
 import { MyLocation } from './entities/my_location.entity';
 
 import { version } from 'package.json';
-import { MulterExtendedModule } from 'nestjs-multer-extended';
 
 @Module({
     imports: [
