@@ -63,17 +63,17 @@ import { version } from 'package.json';
                 }
             })
         }),
-        MulterExtendedModule.register({
-            awsConfig: {
-                accessKeyId: process.env.ACCESS_KEY_ID,
-                secretAccessKey: process.env.SECRET_ACCESS_KEY,
-                region: process.env.REGION
-            },
-            bucket: 'dev-myspot',
-            basePath: 'user/thumbnail',
-            fileSize: 1 * 1024 * 1024 // 1MB
-            // acl: 'public-read'
-        }),
+        // MulterExtendedModule.register({
+        //     awsConfig: {
+        //         accessKeyId: process.env.ACCESS_KEY_ID,
+        //         secretAccessKey: process.env.SECRET_ACCESS_KEY,
+        //         region: process.env.REGION
+        //     },
+        //     bucket: 'dev-myspot',
+        //     basePath: 'user/thumbnail',
+        //     fileSize: 1 * 1024 * 1024 // 1MB
+        //     // acl: 'public-read'
+        // }),
         MapModule,
         AuthModule,
         CommonModule,
