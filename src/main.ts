@@ -25,6 +25,7 @@ import { MapMarkerLike } from './entities/map_marker_like.entity';
 import { MyLocation } from './entities/my_location.entity';
 
 import { version } from 'package.json';
+import { MulterExtendedModule } from 'nestjs-multer-extended';
 
 @Module({
     imports: [
@@ -58,6 +59,11 @@ import { version } from 'package.json';
                     rejectUnauthorized: false
                 }
             })
+        }),
+        MulterExtendedModule.registerAsync({
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: (configService: ConfigService) => configService.get('s3Options')
         }),
         MapModule,
         AuthModule,
