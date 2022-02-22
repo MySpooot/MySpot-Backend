@@ -38,6 +38,9 @@ export class Marker {
     @Column({ type: 'integer', default: 0 })
     like_count: number;
 
+    @Column({ type: 'integer', default: 0 })
+    reply_count: number;
+
     @Column({ type: 'integer' })
     address_id: number;
 
