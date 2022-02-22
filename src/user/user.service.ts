@@ -16,6 +16,7 @@ export class UserService {
                 thumbnail: file.Location
             }
         );
+
         return file.Location;
     }
 }
