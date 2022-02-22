@@ -42,6 +42,9 @@ export class GetMarkersResponse {
     @ApiProperty()
     likeCount: number;
 
+    @ApiProperty()
+    replyCount: number;
+
     @ApiProperty({ required: false })
     isLike?: boolean;
 
@@ -57,6 +60,7 @@ export class GetMarkersResponse {
         this.address = marker.address;
         this.roadAddress = marker.road_address;
         this.likeCount = marker.like_count;
+        this.replyCount = marker.reply_count;
         this.isLike = !!isLike;
         this.isMyLocation = !!isMyLocation;
     }
