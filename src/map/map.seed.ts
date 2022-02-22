@@ -3,7 +3,6 @@ import { AuthUser, UserLevel } from '../lib/user_decorator';
 import { Map, MapActive } from '../entities/map.entity';
 import { UserFavoriteMap, UserFavoriteMapActive } from '../entities/user_favorite_map.entity';
 import { UserAccessibleMap, UserAccessibleMapActive } from '../entities/user_accessible_map.entity';
-import { map } from 'rxjs';
 
 export const seedUsers = () =>
     [...new Array(10).keys()].map(

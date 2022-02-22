@@ -12,3 +12,12 @@ import { JwtAuthModule } from '../lib/jwt';
     providers: [AuthService]
 })
 export class AuthModule {}
+
+/**
+ *  @TODO 추구 별도 모듈로 분리
+ *  MulterExtendedModule.registerAsync({
+ *  imports: [ConfigModule],
+ *  inject: [ConfigService],
+ *  useFactory: (configService: ConfigService) => configService.get('s3Options')
+ * })
+ */

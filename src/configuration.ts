@@ -1,3 +1,5 @@
+import { MulterExtendedS3Options } from 'nestjs-multer-extended';
+
 export default () => ({
     database: {
         username: process.env.POSTGRES_USERNAME || '',
@@ -15,5 +17,14 @@ export default () => ({
         signOptions: {
             expiresIn: '30d'
         }
-    }
+    },
+    // @TODO 모듈 분리 후 async injection 하기
+    s3Options: {
+        accessKeyId: process.env.ACCESS_KEY_ID,
+        secretAccessKey: process.env.SECRET_ACCESS_KEY,
+        region: 'ap-northeast-2',
+        bucket: process.env.BUCKET,
+        basePath: process.env.BASE_PATH,
+        fileSize: process.env.FILE_SIZE
+    } as MulterExtendedS3Options
 });

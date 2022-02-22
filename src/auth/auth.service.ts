@@ -88,6 +88,7 @@ export class AuthService {
         };
     }
 
+    // login process
     async loginProcess(data: { access_token: string }) {
         // 카카오에서 개인정보 가져오기
         const kakaoUser = await this.getKaKaoUserData(data);

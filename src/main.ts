@@ -12,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common/common.module';
 import { MarkerModule } from './marker/marker.module';
 import { ReplyModule } from './reply/reply.module';
+import { UserModule } from './user/user.module';
 
 import { User } from './entities/user.entity';
 import { Map } from './entities/map.entity';
@@ -35,7 +36,13 @@ import { version } from 'package.json';
                 POSTGRES_PORT: Joi.string().required(),
                 POSTGRES_USERNAME: Joi.string().required(),
                 POSTGRES_PASSWORD: Joi.string().required(),
-                POSTGRES_DATABASE: Joi.string().required()
+                POSTGRES_DATABASE: Joi.string().required(),
+                ACCESS_KEY_ID: Joi.string().required(),
+                SECRET_ACCESS_KEY: Joi.string().required(),
+                REGION: Joi.string().required(),
+                BASE_PATH: Joi.string().required(),
+                BUCKET: Joi.string().required(),
+                FILE_SIZE: Joi.string().required()
             }),
             load: [configuration]
         }),
@@ -59,7 +66,8 @@ import { version } from 'package.json';
         AuthModule,
         CommonModule,
         MarkerModule,
-        ReplyModule
+        ReplyModule,
+        UserModule
     ]
 })
 class AppModule {}
