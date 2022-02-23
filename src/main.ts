@@ -1,74 +1,21 @@
 import { NestFactory } from '@nestjs/core';
 import { Module, ValidationPipe } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-// import https from 'https';
-import Joi from 'joi';
+
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-import configuration from './configuration';
-import { MapModule } from './map/map.module';
-import { AuthModule } from './auth/auth.module';
-import { CommonModule } from './common/common.module';
-import { MarkerModule } from './marker/marker.module';
-import { ReplyModule } from './reply/reply.module';
-import { UserModule } from './user/user.module';
-
-import { User } from './entities/user.entity';
-import { Map } from './entities/map.entity';
-import { Marker } from './entities/marker.entity';
-import { UserRecentMap } from './entities/user_recent_map.entity';
-import { UserFavoriteMap } from './entities/user_favorite_map.entity';
-import { UserAccessibleMap } from './entities/user_accessible_map.entity';
-import { MapMarkerReply } from './entities/map_marker_reply.entity';
-import { MapMarkerLike } from './entities/map_marker_like.entity';
-import { MyLocation } from './entities/my_location.entity';
+import { AppModule as UserModule } from '../src/user/app.module';
+import { AppModule as MapModule } from '../src/map/app.module';
+import { AppModule as CommonModule } from '../src/common/app.module';
+import { AppModule as MarkerModule } from '../src/marker/app.module';
+import { AppModule as ReplyModule } from '../src/reply/app.module';
+import { AppModule as AuthModule } from '../src/auth/app.module';
 
 import { version } from 'package.json';
 
 @Module({
-    imports: [
-        ConfigModule.forRoot({
-            // ENV를 이곳에 적용한다.
-            envFilePath: '.env',
-            validationSchema: Joi.object({
-                POSTGRES_HOST: Joi.string().required(),
-                POSTGRES_PORT: Joi.string().required(),
-                POSTGRES_USERNAME: Joi.string().required(),
-                POSTGRES_PASSWORD: Joi.string().required(),
-                POSTGRES_DATABASE: Joi.string().required(),
-                ACCESS_KEY_ID: Joi.string().required(),
-                SECRET_ACCESS_KEY: Joi.string().required(),
-                REGION: Joi.string().required(),
-                BASE_PATH: Joi.string().required(),
-                BUCKET: Joi.string().required(),
-                FILE_SIZE: Joi.string().required()
-            }),
-            load: [configuration]
-        }),
-        TypeOrmModule.forRootAsync({
-            imports: [ConfigModule],
-            inject: [ConfigService],
-            useFactory: (configService: ConfigService) => ({
-                type: 'postgres',
-                username: configService.get('database.username'),
-                password: configService.get('database.password'),
-                host: configService.get('database.host'),
-                port: configService.get('database.port'),
-                database: configService.get('database.database'),
-                entities: [Map, User, Marker, UserRecentMap, UserFavoriteMap, UserAccessibleMap, MapMarkerReply, MapMarkerLike, MyLocation],
-                ssl: {
-                    rejectUnauthorized: false
-                }
-            })
-        }),
-        MapModule,
-        AuthModule,
-        CommonModule,
-        MarkerModule,
-        ReplyModule,
-        UserModule
-    ]
+    imports: [UserModule, MapModule, CommonModule, MarkerModule, ReplyModule, AuthModule],
+    controllers: [],
+    providers: []
 })
 class AppModule {}
 

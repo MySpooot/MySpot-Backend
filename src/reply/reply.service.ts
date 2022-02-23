@@ -15,6 +15,7 @@ export class ReplyService {
     constructor(private readonly connection: Connection, private readonly markerService: MarkerService) {}
 
     async getMarkerReplies({ markerId, offset = 0, limit = 10 }: GetMarkerRepliesQuery) {
+        console.log(process.env.NODE_ENV);
         const replies = await this.connection
             .getRepository(MapMarkerReply)
             .createQueryBuilder('map_marker_reply')
