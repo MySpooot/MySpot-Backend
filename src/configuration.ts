@@ -34,8 +34,6 @@ export default () => ({
             : process.env.NODE_ENV === 'dev'
             ? {
                   type: 'postgres',
-                  host: process.env.POSTGRES_HOST,
-                  port: process.env.POSTGRES_PORT,
                   autoLoadEntities: true,
                   synchronize: false,
                   bigNumberStrings: false,
