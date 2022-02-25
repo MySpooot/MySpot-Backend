@@ -1,25 +1,22 @@
-# 원더월 CI/CD 시스템 - 풀 리퀘스트 발생 시, ESLINT, Unit Test, E2E Test 를 확인하는 로직입니다.
-# checkout actions : 자동으로 PR 한 브렌치로 git head 를 Check out 합니다.
-# setup-node : node 를 버전별로 설치합니다. yarn 까지 덤으로.
-
-name: MySpot API Pull Request
+name: MySpot Api Pull Request
 
 on:
     pull_request:
         types: [opened, reopened]
 
 jobs:
-    ESLint_Test:
+    Check_App:
         runs-on: ubuntu-20.04
         steps:
             - name: Checkout Branch
-              uses: actions/checkout@v2=
+              uses: actions/checkout@v2
 
             - name: Create .env file
               run: |
                   touch .env
                   echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
                   cat .env
+
             - name: Inject slug/short variables
               uses: rlespinasse/github-slug-action@v3.x
 
@@ -33,17 +30,12 @@ jobs:
               with:
                   path: node_modules
                   key: ${{ runner.OS }}-build-${{ hashFiles('**/yarn.lock') }}
-                  restore-keys: |
-                      ${{ runner.OS }}-build-
-                      ${{ runner.OS }}-
+
             - name: Install Packages
               run: yarn install
 
-            - name: ESLint
-              run: yarn lint
+            - name: Check Lint & Stylelint
+              run: yarn lint & yarn stylelint
 
-            - name: Unit Test
-              run: yarn test:cov
-
-            - name: E2E Test
-              run: yarn test:e2e
+            - name: Build
+              run: yarn build
