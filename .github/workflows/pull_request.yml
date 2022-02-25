@@ -40,8 +40,9 @@ jobs:
             - name: Unit Test
               run: yarn test:cov
 
-            - name: E2E Test
-              run: yarn test:e2e
+            #   e2e 테스트 작성 후 주석 풀기
+            # - name: E2E Test
+            #   run: yarn test:e2e
 
             - name: Build
               run: yarn build
