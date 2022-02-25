@@ -173,12 +173,12 @@ describe('MapController', () => {
         });
     });
 
-    /** DELETE /map */
-    describe('DELETE /map', () => {
-        beforeAll(async () => {});
+    // /** DELETE /map */
+    // describe('DELETE /map', () => {
+    //     beforeAll(async () => {});
 
-        it('..test', async () => {});
+    //     it('..test', async () => {});
 
-        afterAll(async () => {});
-    });
+    //     afterAll(async () => {});
+    // });
 });

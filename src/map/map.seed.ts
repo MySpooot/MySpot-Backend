@@ -90,15 +90,15 @@ export const seedPostUserMap = {
         )
 };
 
-// DELETE /map
-export const seedDeleteUserMap = {
-    map: (userId: number) => ({
-        user_id: userId,
-        name: 'delete_map',
-        is_private: false,
-        // code: i % 3 > 0 ? '1234' : undefined,
-        active: MapActive.Active
-    }),
-    favoriteMap: (userId: number, mapId: number) => ({}),
-    accessible: (mapId: number, userId: number) => ({})
-};
+// // DELETE /map
+// export const seedDeleteUserMap = {
+//     map: (userId: number) => ({
+//         user_id: userId,
+//         name: 'delete_map',
+//         is_private: false,
+//         // code: i % 3 > 0 ? '1234' : undefined,
+//         active: MapActive.Active
+//     }),
+//     favoriteMap: (userId: number, mapId: number) => ({}),
+//     accessible: (mapId: number, userId: number) => ({})
+// };
