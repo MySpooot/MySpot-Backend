@@ -1,0 +1,48 @@
+name: MySpot Api Pull Request
+
+on:
+    pull_request:
+        types: [opened, reopened]
+
+jobs:
+    Check_App:
+        runs-on: ubuntu-20.04
+        steps:
+            - name: Checkout Branch
+              uses: actions/checkout@v2
+
+            - name: Create .env file
+              run: |
+                  touch .env
+                  echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
+                  cat .env
+
+            - name: Inject slug/short variables
+              uses: rlespinasse/github-slug-action@v3.x
+
+            - name: Install NodeJS
+              uses: actions/setup-node@v1
+              with:
+                  node-version: 16
+
+            - name: Cache node_modules
+              uses: actions/cache@v1
+              with:
+                  path: node_modules
+                  key: ${{ runner.OS }}-build-${{ hashFiles('**/yarn.lock') }}
+
+            - name: Install Packages
+              run: yarn install
+
+            - name: ESLint
+              run: yarn lint
+
+            - name: Unit Test
+              run: yarn test:cov
+
+            #   e2e 테스트 작성 후 주석 풀기
+            # - name: E2E Test
+            #   run: yarn test:e2e
+
+            - name: Build
+              run: yarn build
