@@ -34,8 +34,14 @@ jobs:
             - name: Install Packages
               run: yarn install
 
-            - name: Check Lint & Stylelint
-              run: yarn lint & yarn stylelint
+            - name: ESLint
+              run: yarn lint
+
+            - name: Unit Test
+              run: yarn test:cov
+
+            - name: E2E Test
+              run: yarn test:e2e
 
             - name: Build
               run: yarn build
