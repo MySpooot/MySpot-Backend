@@ -3,12 +3,14 @@ import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 
 import { MapMarkerReply } from '../../entities/map_marker_reply.entity';
 
-export class GetMarkerRepliesQuery {
+export class GetMarkerRepliesParam {
     @ApiProperty()
     @IsNumber()
     @IsNotEmpty()
     readonly markerId: number;
+}
 
+export class GetMarkerRepliesQuery {
     @ApiProperty({ required: false })
     @IsNumber()
     @IsOptional()
@@ -51,7 +53,7 @@ export class GetMarkerRepliesResponse {
         this.created = replies.created.getTime();
         this.userId = replies.user_id;
         this.userNickName = replies.user.nickname;
-        this.mapId = replies.map_id;
+        this.mapId = replies.marker.map_id;
         this.markerId = replies.marker_id;
         this.message = replies.message;
     }
