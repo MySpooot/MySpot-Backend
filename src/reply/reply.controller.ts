@@ -4,36 +4,36 @@ import { ApiOkResponse } from '@nestjs/swagger';
 import { AuthUser, User_ } from '../lib/user_decorator';
 import { JwtAuthGuard } from '../lib/jwt';
 import { ReplyService } from './reply.service';
-import { PostMarkerReplyBody, PostMarkerReplyResponse } from './dto/post_marker_reply.dto';
-import { GetMarkerRepliesQuery, GetMarkerRepliesResponse } from './dto/get_marker_replies.dto';
+import { PostMarkerReplyBody, PostMarkerReplyParam, PostMarkerReplyResponse } from './dto/post_marker_reply.dto';
+import { GetMarkerRepliesParam, GetMarkerRepliesQuery, GetMarkerRepliesResponse } from './dto/get_marker_replies.dto';
 import { DeleteMarkerReplyParam } from './dto/delete_marker_reply.dto';
 import { PutMarkerReplyBody, PutMarkerReplyParam } from './dto/put_marker_reply.dto';
 
-@Controller('/map/marker/replies')
+@Controller('/map/marker')
 export class ReplyController {
     constructor(private readonly replyService: ReplyService) {}
 
-    @Get()
+    @Get('/:markerId/replies')
     @ApiOkResponse({ type: [GetMarkerRepliesResponse] })
-    getMarkerReplies(@Query() query: GetMarkerRepliesQuery) {
-        return this.replyService.getMarkerReplies(query);
+    getMarkerReplies(@Param() param: GetMarkerRepliesParam, @Query() query: GetMarkerRepliesQuery) {
+        return this.replyService.getMarkerReplies(param, query);
     }
 
-    @Post()
+    @Post('/:markerId/replies')
     @UseGuards(JwtAuthGuard)
     @ApiOkResponse({ type: PostMarkerReplyResponse })
-    insertMarkerReply(@User_() user: AuthUser, @Body() body: PostMarkerReplyBody) {
-        return this.replyService.insertMarkerReply(user, body);
+    insertMarkerReply(@User_() user: AuthUser, @Param() param: PostMarkerReplyParam, @Body() body: PostMarkerReplyBody) {
+        return this.replyService.insertMarkerReply(user, param, body);
     }
 
-    @Put('/:replyId')
+    @Put('/replies/:replyId')
     @UseGuards(JwtAuthGuard)
     @ApiOkResponse()
     updateMarkerReply(@User_() user: AuthUser, @Param() param: PutMarkerReplyParam, @Body() body: PutMarkerReplyBody) {
         return this.replyService.updateMarkerReply(user, param, body);
     }
 
-    @Delete('/:replyId')
+    @Delete('/replies/:replyId')
     @UseGuards(JwtAuthGuard)
     @ApiOkResponse()
     deleteMarkerReply(@User_() user: AuthUser, @Param() param: DeleteMarkerReplyParam) {

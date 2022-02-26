@@ -49,7 +49,7 @@ export class PutMarkerReplyResponse {
         this.created = reply.created.getTime();
         this.message = reply.message;
         this.userId = reply.user_id;
-        this.mapId = reply.map_id;
+        this.mapId = reply.marker_id;
         this.markerId = reply.marker_id;
         this.userNickName = reply.user.nickname;
     }

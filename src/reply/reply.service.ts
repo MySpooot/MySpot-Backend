@@ -2,23 +2,24 @@ import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/
 import { Connection } from 'typeorm';
 
 import { AuthUser } from '../lib/user_decorator';
-import { PostMarkerReplyBody, PostMarkerReplyResponse } from './dto/post_marker_reply.dto';
+import { PostMarkerReplyBody, PostMarkerReplyParam, PostMarkerReplyResponse } from './dto/post_marker_reply.dto';
 import { Map, MapActive } from '../entities/map.entity';
 import { MarkerService } from '../marker/marker.service';
 import { MapMarkerReply, MapMarkerReplyActive } from '../entities/map_marker_reply.entity';
-import { GetMarkerRepliesQuery, GetMarkerRepliesResponse } from './dto/get_marker_replies.dto';
+import { GetMarkerRepliesParam, GetMarkerRepliesQuery, GetMarkerRepliesResponse } from './dto/get_marker_replies.dto';
 import { DeleteMarkerReplyParam } from './dto/delete_marker_reply.dto';
 import { PutMarkerReplyBody, PutMarkerReplyParam, PutMarkerReplyResponse } from './dto/put_marker_reply.dto';
+import { Marker, MarkerActive } from '../entities/marker.entity';
 
 @Injectable()
 export class ReplyService {
     constructor(private readonly connection: Connection, private readonly markerService: MarkerService) {}
 
-    async getMarkerReplies({ markerId, offset = 0, limit = 10 }: GetMarkerRepliesQuery) {
-        console.log(process.env.NODE_ENV);
+    async getMarkerReplies({ markerId }: GetMarkerRepliesParam, { offset = 0, limit = 10 }: GetMarkerRepliesQuery) {
         const replies = await this.connection
             .getRepository(MapMarkerReply)
             .createQueryBuilder('map_marker_reply')
+            .innerJoinAndSelect('map_marker_reply.marker', 'marker')
             .innerJoinAndSelect('map_marker_reply.user', 'user')
             .where('map_marker_reply.marker_id=:markerId AND map_marker_reply.active=:active', { markerId, active: MapMarkerReplyActive.Active })
             .skip(offset)
@@ -29,17 +30,21 @@ export class ReplyService {
         return replies.map(GetMarkerRepliesResponse.from);
     }
 
-    async insertMarkerReply({ userId }: AuthUser, { message, mapId, markerId }: PostMarkerReplyBody) {
-        const map = await this.connection.getRepository(Map).findOne({ id: mapId, active: MapActive.Active });
+    async insertMarkerReply({ userId }: AuthUser, { markerId }: PostMarkerReplyParam, { message }: PostMarkerReplyBody) {
+        const marker = await this.connection.getRepository(Marker).findOne({ id: markerId, active: MarkerActive.Active });
+
+        console.log(marker);
+        if (!marker) throw new BadRequestException('Invalid Marker Id');
+
+        const map = await this.connection.getRepository(Map).findOne({ id: marker.map_id, active: MapActive.Active });
 
         if (!map) throw new BadRequestException('Invalid Map Id');
 
         // (private map && !accessible) 인 경우 throw UnauthorizedException
-        if (map.is_private && !(await this.markerService.getUserAccessible(userId, mapId))) throw new UnauthorizedException();
+        if (map.is_private && !(await this.markerService.getUserAccessible(userId, map.id))) throw new UnauthorizedException();
 
         const insertResult = await this.connection.getRepository(MapMarkerReply).insert({
             user_id: userId,
-            map_id: mapId,
             marker_id: markerId,
             message: message.trim()
         });
@@ -48,6 +53,7 @@ export class ReplyService {
         const reply = await this.connection
             .getRepository(MapMarkerReply)
             .createQueryBuilder('map_marker_reply')
+            .innerJoinAndSelect('map_marker_reply.marker', 'marker')
             .innerJoinAndSelect('map_marker_reply.user', 'user')
             .where('map_marker_reply.id=:id', { id: insertResult.identifiers[0].id })
             .getOne();
