@@ -33,7 +33,6 @@ export class ReplyService {
     async insertMarkerReply({ userId }: AuthUser, { markerId }: PostMarkerReplyParam, { message }: PostMarkerReplyBody) {
         const marker = await this.connection.getRepository(Marker).findOne({ id: markerId, active: MarkerActive.Active });
 
-        console.log(marker);
         if (!marker) throw new BadRequestException('Invalid Marker Id');
 
         const map = await this.connection.getRepository(Map).findOne({ id: marker.map_id, active: MapActive.Active });
