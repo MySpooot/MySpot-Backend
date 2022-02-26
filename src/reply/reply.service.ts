@@ -23,7 +23,7 @@ export class ReplyService {
             .where('map_marker_reply.marker_id=:markerId AND map_marker_reply.active=:active', { markerId, active: MapMarkerReplyActive.Active })
             .skip(offset)
             .take(limit)
-            .orderBy({ 'map_marker_reply.modified': 'DESC' })
+            .orderBy({ 'map_marker_reply.created': 'DESC' })
             .getMany();
 
         return replies.map(GetMarkerRepliesResponse.from);
