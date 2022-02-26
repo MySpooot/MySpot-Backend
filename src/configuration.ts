@@ -18,7 +18,6 @@ export default () => ({
             expiresIn: '30d'
         }
     },
-    // @TODO 모듈 분리 후 async injection 하기
     s3Options: {
         accessKeyId: process.env.ACCESS_KEY_ID,
         secretAccessKey: process.env.SECRET_ACCESS_KEY,
@@ -26,5 +25,27 @@ export default () => ({
         bucket: process.env.BUCKET,
         basePath: process.env.BASE_PATH,
         fileSize: process.env.FILE_SIZE
-    } as MulterExtendedS3Options
+    } as MulterExtendedS3Options,
+    typeorm:
+        process.env.NODE_ENV === 'prod'
+            ? {
+                  //@ TODO
+              }
+            : process.env.NODE_ENV === 'dev'
+            ? {
+                  type: 'postgres',
+                  autoLoadEntities: true,
+                  synchronize: false,
+                  bigNumberStrings: false,
+                  ssl: {
+                      rejectUnauthorized: false
+                  }
+              }
+            : {
+                  type: 'sqlite',
+                  database: ':memory:',
+                  autoLoadEntities: true,
+                  logging: process.env.NODE_ENV === 'local',
+                  synchronize: true
+              }
 });
