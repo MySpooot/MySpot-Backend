@@ -31,8 +31,8 @@ export class AuthController {
         return this.authService.updateUser(param, body);
     }
 
-    // @TODO app api는 swagger response 제외
-    @Post('/appLogin')
+    // app api는 swagger response 제외
+    @Post('/app/login')
     @ApiOkResponse()
     appLogin(@Body() body) {
         return this.authService.loginProcess(body);
