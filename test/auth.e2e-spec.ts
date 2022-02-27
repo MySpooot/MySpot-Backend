@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
@@ -10,7 +11,6 @@ import { AuthModule } from '../src/auth/auth.module';
 import { AuthService } from '../src/auth/auth.service';
 import { User } from '../src/entities/user.entity';
 import { seedKakaoData, seedKakaoGetUserData, seedPendingMe, seedPendingUser, seedUser, seedPendingUserForUpdate } from './auth.e2e.seed';
-import { JwtService } from '@nestjs/jwt';
 
 describe('AppController (e2e)', () => {
     let app: INestApplication;
