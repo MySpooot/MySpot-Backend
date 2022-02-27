@@ -21,7 +21,7 @@ export class AuthService {
 
     // login
     async login({ origin }: PostLoginHeaders, { code }: PostLoginBody): Promise<PostLoginResponse> {
-        let kakaoRedirectUrl;
+        let kakaoRedirectUrl: string | undefined;
 
         if (origin.includes('local')) {
             kakaoRedirectUrl = this.configService.get('kakao.localRedirectUrl');
@@ -29,6 +29,20 @@ export class AuthService {
             kakaoRedirectUrl = this.configService.get('kakao.devRedirectUrl');
         }
 
+        console.log('kakaoRedirectUrl', kakaoRedirectUrl);
+
+        const data = await this.getKakaoData(kakaoRedirectUrl, code);
+
+        console.log('data', data);
+
+        if (data.error) {
+            throw new BadRequestException('카카오 로그인 에러');
+        }
+
+        return await this.loginProcess(data);
+    }
+
+    async getKakaoData(kakaoRedirectUrl, code) {
         const { data } = await this.httpService
             .post(
                 `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${this.configService.get(
@@ -36,12 +50,7 @@ export class AuthService {
                 )}&redirect_uri=${kakaoRedirectUrl}/auth/kakao&code=${code}}`
             )
             .toPromise(); // observable to promise
-
-        if (data.error) {
-            throw new BadRequestException('카카오 로그인 에러');
-        }
-
-        return await this.loginProcess(data);
+        return data;
     }
 
     // 카카오 유저 정보 가져오기
