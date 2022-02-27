@@ -20,3 +20,30 @@ export const seedMe = () =>
                 userLevel: UserLevel.User
             } as AuthUser)
     );
+
+// POST /login
+export const kakaoErrorLoginData = {
+    error: { test: 'error' }
+};
+
+export const kakaoLoginData = {
+    data: {
+        access_token: 'access_token',
+        token_type: 'bearer',
+        refresh_token: 'refresh_token',
+        expires_in: 11111,
+        scope: 'profile_image profile_nickname',
+        refresh_token_expires_in: 111111
+    }
+};
+
+export const kekaoGetUserData = {
+    data: {
+        access_token: 'access_token',
+        token_type: 'bearer',
+        refresh_token: 'refresh_token',
+        expires_in: 11111,
+        scope: 'profile_image profile_nickname',
+        refresh_token_expires_in: 111111
+    }
+};

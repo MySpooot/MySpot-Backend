@@ -29,19 +29,22 @@ export class AuthService {
             kakaoRedirectUrl = this.configService.get('kakao.devRedirectUrl');
         }
 
-        console.log('kakaoRedirectUrl', kakaoRedirectUrl);
+        // console.log('kakaoRedirectUrl', kakaoRedirectUrl);
 
         const data = await this.getKakaoData(kakaoRedirectUrl, code);
 
-        console.log('data', data);
+        if (!data) throw new BadRequestException('Kakao Api Error');
+
+        // console.log('data', data);
 
         if (data.error) {
-            throw new BadRequestException('카카오 로그인 에러');
+            throw new BadRequestException('Kakao Login Error');
         }
 
         return await this.loginProcess(data);
     }
 
+    // 카카오 api 호출
     async getKakaoData(kakaoRedirectUrl, code) {
         const { data } = await this.httpService
             .post(
@@ -53,8 +56,8 @@ export class AuthService {
         return data;
     }
 
-    // 카카오 유저 정보 가져오기
-    async getKaKaoUserData(data) {
+    // 카카오 user api 호출
+    async getKakaoUser(data) {
         const { data: profile } = await this.httpService
             .get('https://kapi.kakao.com/v2/user/me', {
                 headers: { Authorization: `Bearer ${data.access_token}` }
@@ -63,37 +66,19 @@ export class AuthService {
             .catch(() => {
                 throw new BadRequestException('사용자 정보가 없습니다.');
             });
+        return profile;
+    }
+
+    // 카카오 user data return
+    async getKaKaoUserData(data) {
+        const profile = await this.getKakaoUser(data);
+
+        if (!profile) throw new BadRequestException('User Profile Is Not Exist');
 
         return {
             snsId: profile.id,
             name: profile.kakao_account.profile.nickname,
             thumbnail: profile.kakao_account.profile.thumbnail_image_url
-        };
-    }
-
-    // me api
-    async me({ userId, userLevel }: AuthUser): Promise<GetMeResponse> {
-        const user = await this.connection.getRepository(User).findOne({ id: userId, level: userLevel });
-
-        return GetMeResponse.from(user);
-    }
-
-    // insert nickname
-    async updateUser({ userId }: PutUserParam, { nickname }: PutUserBody): Promise<PutUserResponse> {
-        await this.connection.getRepository(User).update({ id: userId }, { nickname: nickname, active: UserActive.Active });
-
-        // update된 user 재조회
-        const user = await this.connection.getRepository(User).findOneOrFail({ id: userId });
-
-        return {
-            token: this.jwtService.sign(
-                { userId: user.id, userLevel: user.level },
-                { secret: this.configService.get('JWT_SECRET'), expiresIn: this.configService.get('jwt.signOptions.expiresIn') }
-            ),
-            id: user.id,
-            nickname: user.nickname,
-            thumbnail: user.thumbnail,
-            active: user.active
         };
     }
 
@@ -148,6 +133,32 @@ export class AuthService {
                 };
             }
         }
+    }
+
+    // me api
+    async me({ userId, userLevel }: AuthUser): Promise<GetMeResponse> {
+        const user = await this.connection.getRepository(User).findOne({ id: userId, level: userLevel });
+
+        return GetMeResponse.from(user);
+    }
+
+    // insert nickname
+    async updateUser({ userId }: PutUserParam, { nickname }: PutUserBody): Promise<PutUserResponse> {
+        await this.connection.getRepository(User).update({ id: userId }, { nickname: nickname, active: UserActive.Active });
+
+        // update된 user 재조회
+        const user = await this.connection.getRepository(User).findOneOrFail({ id: userId });
+
+        return {
+            token: this.jwtService.sign(
+                { userId: user.id, userLevel: user.level },
+                { secret: this.configService.get('JWT_SECRET'), expiresIn: this.configService.get('jwt.signOptions.expiresIn') }
+            ),
+            id: user.id,
+            nickname: user.nickname,
+            thumbnail: user.thumbnail,
+            active: user.active
+        };
     }
 
     // // @TODO 로그아웃 추후 개발 예정
