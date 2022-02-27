@@ -29,13 +29,9 @@ export class AuthService {
             kakaoRedirectUrl = this.configService.get('kakao.devRedirectUrl');
         }
 
-        // console.log('kakaoRedirectUrl', kakaoRedirectUrl);
-
         const data = await this.getKakaoData(kakaoRedirectUrl, code);
 
         if (!data) throw new BadRequestException('Kakao Api Error');
-
-        // console.log('data', data);
 
         if (data.error) {
             throw new BadRequestException('Kakao Login Error');
@@ -62,10 +58,8 @@ export class AuthService {
             .get('https://kapi.kakao.com/v2/user/me', {
                 headers: { Authorization: `Bearer ${data.access_token}` }
             })
-            .toPromise()
-            .catch(() => {
-                throw new BadRequestException('사용자 정보가 없습니다.');
-            });
+            .toPromise();
+
         return profile;
     }
 
