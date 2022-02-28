@@ -4,7 +4,7 @@ import { ApiOkResponse } from '@nestjs/swagger';
 import { AuthUser, User_ } from '../lib/user_decorator';
 import { JwtAuthGuard } from '../lib/jwt';
 import { MarkerService } from './marker.service';
-import { PostMarkerBody, PostMarkerParam } from './dto/post_marker.dto';
+import { PostMarkerBody, PostMarkerParam, PostMarkerResponse } from './dto/post_marker.dto';
 import { GetMarkersHeaders, GetMarkersParam, GetMarkersResponse } from './dto/get_markers.dto';
 import { DeleteMarkerParam } from './dto/delete_marker.dto';
 import { PostMarkerLikeParam } from './dto/post_marker_like.dto';
@@ -25,7 +25,7 @@ export class MarkerController {
 
     @Post('/:mapId/marker')
     @UseGuards(JwtAuthGuard)
-    @ApiOkResponse()
+    @ApiOkResponse({ type: PostMarkerResponse })
     insertMarker(@User_() user: AuthUser, @Param() param: PostMarkerParam, @Body() body: PostMarkerBody) {
         return this.markerService.insertMarker(user, param, body);
     }

@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
 import { AuthUser } from '../lib/user_decorator';
-import { PostMarkerBody, PostMarkerParam } from './dto/post_marker.dto';
+import { PostMarkerBody, PostMarkerParam, PostMarkerResponse } from './dto/post_marker.dto';
 import { Map, MapActive } from '../entities/map.entity';
 import { UserAccessibleMap, UserAccessibleMapActive } from '../entities/user_accessible_map.entity';
 import { Marker, MarkerActive } from '../entities/marker.entity';
@@ -76,10 +76,14 @@ export class MarkerService {
 
         if (!map) throw new BadRequestException('Invalid Map Id');
 
+        const marker = await this.connection.getRepository(Marker).findOne({ map_id: mapId, address_id: addressId, active: MarkerActive.Active });
+
+        if (marker) throw new BadRequestException('Already Exist Marker');
+
         // (private map && !accessible) 인 경우 throw UnauthorizedException
         if (map.is_private && !(await this.getUserAccessible(userId, mapId))) throw new UnauthorizedException();
 
-        await this.connection.getRepository(Marker).insert({
+        const insertResult = await this.connection.getRepository(Marker).insert({
             user_id: userId,
             map_id: mapId,
             name: locationName,
@@ -89,6 +93,11 @@ export class MarkerService {
             address,
             road_address: roadAddress
         });
+
+        // insert된 marker 재 조회
+        const insertedMarker = await this.connection.getRepository(Marker).findOne({ id: insertResult.identifiers[0].id });
+
+        return new PostMarkerResponse(insertedMarker);
     }
 
     // delete marker
