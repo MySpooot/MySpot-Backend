@@ -58,7 +58,7 @@ export class PostMarkerResponse {
     mapId: number;
 
     @ApiProperty()
-    name: string;
+    locationName: string;
 
     @ApiProperty()
     latitude: string;
@@ -69,20 +69,21 @@ export class PostMarkerResponse {
     @ApiProperty()
     addressId: number;
 
-    @ApiProperty()
-    address: string;
+    @ApiProperty({ required: false })
+    address?: string;
 
-    @ApiProperty()
-    roadAddress: string;
+    @ApiProperty({ required: false })
+    roadAddress?: string;
 
     constructor(marker: Marker) {
         this.id = marker.id;
         this.userId = marker.user_id;
         this.mapId = marker.map_id;
-        this.name = marker.name;
+        this.locationName = marker.name;
         this.latitude = marker.latitude;
         this.longitude = marker.longitude;
         this.addressId = marker.address_id;
+        this.address = marker.address;
         this.roadAddress = marker.road_address;
     }
 }

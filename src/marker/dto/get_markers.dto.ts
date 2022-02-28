@@ -22,7 +22,7 @@ export class GetMarkersResponse {
     id: number;
 
     @ApiProperty()
-    name: string;
+    locationName: string;
 
     @ApiProperty()
     latitude: string;
@@ -53,7 +53,7 @@ export class GetMarkersResponse {
 
     constructor(marker: Marker, isLike?: boolean, isMyLocation?: boolean) {
         this.id = marker.id;
-        this.name = marker.name;
+        this.locationName = marker.name;
         this.latitude = marker.latitude;
         this.longitude = marker.longitude;
         this.addressId = marker.address_id;
