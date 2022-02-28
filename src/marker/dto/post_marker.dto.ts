@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength } from 'class-validator';
 
+import { Marker } from '../../entities/marker.entity';
+
 export class PostMarkerParam {
     @ApiProperty()
     @IsNumber()
@@ -43,4 +45,44 @@ export class PostMarkerBody {
     @IsOptional()
     @MaxLength(128)
     readonly roadAddress?: string;
+}
+
+export class PostMarkerResponse {
+    @ApiProperty()
+    id: number;
+
+    @ApiProperty()
+    userId: number;
+
+    @ApiProperty()
+    mapId: number;
+
+    @ApiProperty()
+    name: string;
+
+    @ApiProperty()
+    latitude: string;
+
+    @ApiProperty()
+    longitude: string;
+
+    @ApiProperty()
+    addressId: number;
+
+    @ApiProperty()
+    address: string;
+
+    @ApiProperty()
+    roadAddress: string;
+
+    constructor(marker: Marker) {
+        this.id = marker.id;
+        this.userId = marker.user_id;
+        this.mapId = marker.map_id;
+        this.name = marker.name;
+        this.latitude = marker.latitude;
+        this.longitude = marker.longitude;
+        this.addressId = marker.address_id;
+        this.roadAddress = marker.road_address;
+    }
 }
