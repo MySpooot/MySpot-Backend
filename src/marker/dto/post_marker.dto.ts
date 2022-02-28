@@ -83,6 +83,7 @@ export class PostMarkerResponse {
         this.latitude = marker.latitude;
         this.longitude = marker.longitude;
         this.addressId = marker.address_id;
+        this.address = marker.address;
         this.roadAddress = marker.road_address;
     }
 }
