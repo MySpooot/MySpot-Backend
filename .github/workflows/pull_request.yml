@@ -15,6 +15,7 @@ jobs:
               run: |
                   touch .env
                   echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
+                  echo BUCKET=${{ secrets.BUCKET }} >> .env
                   cat .env
 
             - name: Inject slug/short variables
