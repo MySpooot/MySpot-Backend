@@ -1,5 +1,5 @@
-import { User, UserActive } from '../src/entities/user.entity';
-import { AuthUser, UserLevel } from '../src/lib/user_decorator';
+import { User, UserActive } from '../../src/entities/user.entity';
+import { AuthUser, UserLevel } from '../../src/lib/user_decorator';
 
 /** POST /auth/login */
 export const seedUser = {

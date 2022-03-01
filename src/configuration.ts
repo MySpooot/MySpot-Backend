@@ -23,7 +23,7 @@ export default () => ({
         secretAccessKey: process.env.SECRET_ACCESS_KEY,
         region: 'ap-northeast-2',
         bucket: process.env.BUCKET,
-        basePath: process.env.BASE_PATH,
+        basePath: process.env.NODE_ENV === 'test' ? 'test' : process.env.BASE_PATH,
         fileSize: process.env.FILE_SIZE
     } as MulterExtendedS3Options,
     typeorm:
