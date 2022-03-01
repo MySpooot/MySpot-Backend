@@ -6,13 +6,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
 import request from 'supertest';
 
-import configuration from '../src/configuration';
-import { AuthModule } from '../src/auth/auth.module';
-import { AuthService } from '../src/auth/auth.service';
-import { User } from '../src/entities/user.entity';
+import configuration from '../../src/configuration';
+import { AuthModule } from '../../src/auth/auth.module';
+import { AuthService } from '../../src/auth/auth.service';
+import { User } from '../../src/entities/user.entity';
 import { seedKakaoData, seedKakaoGetUserData, seedPendingMe, seedPendingUser, seedUser, seedPendingUserForUpdate } from './auth.e2e.seed';
 
-describe('AppController (e2e)', () => {
+describe('AuthController (e2e)', () => {
     let app: INestApplication;
     let connection: Connection;
     let authService: AuthService;
