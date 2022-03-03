@@ -10,6 +10,7 @@ export class UserService {
 
     // 유저 썸네일 업로드
     async uploadImage({ userId }: AuthUser, file): Promise<string> {
+        console.log('key');
         await this.connection.getRepository(User).update(
             { id: userId },
             {
