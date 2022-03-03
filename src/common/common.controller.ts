@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { ApiOkResponse } from '@nestjs/swagger';
+import { ApiHeader, ApiOkResponse } from '@nestjs/swagger';
 
 import { CommonService } from './common.service';
 
@@ -8,6 +8,7 @@ export class CommonController {
     constructor(private readonly commonService: CommonService) {}
 
     @Get('/status')
+    @ApiHeader({ name: 'Authorization', required: false })
     @ApiOkResponse({ type: 'string' })
     getServerStatus() {
         return this.commonService.getServerStatus();

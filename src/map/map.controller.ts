@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards, Headers } from '@nestjs/common';
-import { ApiOkResponse } from '@nestjs/swagger';
+import { ApiHeader, ApiOkResponse } from '@nestjs/swagger';
 
 import { JwtAuthGuard } from '../lib/jwt';
 import { MapService } from './map.service';
@@ -23,6 +23,7 @@ export class MapController {
 
     @Get()
     @UseGuards(JwtAuthGuard)
+    @ApiHeader({ name: 'Authorization', required: true })
     @ApiOkResponse({ type: [GetUserMapsResponse] })
     getUserMaps(@User_() user: AuthUser, @Query() query: GetUserMapsQuery) {
         return this.mapService.getUserMaps(user, query);
@@ -30,6 +31,7 @@ export class MapController {
 
     @Post()
     @UseGuards(JwtAuthGuard)
+    @ApiHeader({ name: 'Authorization', required: true })
     @ApiOkResponse()
     insertUserMap(@User_() user: AuthUser, @Body() body: PostUserMapBody) {
         return this.mapService.insertUserMap(user, body);
@@ -37,6 +39,7 @@ export class MapController {
 
     @Delete('/:mapId')
     @UseGuards(JwtAuthGuard)
+    @ApiHeader({ name: 'Authorization', required: true })
     @ApiOkResponse()
     deleteUserMap(@Param() param: DeleteUserMapParam) {
         return this.mapService.deleteUserMap(param);
@@ -44,6 +47,7 @@ export class MapController {
 
     @Get('/recent')
     @UseGuards(JwtAuthGuard)
+    @ApiHeader({ name: 'Authorization', required: true })
     @ApiOkResponse({ type: [GetUserRecentMapsResponse] })
     getUserMapLogs(@User_() user: AuthUser, @Query() query: GetUserRecentMapsQuery) {
         return this.mapService.getUserRecentMaps(user, query);
@@ -51,6 +55,7 @@ export class MapController {
 
     @Post('/recent/:recentMapId')
     @UseGuards(JwtAuthGuard)
+    @ApiHeader({ name: 'Authorization', required: true })
     @ApiOkResponse()
     insertUserRecentMap(@User_() user: AuthUser, @Param() param: PostUserRecentMapParam) {
         return this.mapService.insertUserRecentMap(user, param);
@@ -58,6 +63,7 @@ export class MapController {
 
     @Delete('/recent/:recentMapId')
     @UseGuards(JwtAuthGuard)
+    @ApiHeader({ name: 'Authorization', required: true })
     @ApiOkResponse()
     deleteUserRecentMap(@User_() user: AuthUser, @Param() param: DeleteUserRecentMapParam) {
         return this.mapService.deleteUserRecentMap(user, param);
@@ -65,6 +71,7 @@ export class MapController {
 
     @Get('/favorite')
     @UseGuards(JwtAuthGuard)
+    @ApiHeader({ name: 'Authorization', required: true })
     @ApiOkResponse({ type: [GetUserFavoriteMapsResponse] })
     getUserFavoriteMaps(@User_() user: AuthUser, @Query() query: GetUserFavoriteMapsQuery) {
         return this.mapService.getUserFavoriteMaps(user, query);
@@ -72,6 +79,7 @@ export class MapController {
 
     @Post('/favorite/:favoriteMapId')
     @UseGuards(JwtAuthGuard)
+    @ApiHeader({ name: 'Authorization', required: true })
     @ApiOkResponse()
     insertUserFavoriteMap(@User_() user: AuthUser, @Param() param: PostUserFavoriteMapParam) {
         return this.mapService.insertUserFavoriteMap(user, param);
@@ -79,12 +87,14 @@ export class MapController {
 
     @Delete('/favorite/:favoriteMapId')
     @UseGuards(JwtAuthGuard)
+    @ApiHeader({ name: 'Authorization', required: true })
     @ApiOkResponse()
     deleteUserFavoriteMap(@User_() user: AuthUser, @Param() param: DeleteUserFavoriteMapParam) {
         return this.mapService.deleteUserFavoriteMap(user, param);
     }
 
     @Get('/:mapId/detail')
+    @ApiHeader({ name: 'Authorization', required: false })
     @ApiOkResponse({ type: GetMapDetailResponse })
     getMapAccessible(@Headers() headers: GetMapDetailHeaders, @Param() param: GetMapDetailParam) {
         return this.mapService.getMapDetail(headers, param);
@@ -92,12 +102,14 @@ export class MapController {
 
     @Get('/:mapId/code')
     @UseGuards(JwtAuthGuard)
+    @ApiHeader({ name: 'Authorization', required: true })
     @ApiOkResponse({ type: GetMapCodeResponse })
     getMapCode(@Param() param: GetMapCodeParam) {
         return this.mapService.getMapCode(param);
     }
 
     @Post('/:mapId/code/match')
+    @ApiHeader({ name: 'Authorization', required: false })
     @ApiOkResponse({ type: Boolean })
     getMapCodeMatch(@Param() param: PostMapCodeMatchParam, @Body() body: PostMapCodeMatchBody) {
         return this.mapService.getMapCodeMatch(param, body);
