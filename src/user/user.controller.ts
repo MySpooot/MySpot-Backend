@@ -22,7 +22,7 @@ export class UserController {
             randomFilename: true
         })
     )
-    uploadFile(@User_() user: AuthUser, @UploadedFile() file: PostUploadImageBody) {
+    uploadFile(@User_() user: AuthUser, @UploadedFile() file) {
         return this.userService.uploadImage(user, file);
     }
 }
