@@ -1,34 +1,43 @@
-import { Handler, Context } from 'aws-lambda';
-import { Server } from 'http';
-import { createServer, proxy } from 'aws-serverless-express';
-import { eventContext } from 'aws-serverless-express/middleware';
-
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
+import ServerlessExpress from '@vendia/serverless-express';
+import express from 'express';
+import 'source-map-support/register';
+import { APIGatewayProxyHandler, Context } from 'aws-lambda';
+
 import { AppModule } from './app.module';
 
-import express from 'express';
+let cachedServer;
 
-// NOTE: If you get ERR_CONTENT_DECODING_FAILED in your browser, this is likely
-// due to a compressed response (e.g. gzip) which has not been handled correctly
-// by aws-serverless-express and/or API Gateway. Add the necessary MIME types to
-// binaryMimeTypes below
-const binaryMimeTypes: string[] = [];
-
-let cachedServer: Server;
-
-async function bootstrapServer(): Promise<Server> {
+export const bootstrapServer = async (module: any) => {
     if (!cachedServer) {
         const expressApp = express();
-        const nestApp = await NestFactory.create(AppModule, new ExpressAdapter(expressApp));
-        nestApp.use(eventContext());
-        await nestApp.init();
-        cachedServer = createServer(expressApp, undefined, binaryMimeTypes);
-    }
-    return cachedServer;
-}
+        // const isProd = process.env.stage === 'prod';
 
-export const handler: Handler = async (event: any, context: Context) => {
-    cachedServer = await bootstrapServer();
-    return proxy(cachedServer, event, context, 'PROMISE').promise;
+        const app = await NestFactory.create(module, new ExpressAdapter(expressApp));
+        // app.useGlobalPipes(
+        //     new ValidationPipe({
+        //         whitelist: true,
+        //         transform: true,
+        //         transformOptions: { enableImplicitConversion: true }
+        //     })
+        // );
+        app.enableCors({
+            origin: '*',
+            allowedHeaders: '*'
+        });
+
+        await app.init();
+
+        cachedServer = ServerlessExpress({ app: expressApp });
+    }
+
+    return cachedServer;
+};
+
+export const handler: APIGatewayProxyHandler = async (event: any, context: Context, callback: any) => {
+    const server = await bootstrapServer(AppModule);
+
+    return server(event, context, callback);
 };
