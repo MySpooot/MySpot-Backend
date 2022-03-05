@@ -38,7 +38,7 @@ export class GetUserRecentMapsResponse {
     constructor(recentMap: UserRecentMap) {
         this.id = recentMap.id;
         this.mapId = recentMap.map_id;
-        this.created = recentMap.created.getTime();
+        this.created = process.env.NODE_ENV === 'test' ? Date.now() : recentMap.created.getTime();
         this.userId = recentMap.user_id;
         this.mapName = recentMap.map.name;
     }

@@ -61,7 +61,7 @@ export class MapService {
             .createQueryBuilder('user_recent_map')
             .innerJoinAndSelect('user_recent_map.map', 'map', 'map.active=:mActive', { mActive: MapActive.Active })
             .where('user_recent_map.user_id=:userId AND user_recent_map.active=:urmActive', { userId, urmActive: UserRecentMapActive.Active })
-            .orderBy({ 'user_recent_map.modified': 'DESC' })
+            .orderBy({ 'user_recent_map.modified': 'DESC', 'user_recent_map.id': 'DESC' })
             .skip(offset)
             .take(limit)
             .getMany();

@@ -49,7 +49,7 @@ export class MapController {
     @UseGuards(JwtAuthGuard)
     @ApiHeader({ name: 'Authorization', required: true })
     @ApiOkResponse({ type: [GetUserRecentMapsResponse] })
-    getUserMapLogs(@User_() user: AuthUser, @Query() query: GetUserRecentMapsQuery) {
+    getUserRecentMaps(@User_() user: AuthUser, @Query() query: GetUserRecentMapsQuery) {
         return this.mapService.getUserRecentMaps(user, query);
     }
 
