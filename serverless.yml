@@ -1,0 +1,35 @@
+service:
+    name: MySpotApi
+plugins:
+    - serverless-plugin-typescript
+    - serverless-plugin-optimize
+    - serverless-offline
+
+provider:
+    name: aws
+    runtime: nodejs14.x
+    region: ap-northeast-2
+    memorySize: 512
+    timeout: 10
+    # tracing:
+    #     lambda: true
+    # deploymentBucket: test-serverless-dev-sp
+    # deploymentPrefix: test-dev
+    environment:
+        NODE_ENV: production
+        stage: ${self:provider.stage}
+    lambdaHashingVersion: 20201221
+    iamManagedPolicies:
+        - arn:aws:iam::329737213975:policy/AWSServerlessDeployFullAccess
+custom:
+    prune:
+        automatic: true
+        number: 10
+
+functions:
+    test:
+        handler: src/common/lambda.handler
+        events:
+            - http:
+                  method: get
+                  path: /common/status
