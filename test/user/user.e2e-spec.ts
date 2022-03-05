@@ -8,12 +8,14 @@ import request from 'supertest';
 
 import configuration from '../../src/configuration';
 import { User } from '../../src/entities/user.entity';
-import { seedImageUploadUser } from './user.e2e.seed';
+import { seedImageUploadMe, seedImageUploadUser, seedUpdateNicknameUser, seedUpdateNicknameMe } from './user.e2e.seed';
 import { UserModule } from '../../src/user/user.module';
+import { UserService } from '../../src/user/user.service';
 
 describe('UserController (e2e)', () => {
     let app: INestApplication;
     let connection: Connection;
+    let userService: UserService;
 
     beforeAll(async () => {
         const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -46,11 +48,27 @@ describe('UserController (e2e)', () => {
         await app.init();
 
         connection = app.get(Connection);
+        userService = app.get(UserService);
+    });
+
+    it('PUT /user', async () => {
+        await connection.getRepository(User).save(seedUpdateNicknameUser);
+        const jwtToken = app.get(JwtService).sign(seedUpdateNicknameMe);
+        const body = {
+            nickname: 'after_'
+        };
+
+        return request(app.getHttpServer())
+            .put('/user')
+            .set({ Authorization: jwtToken })
+            .send(body)
+            .expect(200)
+            .expect(JSON.stringify(await userService.updateUserNickname(seedUpdateNicknameMe, body)));
     });
 
     it('POST /user/upload', async () => {
-        const user = await connection.getRepository(User).save(seedImageUploadUser);
-        const jwtToken = app.get(JwtService).sign({ userId: user.id, userLevel: user.level });
+        await connection.getRepository(User).save(seedImageUploadUser);
+        const jwtToken = app.get(JwtService).sign(seedImageUploadMe);
 
         return request(app.getHttpServer()).post('/user/upload').attach('file', 'test/user/cat.png').set({ Authorization: jwtToken }).expect(201);
     });
