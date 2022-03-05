@@ -96,7 +96,7 @@ export class MapController {
     @Get('/:mapId/detail')
     @ApiHeader({ name: 'Authorization', required: false })
     @ApiOkResponse({ type: GetMapDetailResponse })
-    getMapAccessible(@Headers() headers: GetMapDetailHeaders, @Param() param: GetMapDetailParam) {
+    getMapDetail(@Headers() headers: GetMapDetailHeaders, @Param() param: GetMapDetailParam) {
         return this.mapService.getMapDetail(headers, param);
     }
 

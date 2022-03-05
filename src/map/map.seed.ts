@@ -144,7 +144,7 @@ export const seedDeleteUserMap = {
     })
 };
 
-/** GET /recent/map */
+/** GET /map/recent */
 export const seedGetUserRecentMap = {
     maps: (userId: number) =>
         [...new Array(20).keys()].map(
@@ -167,15 +167,6 @@ export const seedGetUserRecentMap = {
                     active: i % 10 > 0 ? UserRecentMapActive.Active : UserRecentMapActive.Inactive
                 } as UserRecentMap)
         ),
-    // favoriteMaps: (mapId: number[], userId: number) =>
-    //     [...new Array(5).keys()].map(
-    //         i =>
-    //             ({
-    //                 user_id: userId,
-    //                 map_id: mapId[i],
-    //                 active: i % 10 > 0 ? UserFavoriteMapActive.Active : UserFavoriteMapActive.Inactive
-    //             } as UserFavoriteMap)
-    //     ),
     accessible: (mapId: number[], userId: number) =>
         [...new Array(20).keys()].map(
             i =>
@@ -187,7 +178,7 @@ export const seedGetUserRecentMap = {
         )
 };
 
-/** POST /recent/:recentMapId exist not exist map*/
+/** POST /map/recent/:recentMapId exist not exist map*/
 export const seedPostUserRecentMapNotExist = {
     map: (userId: number) => ({
         user_id: userId,
@@ -207,7 +198,7 @@ export const seedPostUserRecentMapNotExist = {
     })
 };
 
-/** POST /recent/:recentMapId exist recent map*/
+/** POST /map/recent/:recentMapId exist recent map*/
 export const seedPostUserRecentMapExist = {
     map: (userId: number) => ({
         user_id: userId,
@@ -227,7 +218,7 @@ export const seedPostUserRecentMapExist = {
     })
 };
 
-/** DELETE /recent/:recentMapId */
+/** DELETE /map/recent/:recentMapId */
 export const seedDeleteUserRecentMap = {
     map: (userId: number) => ({
         user_id: userId,
@@ -247,7 +238,7 @@ export const seedDeleteUserRecentMap = {
     })
 };
 
-/** GET /favorite/map */
+/** GET /map/favorite */
 export const seedGetUserFavoriteMap = {
     maps: (userId: number) =>
         [...new Array(20).keys()].map(
@@ -278,4 +269,90 @@ export const seedGetUserFavoriteMap = {
                     active: i % 10 > 0 ? UserAccessibleMapActive.Active : UserAccessibleMapActive.Inactive
                 } as UserAccessibleMap)
         )
+};
+
+/** POST /map/favorite/:favoriteMapId */
+export const seedPostUserFavoriteMap = {
+    map: (userId: number) => ({
+        user_id: userId,
+        name: 'map123',
+        is_private: false,
+        active: MapActive.Active
+    }),
+
+    accessible: (mapId: number, userId: number) => ({
+        user_id: userId,
+        map_id: mapId,
+        active: UserAccessibleMapActive.Active
+    })
+};
+
+/** POST /map/favorite/:favoriteMapId */
+export const seedDeleteUserFavoriteMap = {
+    map: (userId: number) => ({
+        user_id: userId,
+        name: 'map123',
+        is_private: false,
+        active: MapActive.Active
+    }),
+
+    favoriteMap: (mapId: number, userId: number) => ({
+        user_id: userId,
+        map_id: mapId,
+        active: UserFavoriteMapActive.Active
+    }),
+
+    accessible: (mapId: number, userId: number) => ({
+        user_id: userId,
+        map_id: mapId,
+        active: UserAccessibleMapActive.Active
+    })
+};
+
+/** GET /map/detail login user */
+export const seedDetailLoginUser = {
+    map: (userId: number) => ({
+        user_id: userId,
+        name: 'map123',
+        is_private: false,
+        active: MapActive.Active
+    }),
+    accessible: (mapId: number, userId: number) => ({
+        user_id: userId,
+        map_id: mapId,
+        active: UserAccessibleMapActive.Active
+    })
+};
+
+/** GET /map/detail not login user */
+export const seedDetailNotLoginUser = {
+    map: (userId: number) => ({
+        user_id: userId,
+        name: 'map123',
+        is_private: true,
+        code: '1234',
+        active: MapActive.Active
+    })
+};
+
+/** GET /map/code */
+export const seedGetMapCode = {
+    map: (userId: number) => ({
+        user_id: userId,
+        name: 'private_map',
+        is_private: true,
+        code: '4454',
+        active: MapActive.Active
+    })
+};
+
+/** POST /map/:mapId/code/match */
+export const seedPostMapCodeMatch = {
+    map: (userId: number) => ({
+        user_id: userId,
+        name: 'private_map',
+        is_private: true,
+        code: '1313',
+        active: MapActive.Active
+    })
 };

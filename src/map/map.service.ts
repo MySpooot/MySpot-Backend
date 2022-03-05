@@ -139,11 +139,11 @@ export class MapService {
                 .leftJoinAndSelect(
                     'map.favoriteMap',
                     'favoriteMap',
-                    'favoriteMap.user_id=:userId AND favoriteMap.map_id=:mapId AND favoriteMap.active=:active',
+                    'favoriteMap.user_id=:userId AND favoriteMap.map_id=:mapId AND favoriteMap.active=:fActive',
                     {
                         userId,
                         mapId,
-                        active: UserFavoriteMapActive.Active
+                        fActive: UserFavoriteMapActive.Active
                     }
                 )
                 .where('map.id=:mapId AND map.active=:active', { mapId, active: MapActive.Active })

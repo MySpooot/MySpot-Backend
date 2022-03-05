@@ -2,15 +2,16 @@ import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { isNumberString } from 'class-validator';
+import { JwtService } from '@nestjs/jwt';
 import { Connection } from 'typeorm';
 
 import configuration from '../configuration';
-import { AuthUser } from '../lib/user_decorator';
+import { AuthUser, UserLevel } from '../lib/user_decorator';
 import { MapController } from './map.controller';
 import { MapModule } from './map.module';
 import { User } from '../entities/user.entity';
 import { Map, MapActive } from '../entities/map.entity';
-import { UserFavoriteMap } from '../entities/user_favorite_map.entity';
+import { UserFavoriteMap, UserFavoriteMapActive } from '../entities/user_favorite_map.entity';
 import { UserAccessibleMap, UserAccessibleMapActive } from '../entities/user_accessible_map.entity';
 import { UserRecentMap, UserRecentMapActive } from '../entities/user_recent_map.entity';
 import {
@@ -24,7 +25,12 @@ import {
     seedPostUserRecentMapExist,
     seedPostUserRecentMapNotExist,
     seedDeleteUserRecentMap,
-    seedGetUserFavoriteMap
+    seedGetUserFavoriteMap,
+    seedPostUserFavoriteMap,
+    seedDeleteUserFavoriteMap,
+    seedDetailLoginUser,
+    seedDetailNotLoginUser,
+    seedPostMapCodeMatch
 } from './map.seed';
 
 describe('MapController', () => {
@@ -33,8 +39,8 @@ describe('MapController', () => {
 
     let users: User[];
     let me: AuthUser[];
+    let jwtToken: string;
 
-    // 테스트 시작 전에 첫 실행
     beforeAll(async () => {
         const app: TestingModule = await Test.createTestingModule({
             imports: [
@@ -56,6 +62,7 @@ describe('MapController', () => {
 
         connection = app.get(Connection);
         mapController = app.get(MapController);
+        jwtToken = app.get(JwtService).sign({ userId: 1, userLevel: UserLevel.User });
 
         // create users
         users = await connection.getRepository(User).save(seedUsers());
@@ -71,13 +78,6 @@ describe('MapController', () => {
         beforeAll(async () => {
             maps = await connection.getRepository(Map).save(seedGetUserMaps.maps(users[0].id));
 
-            // await connection.getRepository(UserFavoriteMap).save(
-            //     seedGetUserMaps.favoriteMaps(
-            //         maps.map(x => x.id),
-            //         users[0].id
-            //     )
-            // );
-
             await connection.getRepository(UserAccessibleMap).save(
                 seedGetUserMaps.accessible(
                     maps.map(x => x.id),
@@ -86,7 +86,6 @@ describe('MapController', () => {
             );
         });
 
-        // 테스트 케이스
         it('should return maps', async () => {
             const result = await mapController.getUserMaps(me[0], {});
 
@@ -124,13 +123,6 @@ describe('MapController', () => {
         it('should insert public map and insert accessible', async () => {
             const maps = await connection.getRepository(Map).save(seedPostUserPublicMap.maps(users[0].id));
 
-            // await connection.getRepository(UserFavoriteMap).save(
-            //     seedPostUserPublicMap.favoriteMaps(
-            //         maps.map(x => x.id),
-            //         users[0].id
-            //     )
-            // );
-
             await connection.getRepository(UserAccessibleMap).save(
                 seedPostUserPublicMap.accessible(
                     maps.map(x => x.id),
@@ -159,13 +151,6 @@ describe('MapController', () => {
         // private map
         it('should insert private map and insert accessible', async () => {
             const maps = await connection.getRepository(Map).save(seedPostUserPrivateMap.maps(users[0].id));
-
-            // await connection.getRepository(UserFavoriteMap).save(
-            //     seedPostUserPrivateMap.favoriteMaps(
-            //         maps.map(x => x.id),
-            //         users[0].id
-            //     )
-            // );
 
             await connection.getRepository(UserAccessibleMap).save(
                 seedPostUserPrivateMap.accessible(
@@ -215,7 +200,7 @@ describe('MapController', () => {
         });
     });
 
-    /** GET /recent/map */
+    /** GET map/recent */
     describe('GET /recent/map', () => {
         it('should return maps according to offset, limit', async () => {
             const maps = await connection.getRepository(Map).save(seedGetUserRecentMap.maps(users[0].id));
@@ -245,7 +230,7 @@ describe('MapController', () => {
         });
     });
 
-    /** POST /recent/:recentMapId */
+    /** POST /map/recent/:recentMapId */
     describe('POST /recent/recentMapId', () => {
         it('should insert recent map if recent map is not exist', async () => {
             const map = await connection.getRepository(Map).save(seedPostUserRecentMapNotExist.map(users[0].id));
@@ -291,7 +276,7 @@ describe('MapController', () => {
         });
     });
 
-    /** DELETE /recent/:recentMapId */
+    /** DELETE /map/recent/:recentMapId */
     describe('DELETE /recent/:recentMapId', () => {
         it('should update active to Inactive', async () => {
             const map = await connection.getRepository(Map).save(seedDeleteUserRecentMap.map(users[5].id));
@@ -317,7 +302,7 @@ describe('MapController', () => {
         });
     });
 
-    /** GET /favorite/:favoriteMapId */
+    /** GET /map/favorite */
     describe('should get user favorite map', () => {
         it('should return favorite map according to offset, limit', async () => {
             // postgresql entity type issue로 modified test 진행x
@@ -340,6 +325,128 @@ describe('MapController', () => {
 
             expect(result).toBeDefined();
             expect(result.length).toEqual(4);
+
+            await connection.getRepository(UserAccessibleMap).clear();
+            await connection.getRepository(UserFavoriteMap).clear();
+            await connection.getRepository(Map).clear();
+        });
+    });
+
+    /** POST /map/favorite/:favoriteMapId */
+    describe('POST /map/favorite/:favoriteMapId', () => {
+        it('should insert favorite map', async () => {
+            const map = await connection.getRepository(Map).save(seedPostUserFavoriteMap.map(users[2].id));
+
+            await connection.getRepository(UserAccessibleMap).save(seedPostUserFavoriteMap.accessible(map.id, users[2].id));
+
+            const beforeFavoriteMap = await connection
+                .getRepository(UserFavoriteMap)
+                .findOne({ map_id: map.id, active: UserFavoriteMapActive.Active });
+
+            await mapController.insertUserFavoriteMap(me[2], { favoriteMapId: map.id });
+
+            const afterFavoriteMap = await connection
+                .getRepository(UserFavoriteMap)
+                .findOne({ map_id: map.id, active: UserFavoriteMapActive.Active });
+
+            expect(beforeFavoriteMap).toBeUndefined();
+            expect(afterFavoriteMap).toBeDefined();
+
+            await connection.getRepository(UserAccessibleMap).clear();
+            await connection.getRepository(UserFavoriteMap).clear();
+            await connection.getRepository(Map).clear();
+        });
+    });
+
+    /** DELETE /map/favorite/:favoriteMapId */
+    describe('DELETE /map/favorite/:favoriteMapId', () => {
+        it('should update active to Inactive', async () => {
+            const map = await connection.getRepository(Map).save(seedDeleteUserFavoriteMap.map(users[0].id));
+
+            await connection.getRepository(UserAccessibleMap).save(seedDeleteUserFavoriteMap.accessible(map.id, users[0].id));
+
+            await connection.getRepository(UserFavoriteMap).save(seedDeleteUserFavoriteMap.favoriteMap(map.id, users[0].id));
+
+            const beforeFavoriteMap = await connection.getRepository(UserFavoriteMap).findOne({ map_id: map.id });
+
+            await mapController.deleteUserFavoriteMap(me[0], { favoriteMapId: map.id });
+
+            const afterFavoriteMap = await connection.getRepository(UserFavoriteMap).findOne({ map_id: map.id });
+
+            expect(beforeFavoriteMap).toBeDefined();
+            expect(afterFavoriteMap).toBeDefined();
+            expect(afterFavoriteMap.active).toEqual(UserFavoriteMapActive.Inactive);
+
+            await connection.getRepository(UserAccessibleMap).clear();
+            await connection.getRepository(UserFavoriteMap).clear();
+            await connection.getRepository(Map).clear();
+        });
+    });
+
+    /** GET /map/detail */
+    describe('GET /map/detail', () => {
+        it('should return response if login user', async () => {
+            const map = await connection.getRepository(Map).save(seedDetailLoginUser.map(users[0].id));
+
+            await connection.getRepository(UserAccessibleMap).save(seedDetailLoginUser.accessible(map.id, users[0].id));
+
+            const result = await mapController.getMapDetail({ authorization: jwtToken }, { mapId: map.id });
+
+            expect(result).toBeDefined();
+            expect(result.isOwner).toBeTruthy();
+            expect(result.accessible).toBeTruthy();
+            expect(result.isFavorite).toBeFalsy();
+            expect(result.isPrivate).toBeFalsy();
+
+            await connection.getRepository(UserAccessibleMap).clear();
+            await connection.getRepository(Map).clear();
+        });
+
+        it('should return response if not login user', async () => {
+            const map = await connection.getRepository(Map).save(seedDetailNotLoginUser.map(users[8].id));
+
+            const result = await mapController.getMapDetail({}, { mapId: map.id });
+
+            console.log(result);
+
+            expect(result).toBeDefined();
+            expect(result.isOwner).toBeFalsy();
+            expect(result.accessible).toBeFalsy();
+            expect(result.isFavorite).toBeFalsy();
+            expect(result.isPrivate).toBeTruthy();
+
+            await connection.getRepository(Map).clear();
+        });
+    });
+
+    /** GET /map/code */
+    describe('GET /map/code', () => {
+        it('should return code', async () => {
+            const map = await connection.getRepository(Map).save(seedDetailNotLoginUser.map(users[8].id));
+
+            const result = await mapController.getMapCode({ mapId: map.id });
+
+            expect(result).toBeDefined();
+            expect(result.code).toEqual(map.code);
+        });
+    });
+
+    /** POST /map/:mapId/code/match */
+    describe('POST /map/:mapId/code/match', () => {
+        it('should return true if code is match, or return false if code is not match', async () => {
+            const map = await connection.getRepository(Map).save(seedPostMapCodeMatch.map(users[7].id));
+
+            // true
+            const resultTrue = await mapController.getMapCodeMatch({ mapId: map.id }, { code: '1313' });
+
+            expect(resultTrue).toBeDefined();
+            expect(resultTrue).toEqual(true);
+
+            // false
+            const resultFalse = await mapController.getMapCodeMatch({ mapId: map.id }, { code: '4444' });
+
+            expect(resultFalse).toBeDefined();
+            expect(resultFalse).toEqual(false);
         });
     });
 });
