@@ -9,22 +9,26 @@ provider:
     name: aws
     runtime: nodejs14.x
     region: ap-northeast-2
+    endpointType: REGIONAL
+    # stackName: ${self:service}-${self:provider.stage}
     memorySize: 512
     timeout: 10
-    # tracing:
-    #     lambda: true
-    # deploymentBucket: test-serverless-dev-sp
-    # deploymentPrefix: test-dev
+    tracing:
+        lambda: true
+    deploymentBucket: myspot-serverless-deployment
+    deploymentPrefix: myspot
     environment:
         NODE_ENV: production
         stage: ${self:provider.stage}
     lambdaHashingVersion: 20201221
-    iamManagedPolicies:
-        - arn:aws:iam::329737213975:policy/AWSServerlessDeployFullAccess
+
+package:
+    individually: true
+
 custom:
-    prune:
-        automatic: true
-        number: 10
+    cors:
+        origin: '*'
+        headers: '*'
 
 functions:
     test:
@@ -33,3 +37,4 @@ functions:
             - http:
                   method: get
                   path: /common/status
+                  cors: ${self.custom.cors}
