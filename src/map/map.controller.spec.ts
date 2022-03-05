@@ -407,8 +407,6 @@ describe('MapController', () => {
 
             const result = await mapController.getMapDetail({}, { mapId: map.id });
 
-            console.log(result);
-
             expect(result).toBeDefined();
             expect(result.isOwner).toBeFalsy();
             expect(result.accessible).toBeFalsy();
