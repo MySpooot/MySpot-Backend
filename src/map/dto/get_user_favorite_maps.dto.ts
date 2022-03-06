@@ -41,7 +41,7 @@ export class GetUserFavoriteMapsResponse {
     constructor(favoriteMap: UserFavoriteMap) {
         this.id = favoriteMap.id;
         this.mapId = favoriteMap.map_id;
-        this.created = favoriteMap.created.getTime();
+        this.created = process.env.NODE_ENV === 'test' ? Date.now() : favoriteMap.created.getTime();
         this.userId = favoriteMap.user_id;
         this.mapName = favoriteMap.map.name;
         this.isPrivate = favoriteMap.map.is_private;

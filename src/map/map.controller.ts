@@ -49,7 +49,7 @@ export class MapController {
     @UseGuards(JwtAuthGuard)
     @ApiHeader({ name: 'Authorization', required: true })
     @ApiOkResponse({ type: [GetUserRecentMapsResponse] })
-    getUserMapLogs(@User_() user: AuthUser, @Query() query: GetUserRecentMapsQuery) {
+    getUserRecentMaps(@User_() user: AuthUser, @Query() query: GetUserRecentMapsQuery) {
         return this.mapService.getUserRecentMaps(user, query);
     }
 
@@ -96,7 +96,7 @@ export class MapController {
     @Get('/:mapId/detail')
     @ApiHeader({ name: 'Authorization', required: false })
     @ApiOkResponse({ type: GetMapDetailResponse })
-    getMapAccessible(@Headers() headers: GetMapDetailHeaders, @Param() param: GetMapDetailParam) {
+    getMapDetail(@Headers() headers: GetMapDetailHeaders, @Param() param: GetMapDetailParam) {
         return this.mapService.getMapDetail(headers, param);
     }
 
