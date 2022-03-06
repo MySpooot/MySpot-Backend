@@ -38,15 +38,6 @@ export const seedGetUserMaps = {
                     active: i % 10 > 0 ? MapActive.Active : MapActive.Inactive
                 } as Map)
         ),
-    // favoriteMaps: (mapId: number[], userId: number) =>
-    //     [...new Array(20).keys()].map(
-    //         i =>
-    //             ({
-    //                 user_id: userId,
-    //                 map_id: mapId[i],
-    //                 active: i % 10 > 0 ? UserFavoriteMapActive.Active : UserFavoriteMapActive.Inactive
-    //             } as UserFavoriteMap)
-    //     ),
     accessible: (mapId: number[], userId: number) =>
         [...new Array(20).keys()].map(
             i =>
@@ -71,15 +62,6 @@ export const seedPostUserPublicMap = {
                     active: i % 10 > 0 ? MapActive.Active : MapActive.Inactive
                 } as Map)
         ),
-    // favoriteMaps: (mapId: number[], userId: number) =>
-    //     [...new Array(5).keys()].map(
-    //         i =>
-    //             ({
-    //                 user_id: userId,
-    //                 map_id: mapId[i],
-    //                 active: i % 10 > 0 ? UserFavoriteMapActive.Active : UserFavoriteMapActive.Inactive
-    //             } as UserFavoriteMap)
-    //     ),
     accessible: (mapId: number[], userId: number) =>
         [...new Array(5).keys()].map(
             i =>
@@ -104,15 +86,6 @@ export const seedPostUserPrivateMap = {
                     active: i % 10 > 0 ? MapActive.Active : MapActive.Inactive
                 } as Map)
         ),
-    // favoriteMaps: (mapId: number[], userId: number) =>
-    //     [...new Array(5).keys()].map(
-    //         i =>
-    //             ({
-    //                 user_id: userId,
-    //                 map_id: mapId[i],
-    //                 active: i % 10 > 0 ? UserFavoriteMapActive.Active : UserFavoriteMapActive.Inactive
-    //             } as UserFavoriteMap)
-    //     ),
     accessible: (mapId: number[], userId: number) =>
         [...new Array(5).keys()].map(
             i =>
@@ -132,11 +105,6 @@ export const seedDeleteUserMap = {
         is_private: false,
         active: MapActive.Active
     }),
-    // favoriteMap: (userId: number, mapId: number) => ({
-    //     user_id: userId,
-    //     map_id: mapId,
-    //     active: UserFavoriteMapActive.Active
-    // }),
     accessible: (mapId: number, userId: number) => ({
         user_id: userId,
         map_id: mapId,
