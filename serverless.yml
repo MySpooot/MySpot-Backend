@@ -1,5 +1,4 @@
-service:
-    name: MySpotApi
+service: MySpotApi
 plugins:
     - serverless-plugin-typescript
     - serverless-plugin-optimize
@@ -20,7 +19,7 @@ provider:
     deploymentPrefix: myspot
     environment:
         NODE_ENV: production
-        stage: ${self:provider.stage}
+        stage: ${self:provider.stage} # process.env.stage, deploy stage option을 따른다.
     lambdaHashingVersion: 20201221
 
 package:
@@ -30,9 +29,13 @@ custom:
     cors:
         origin: '*'
         headers: '*'
+        allowCredentials: false
+    deploymentSettings:
+        type: AllAtOnce # shifts all the traffic to the new version, useful when you only need to execute the validation hooks.
+        alias: ${self.custom.stage}
 
 functions:
-    test:
+    common: # lambda function name
         handler: src/common/lambda.handler
         events:
             - http:

@@ -16,13 +16,13 @@ export const bootstrapServer = async (module: any) => {
         // const isProd = process.env.stage === 'prod';
 
         const app = await NestFactory.create(module, new ExpressAdapter(expressApp));
-        // app.useGlobalPipes(
-        //     new ValidationPipe({
-        //         whitelist: true,
-        //         transform: true,
-        //         transformOptions: { enableImplicitConversion: true }
-        //     })
-        // );
+        app.useGlobalPipes(
+            new ValidationPipe({
+                whitelist: true,
+                transform: true,
+                transformOptions: { enableImplicitConversion: true }
+            })
+        );
         app.enableCors({
             origin: '*',
             allowedHeaders: '*'
