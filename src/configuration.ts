@@ -26,6 +26,7 @@ export default () => ({
         basePath: process.env.NODE_ENV === 'test' ? 'test' : process.env.BASE_PATH,
         fileSize: process.env.FILE_SIZE
     } as MulterExtendedS3Options,
+    stage: process.env.stage || 'dev',
     typeorm:
         process.env.NODE_ENV === 'prod'
             ? {

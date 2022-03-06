@@ -2,9 +2,11 @@
 /dist
 /node_modules
 
-# node modules
-/node_modules
-/dist
+# Serverless directories
+.serverless
+
+# build
+.build
 
 # Logs
 logs

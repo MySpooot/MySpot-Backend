@@ -5,7 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule as UserModule } from '../src/user/app.module';
 import { AppModule as MapModule } from '../src/map/app.module';
-import { AppModule as CommonModule } from '../src/common/app.module';
+// import { AppModule as CommonModule } from '../src/common/app.module'; -> moved to lambda
 import { AppModule as MarkerModule } from '../src/marker/app.module';
 import { AppModule as ReplyModule } from '../src/reply/app.module';
 import { AppModule as AuthModule } from '../src/auth/app.module';
@@ -13,7 +13,7 @@ import { AppModule as AuthModule } from '../src/auth/app.module';
 import { version } from 'package.json';
 
 @Module({
-    imports: [UserModule, MapModule, CommonModule, MarkerModule, ReplyModule, AuthModule],
+    imports: [UserModule, MapModule, MarkerModule, ReplyModule, AuthModule], // CommonModule
     controllers: [],
     providers: []
 })

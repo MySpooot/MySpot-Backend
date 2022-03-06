@@ -1,0 +1,44 @@
+service: MySpotApi
+plugins:
+    - serverless-plugin-typescript
+    - serverless-plugin-optimize
+    - serverless-offline
+
+provider:
+    name: aws
+    runtime: nodejs14.x
+    region: ap-northeast-2
+    endpointType: REGIONAL
+    stackName: ${self:service}-${self:provider.stage}
+    apiName: ${self:service}-${self:provider.stage}
+    memorySize: 512
+    timeout: 10
+    tracing:
+        lambda: true
+    deploymentBucket: myspot-serverless-deployment
+    deploymentPrefix: myspot
+    environment:
+        NODE_ENV: production
+        stage: ${self:provider.stage} # process.env.stage, deploy stage option을 따른다.
+    lambdaHashingVersion: 20201221
+
+package:
+    individually: true
+
+custom:
+    cors:
+        origin: '*'
+        headers: '*'
+        allowCredentials: false
+    deploymentSettings:
+        type: AllAtOnce # shifts all the traffic to the new version, useful when you only need to execute the validation hooks.
+        alias: ${self.custom.stage}
+
+functions:
+    common: # lambda function name
+        handler: src/common/lambda.handler
+        events:
+            - http:
+                  method: get
+                  path: /common/status
+                  cors: ${self.custom.cors}

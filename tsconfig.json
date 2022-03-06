@@ -6,14 +6,16 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "allowSyntheticDefaultImports": true,
-        "target": "es2021",
+        "target": "es2019",
+        "lib": ["es2019"],
         "sourceMap": true,
-        "esModuleInterop": true,
         "outDir": "./dist",
         "baseUrl": "./",
-        "incremental": true,
-        "skipLibCheck": true,
-        // "moduleResolution": "node",
-        "resolveJsonModule": true
-    }
+        "preserveConstEnums": true,
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "allowJs": true,
+        "moduleResolution": "node"
+    },
+    "exclude": ["node_modules", "dist"]
 }
