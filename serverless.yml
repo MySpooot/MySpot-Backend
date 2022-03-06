@@ -10,7 +10,8 @@ provider:
     runtime: nodejs14.x
     region: ap-northeast-2
     endpointType: REGIONAL
-    # stackName: ${self:service}-${self:provider.stage}
+    stackName: ${self:service}-${self:provider.stage}
+    apiName: ${self:service}-${self:provider.stage}
     memorySize: 512
     timeout: 10
     tracing:

@@ -68,6 +68,7 @@
         "plugin": "^0.3.3",
         "prettier": "^2.3.2",
         "run-script-webpack-plugin": "0.0.11",
+        "serverless": "^2.5.0",
         "serverless-offline": "^8.5.0",
         "serverless-plugin-optimize": "^4.2.1-rc.1",
         "serverless-plugin-typescript": "^2.1.1",
