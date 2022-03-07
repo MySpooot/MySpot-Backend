@@ -1,8 +1,4 @@
-# 원더월 CI/CD 시스템 - Master/Dev Branch 에 Push 가 발생 시, 배포 하는 로직입니다.
-# checkout actions : 자동으로 PR 한 브렌치로 git head 를 Check out 합니다.
-# setup-node : node 를 버전별로 설치합니다. yarn 까지 덤으로.
-
-name: Wonderwall Delivery API Push and Deploy
+name: MySpot API Push and Deploy
 
 on:
     push:
