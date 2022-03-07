@@ -20,12 +20,21 @@ provider:
     environment:
         NODE_ENV: production
         stage: ${self:provider.stage} # process.env.stage, deploy stage option을 따른다.
+        POSTGRES_USERNAME: ${self.custom.env.dev.database.username}
+        POSTGRES_PORT: ${self.custom.env.dev.database.port}
+        POSTGRES_HOST: ${self.custom.env.dev.database.host}
+        POSTGRES_PASSWORD: ${self.custom.env.dev.database.password}
+        POSTGRES_DATABASE: ${self.custom.env.dev.database.database}
+        JWT_SECRET: ${self.custom.env.dev.jwt}
+
     lambdaHashingVersion: 20201221
 
 package:
     individually: true
 
 custom:
+    env:
+        - dev: ${file(../src/configuration.${opt:alias, 'dev'}.json)}
     cors:
         origin: '*'
         headers: '*'
@@ -42,3 +51,66 @@ functions:
                   method: get
                   path: /common/status
                   cors: ${self.custom.cors}
+
+    map:
+        handler: src/map/lambda.handler
+        events:
+            - http:
+                  method: get
+                  path: /map
+                  cors: ${self.custom.cors}
+            # - http:
+            #       method: post
+            #       path: /map
+            #       cors: ${self.custom.cors}
+            #       authorizer:
+            #           name:
+            #               verify-token
+            #               # this tells the lambda where to take the information from,
+            #               # in our case the HTTP Authorization header
+            #           identitySource: method.request.header.Authorization
+            #           resultTtlInSeconds: 3600 # cache the result for 1 hour
+            # - http:
+            #       method: delete
+            #       path: /map/{mapId}
+            #       cors: ${self.custom.cors}
+            #       authorizer:
+            #           name:
+            #               verify-token
+            #               # this tells the lambda where to take the information from,
+            #               # in our case the HTTP Authorization header
+            #           identitySource: method.request.header.Authorization
+            #           resultTtlInSeconds: 3600 # cache the result for 1 hour
+            # - http:
+            #       method: get
+            #       path: /map/recent
+            #       cors: ${self.custom.cors}
+            #       authorizer:
+            #           name:
+            #               verify-token
+            #               # this tells the lambda where to take the information from,
+            #               # in our case the HTTP Authorization header
+            #           identitySource: method.request.header.Authorization
+            #           resultTtlInSeconds: 3600 # cache the result for 1 hour
+            # - http:
+            #       method: post
+            #       path: /map/recent/{recentMapId}
+            #       cors: ${self.custom.cors}
+            #       authorizer:
+            #           name:
+            #               verify-token
+            #               # this tells the lambda where to take the information from,
+            #               # in our case the HTTP Authorization header
+            #           identitySource: method.request.header.Authorization
+            #           resultTtlInSeconds: 3600 # cache the result for 1 hour
+            # - http:
+            #       method: delete
+            #       path: /map/recent/{recentMapId}
+            #       cors: ${self.custom.cors}
+            #       authorizer:
+            #           name:
+            #               verify-token
+            #               # this tells the lambda where to take the information from,
+            #               # in our case the HTTP Authorization header
+            #           identitySource: method.request.header.Authorization
+            #           resultTtlInSeconds: 3600 # cache the result for 1 hour

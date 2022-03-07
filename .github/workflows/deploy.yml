@@ -1,0 +1,60 @@
+# 원더월 CI/CD 시스템 - Master/Dev Branch 에 Push 가 발생 시, 배포 하는 로직입니다.
+# checkout actions : 자동으로 PR 한 브렌치로 git head 를 Check out 합니다.
+# setup-node : node 를 버전별로 설치합니다. yarn 까지 덤으로.
+
+name: Wonderwall Delivery API Push and Deploy
+
+on:
+    push:
+        branches:
+            - master
+
+jobs:
+    Build_Deploy:
+        runs-on: ubuntu-20.04
+        steps:
+            - name: Checkout Branch
+              uses: actions/checkout@v2
+
+            - name: Create .env file
+              run: |
+                  touch .env
+                  echo POSTGRES_USERNAME=${{ secrets.POSTGRES_USERNAME }} >> .env
+                  echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
+                  echo POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE }} >> .env
+                  echo POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} >> .env
+                  echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
+
+                  cat .env
+            - name: Create .env host - dev
+              if: github.ref == 'refs/heads/dev'
+              run: |
+                  echo POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} >> .env
+                  cat .env
+
+            - name: Inject slug/short variables
+              uses: rlespinasse/github-slug-action@v3.x
+
+            - name: Install NodeJS
+              uses: actions/setup-node@v1
+              with:
+                  node-version: 14
+
+            - name: Cache node_modules
+              uses: actions/cache@v1
+              with:
+                  path: node_modules
+                  key: ${{ runner.OS }}-build-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.OS }}-build-
+                      ${{ runner.OS }}-
+            - name: Install Packages
+              run: yarn install
+
+            - name: Build and Deploy
+              env:
+                  CI: false
+                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+              run: |
+                  yarn deploy:dev
