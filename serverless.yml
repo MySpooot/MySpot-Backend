@@ -34,7 +34,7 @@ package:
 
 custom:
     env:
-        - dev: ${file(../src/configuration.${opt:alias, 'dev'}.json)}
+        - dev: ${file(./src/configuration.${opt:alias, 'dev'}.json)}
     cors:
         origin: '*'
         headers: '*'
