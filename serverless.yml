@@ -20,12 +20,12 @@ provider:
     environment:
         NODE_ENV: production
         stage: ${self:provider.stage} # process.env.stage, deploy stage option을 따른다.
-        POSTGRES_USERNAME: ${self.custom.env.dev.database.username}
-        POSTGRES_PORT: ${self.custom.env.dev.database.port}
-        POSTGRES_HOST: ${self.custom.env.dev.database.host}
-        POSTGRES_PASSWORD: ${self.custom.env.dev.database.password}
-        POSTGRES_DATABASE: ${self.custom.env.dev.database.database}
-        JWT_SECRET: ${self.custom.env.dev.jwt}
+        # POSTGRES_USERNAME: ${self.custom.env.dev.database.username}
+        # POSTGRES_PORT: ${self.custom.env.dev.database.port}
+        # POSTGRES_HOST: ${self.custom.env.dev.database.host}
+        # POSTGRES_PASSWORD: ${self.custom.env.dev.database.password}
+        # POSTGRES_DATABASE: ${self.custom.env.dev.database.database}
+        # JWT_SECRET: ${self.custom.env.dev.jwt}
 
     lambdaHashingVersion: 20201221
 
@@ -33,8 +33,8 @@ package:
     individually: true
 
 custom:
-    env:
-        - dev: ${file(./src/configuration.${opt:alias, 'dev'}.json)}
+    # env:
+    #     - dev: ${file(./src/configuration.${opt:alias, 'dev'}.json)}
     cors:
         origin: '*'
         headers: '*'
