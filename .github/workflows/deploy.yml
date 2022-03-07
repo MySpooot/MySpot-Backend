@@ -3,7 +3,7 @@ name: MySpot API Push and Deploy
 on:
     push:
         branches:
-            - master
+            - serverless
 
 jobs:
     Build_Deploy:
