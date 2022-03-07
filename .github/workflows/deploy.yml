@@ -50,7 +50,7 @@ jobs:
             - name: Build and Deploy
               env:
                   CI: false
-                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+                  SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
               run: |
                   yarn deploy:dev
