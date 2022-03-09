@@ -10,9 +10,15 @@ import { MapMarkerLike } from '../entities/map_marker_like.entity';
 import { MyLocation } from '../entities/my_location.entity';
 import { UserAccessibleMap } from '../entities/user_accessible_map.entity';
 import { Map } from '../entities/map.entity';
+import { User } from '../entities/user.entity';
+import { UserFavoriteMap } from '../entities/user_favorite_map.entity';
 
 @Module({
-    imports: [JwtAuthModule, ConfigModule, TypeOrmModule.forFeature([Marker, MapMarkerLike, MyLocation, Map, UserAccessibleMap])],
+    imports: [
+        JwtAuthModule,
+        ConfigModule,
+        TypeOrmModule.forFeature([Marker, MapMarkerLike, MyLocation, Map, UserAccessibleMap, User, UserFavoriteMap])
+    ],
     controllers: [MarkerController],
     providers: [MarkerService]
 })

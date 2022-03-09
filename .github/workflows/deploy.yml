@@ -4,7 +4,7 @@ on:
     push:
         branches:
             - master
-            - serverless
+            - dev
 
 jobs:
     Build_Deploy:
@@ -27,8 +27,8 @@ jobs:
                   echo FILE_SIZE=${{ secrets.FILE_SIZE }} >> .env
                   cat .env
 
-            - name: Create .env host - serverless
-              if: github.ref == 'refs/heads/serverless'
+            - name: Create .env host - dev
+              if: github.ref == 'refs/heads/dev'
               run: |
                   echo POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} >> .env
                   echo POSTGRES_PORT=${{ secrets.POSTGRES_HOST }} >> .env

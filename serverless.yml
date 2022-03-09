@@ -18,11 +18,8 @@ provider:
     deploymentBucket: myspot-serverless-deployment
     deploymentPrefix: myspot
     environment:
-        NODE_ENV: production
-        stage: ${self:provider.stage}
 
     lambdaHashingVersion: 20201221
-    profile: arn:aws:iam::281400526017:user/myspot
 
 package:
     individually: true
@@ -107,3 +104,82 @@ functions:
                   method: delete
                   path: /map/favorite/{favoriteMapId}
                   cors: ${self.custom.cors}
+
+    Marker:
+        handler: src/marker/lambda.handler
+        events:
+            - http:
+                  method: get
+                  path: /map/{mapId}/marker
+                  cors: ${self.custom.cors}
+
+            - http:
+                  method: post
+                  path: /map/{mapId}/marker
+                  cors: ${self.custom.cors}
+
+            - http:
+                  method: delete
+                  path: /map/marker/{markerId}
+                  cors: ${self.custom.cors}
+
+            - http:
+                  method: post
+                  path: /map/marker/{markerId}/like
+                  cors: ${self.custom.cors}
+
+            - http:
+                  method: delete
+                  path: /map/marker/{markerId}/like
+                  cors: ${self.custom.cors}
+
+            - http:
+                  method: get
+                  path: /map/marker/location
+                  cors: ${self.custom.cors}
+
+            - http:
+                  method: post
+                  path: /map/marker/location
+                  cors: ${self.custom.cors}
+
+            - http:
+                  method: delete
+                  path: /map/marker/location/{addressId}
+                  cors: ${self.custom.cors}
+
+    Reply:
+        handler: src/reply/lambda.handler
+        events:
+            - http:
+                  method: get
+                  path: /map/marker/{markerId}/replies
+                  cors: ${self.custom.cors}
+
+            - http:
+                  method: post
+                  path: /map/marker/{markerId}/replies
+                  cors: ${self.custom.cors}
+
+            - http:
+                  method: put
+                  path: /map/marker/replies/{replyId}
+                  cors: ${self.custom.cors}
+
+            - http:
+                  method: delete
+                  path: /map/marker/replies/{replyId}
+                  cors: ${self.custom.cors}
+
+    # User:
+    #     handler: src/user/lambda.handler
+    #     events:
+    #         - http:
+    #               method: get
+    #               path: /user
+    #               cors: ${self.custom.cors}
+
+    #         - http:
+    #               method: post
+    #               path: /user/upload
+    #               cors: ${self.custom.cors}
