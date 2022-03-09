@@ -15,7 +15,7 @@ export const bootstrapServer = async (module: any) => {
         const expressApp = express();
         // const isProd = process.env.stage === 'prod';
 
-        console.log('common stage', process.env.stage);
+        console.log('map stage', process.env.stage);
 
         const app = await NestFactory.create(module, new ExpressAdapter(expressApp));
         app.useGlobalPipes(

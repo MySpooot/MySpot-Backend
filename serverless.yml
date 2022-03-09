@@ -13,8 +13,8 @@ provider:
     apiName: ${self:service}-${self:provider.stage}
     memorySize: 512
     timeout: 10
-    tracing:
-        lambda: true
+    # tracing: ?? 이 옵션 뭐지 ㅋㅋㅋㅋㅋㅋㅋ
+    #     lambda: true
     deploymentBucket: myspot-serverless-deployment
     deploymentPrefix: myspot
     environment:
@@ -31,15 +31,23 @@ custom:
         origin: '*'
         headers: '*'
         allowCredentials: false
-    deploymentSettings:
-        type: AllAtOnce # shifts all the traffic to the new version, useful when you only need to execute the validation hooks.
-        alias: ${self.custom.stage}
+    # deploymentSettings:
+    #     type: AllAtOnce # shifts all the traffic to the new version, useful when you only need to execute the validation hooks.
+    #     alias: ${self.custom.stage}
 
 functions:
-    common: # lambda function name
+    Common: # lambda function name
         handler: src/common/lambda.handler
         events:
             - http:
                   method: get
                   path: /common/status
+                  cors: ${self.custom.cors}
+
+    Map:
+        handler: src/map/lambda.handler
+        events:
+            - http:
+                  method: get
+                  path: /map
                   cors: ${self.custom.cors}
