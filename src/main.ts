@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { Module, ValidationPipe } from '@nestjs/common';
+import https from 'https';
 
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
@@ -33,8 +34,8 @@ class AppModule {}
     await app.listen(process.env.PORT || 3001);
 
     /** 일단 주석처리 */
-    // if (process.env.NODE_ENV === 'dev')
-    //     setInterval(() => {
-    //         https.get('https://nestjs-map.herokuapp.com/');
-    //     }, 1200000);
+    if (process.env.NODE_ENV === 'dev')
+        setInterval(() => {
+            https.get('https://nestjs-map.herokuapp.com/');
+        }, 1200000);
 })();
