@@ -22,6 +22,7 @@ provider:
         stage: ${self:provider.stage}
 
     lambdaHashingVersion: 20201221
+    profile: 'myspot'
 
 package:
     individually: true
