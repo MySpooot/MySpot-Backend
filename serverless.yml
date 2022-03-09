@@ -31,12 +31,9 @@ custom:
         origin: '*'
         headers: '*'
         allowCredentials: false
-    deploymentSettings:
-        type: AllAtOnce # shifts all the traffic to the new version, useful when you only need to execute the validation hooks.
-        alias: ${self.custom.stage}
 
 functions:
-    common: # lambda function name
+    common:
         handler: src/common/lambda.handler
         events:
             - http:
