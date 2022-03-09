@@ -26,14 +26,16 @@ export default () => ({
         basePath: process.env.NODE_ENV === 'test' ? 'test' : process.env.BASE_PATH,
         fileSize: process.env.FILE_SIZE
     } as MulterExtendedS3Options,
-    stage: process.env.stage || 'dev',
     typeorm:
-        process.env.NODE_ENV === 'prod'
+        process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'prod'
             ? {
-                  //@ TODO
+                  type: 'sqlite',
+                  database: ':memory:',
+                  autoLoadEntities: true,
+                  logging: process.env.NODE_ENV === 'local',
+                  synchronize: true
               }
-            : process.env.NODE_ENV === 'dev'
-            ? {
+            : {
                   type: 'postgres',
                   autoLoadEntities: true,
                   synchronize: false,
@@ -41,12 +43,5 @@ export default () => ({
                   ssl: {
                       rejectUnauthorized: false
                   }
-              }
-            : {
-                  type: 'sqlite',
-                  database: ':memory:',
-                  autoLoadEntities: true,
-                  logging: process.env.NODE_ENV === 'local',
-                  synchronize: true
               }
 });
