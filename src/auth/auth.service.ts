@@ -22,7 +22,6 @@ export class AuthService {
     // login
     async login({ origin }: PostLoginHeaders, { code }: PostLoginBody): Promise<PostLoginResponse> {
         let kakaoRedirectUrl: string | undefined;
-        console.log('1234');
 
         if (origin.includes('local')) {
             kakaoRedirectUrl = this.configService.get('kakao.localRedirectUrl');
