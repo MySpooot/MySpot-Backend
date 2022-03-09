@@ -51,3 +51,58 @@ functions:
                   method: get
                   path: /map
                   cors: ${self.custom.cors}
+
+            - http:
+                  method: post
+                  path: /map
+                  cors: ${self.custom.cors}
+
+            - http:
+                  method: delete
+                  path: /map/{mapId}
+                  cors: ${self.custom.cors}
+
+            - http:
+                  method: get
+                  path: /map/{mapId}/detail
+                  cors: ${self.custom.cors}
+
+            - http:
+                  method: get
+                  path: /map/{mapId}/code
+                  cors: ${self.custom.cors}
+
+            - http:
+                  method: post
+                  path: /map/{mapId}/code/match
+                  cors: ${self.custom.cors}
+
+            - http:
+                  method: get
+                  path: /map/recent
+                  cors: ${self.custom.cors}
+
+            - http:
+                  method: post
+                  path: /map/recent/{recentMapId}
+                  cors: ${self.custom.cors}
+
+            - http:
+                  method: delete
+                  path: /map/recent/{recentMapId}
+                  cors: ${self.custom.cors}
+
+            - http:
+                  method: get
+                  path: /map/favorite
+                  cors: ${self.custom.cors}
+
+            - http:
+                  method: post
+                  path: /map/favorite/{favoriteMapId}
+                  cors: ${self.custom.cors}
+
+            - http:
+                  method: delete
+                  path: /map/favorite/{favoriteMapId}
+                  cors: ${self.custom.cors}
