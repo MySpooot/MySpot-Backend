@@ -22,7 +22,7 @@ provider:
         stage: ${self:provider.stage}
 
     lambdaHashingVersion: 20201221
-    profile: 'myspot'
+    profile: arn:aws:iam::281400526017:user/myspot
 
 package:
     individually: true
