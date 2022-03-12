@@ -18,12 +18,12 @@ export default () => ({
     },
     stage: process.env.stage || 'dev',
     typeorm:
-        process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'prod'
+        process.env.NODE_ENV === 'test'
             ? {
                   type: 'sqlite',
                   database: ':memory:',
                   autoLoadEntities: true,
-                  logging: process.env.NODE_ENV === 'local',
+                  logging: process.env.NODE_ENV === 'test',
                   synchronize: true
               }
             : {

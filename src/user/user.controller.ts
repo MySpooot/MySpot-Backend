@@ -1,6 +1,7 @@
 import { Controller, Post, UseGuards, UseInterceptors, UploadedFile, Put, Body } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiHeader, ApiOkResponse } from '@nestjs/swagger';
+import { v4 } from 'uuid';
 import multerS3 from 'multer-s3';
 import AWS from 'aws-sdk';
 
@@ -13,7 +14,7 @@ import { UserService } from './user.service';
 AWS.config.update({
     accessKeyId: process.env.ACCESS_KEY_ID,
     secretAccessKey: process.env.SECRET_ACCESS_KEY,
-    region: 'ap-northeast-2'
+    region: process.env.REGION
 });
 const s3 = new AWS.S3();
 
@@ -41,17 +42,15 @@ export class UserController {
                 s3: s3,
                 bucket: 'myspot-dev/user/thumbnail',
                 acl: 'public-read',
-                contentType: multerS3.AUTO_CONTENT_TYPE,
-                key: function (req, file, cb) {
-                    cb(null, file.originalname);
+                contentType: 'image/png',
+                key: function (_, __, cb) {
+                    cb(null, `${Date.now().toString()} - ${v4()}`);
                 }
             }),
             limits: { fileSize: 1024 * 1024 }
         })
     )
     uploadFile(@User_() user: AuthUser, @UploadedFile() file) {
-        console.log(process.env.ACCESS_KEY_ID);
-        console.log(typeof process.env.ACCESS_KEY_ID);
         return this.userService.uploadImage(user, file);
     }
 }
