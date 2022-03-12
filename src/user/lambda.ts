@@ -32,7 +32,12 @@ export const bootstrapServer = async (module: any) => {
 
         await app.init();
 
-        cachedServer = ServerlessExpress({ app: expressApp });
+        cachedServer = ServerlessExpress({
+            app: expressApp,
+            binarySettings: {
+                contentTypes: ['image/jpeg', 'image/png', 'image/jpg', 'multipart/form-data']
+            }
+        });
     }
 
     return cachedServer;

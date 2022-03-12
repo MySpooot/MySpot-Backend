@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, UseInterceptors, UploadedFile, Put, Body } from '@nestjs/common';
+import { Controller, Post, UseGuards, UseInterceptors, UploadedFile, Put, Body, BadRequestException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiHeader, ApiOkResponse } from '@nestjs/swagger';
 import { v4 } from 'uuid';
@@ -38,16 +38,21 @@ export class UserController {
     @ApiConsumes('multipart/form-data')
     @UseInterceptors(
         FileInterceptor('file', {
-            storage: new multerS3({
+            storage: multerS3({
                 s3: s3,
                 bucket: 'myspot-dev/user/thumbnail',
                 acl: 'public-read',
-                contentType: 'image/png',
-                key: function (_, __, cb) {
+                contentType: multerS3.AUTO_CONTENT_TYPE,
+                key: (_, __, cb) => {
                     cb(null, `${Date.now().toString()} - ${v4()}`);
                 }
             }),
-            limits: { fileSize: 1024 * 1024 }
+            limits: { fileSize: 1024 * 1024 },
+            fileFilter: (_, file, cb) => {
+                if (file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
+                    cb(null, true);
+                } else throw new BadRequestException('only png, jpeg, jpg types are allowed');
+            }
         })
     )
     uploadFile(@User_() user: AuthUser, @UploadedFile() file) {
