@@ -29,11 +29,30 @@ custom:
         origin: '*'
         headers: '*'
         allowCredentials: false
+
     # deploymentSettings:
     #     type: AllAtOnce # shifts all the traffic to the new version, useful when you only need to execute the validation hooks.
     #     alias: ${self.custom.stage}
 
 functions:
+    Auth:
+        handler: src/auth/lambda.handler
+        events:
+            - http:
+                  method: post
+                  path: /auth/login
+                  cors: ${self.custom.cors}
+
+            - http:
+                  method: get
+                  path: /auth/me
+                  cors: ${self.custom.cors}
+
+            - http:
+                  method: put
+                  path: /auth/user/{userId}
+                  cors: ${self.custom.cors}
+
     Common: # lambda function name
         handler: src/common/lambda.handler
         events:
@@ -170,16 +189,15 @@ functions:
                   method: delete
                   path: /map/marker/replies/{replyId}
                   cors: ${self.custom.cors}
+#     User:
+#         handler: src/user/lambda.handler
+#         events:
+#             - http:
+#                   method: put
+#                   path: /user
+#                   cors: ${self.custom.cors}
 
-    # User:
-    #     handler: src/user/lambda.handler
-    #     events:
-    #         - http:
-    #               method: get
-    #               path: /user
-    #               cors: ${self.custom.cors}
-
-    #         - http:
-    #               method: post
-    #               path: /user/upload
-    #               cors: ${self.custom.cors}
+#             - http:
+#                   method: post
+#                   path: /user/upload
+#                   cors: ${self.custom.cors}
