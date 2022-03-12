@@ -68,12 +68,12 @@ describe('UserController', () => {
             const afterUser = await connection.getRepository(User).findOne({ id: user.id });
 
             expect(result).toBeDefined();
-            expect(result).toEqual(file.Location);
+            expect(result).toEqual(file.location);
 
             expect(beforeUser).toBeDefined();
             expect(afterUser).toBeDefined();
             expect(beforeUser.thumbnail).toBeNull();
-            expect(afterUser.thumbnail).toEqual(file.Location);
+            expect(afterUser.thumbnail).toEqual(file.location);
 
             await connection.getRepository(User).clear();
         });

@@ -13,7 +13,6 @@ let cachedServer;
 export const bootstrapServer = async (module: any) => {
     if (!cachedServer) {
         const expressApp = express();
-        // const isProd = process.env.stage === 'prod';
 
         console.log('map stage', process.env.stage);
 

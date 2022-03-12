@@ -32,7 +32,7 @@ export const file = {
     mimetype: 'image/png',
     ACL: 'public-read',
     ETag: '"1234"',
-    Location: 'test-location',
+    location: 'test-location',
     key: '123',
     Key: '456',
     Bucket: 'test-bucket',
