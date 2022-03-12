@@ -27,31 +27,22 @@ export default () => ({
         fileSize: process.env.FILE_SIZE
     } as MulterExtendedS3Options,
     stage: process.env.stage || 'dev',
-    typeorm: process.env.stage
-        ? {
-              type: 'postgres',
-              autoLoadEntities: true,
-              synchronize: false,
-              bigNumberStrings: false,
-              ssl: {
-                  rejectUnauthorized: false
+    typeorm:
+        process.env.NODE_ENV !== 'dev' && process.env.NODE_ENV !== 'prod'
+            ? {
+                  type: 'sqlite',
+                  database: ':memory:',
+                  autoLoadEntities: true,
+                  logging: process.env.NODE_ENV === 'local',
+                  synchronize: true
               }
-          }
-        : process.env.NODE_ENV === 'dev'
-        ? {
-              type: 'postgres',
-              autoLoadEntities: true,
-              synchronize: false,
-              bigNumberStrings: false,
-              ssl: {
-                  rejectUnauthorized: false
+            : {
+                  type: 'postgres',
+                  autoLoadEntities: true,
+                  synchronize: false,
+                  bigNumberStrings: false,
+                  ssl: {
+                      rejectUnauthorized: false
+                  }
               }
-          }
-        : {
-              type: 'sqlite',
-              database: ':memory:',
-              autoLoadEntities: true,
-              logging: process.env.NODE_ENV === 'local',
-              synchronize: true
-          }
 });
