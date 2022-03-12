@@ -20,13 +20,15 @@ export class UserService {
 
     // 썸네일 업로드
     async uploadImage({ userId }: AuthUser, file): Promise<string> {
+        console.log(file);
+        console.log(process.env.ACCESS_KEY_ID);
         await this.connection.getRepository(User).update(
             { id: userId },
             {
-                thumbnail: file.Location
+                thumbnail: file.location
             }
         );
 
-        return file.Location;
+        return file.location;
     }
 }
