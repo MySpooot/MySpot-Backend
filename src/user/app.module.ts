@@ -19,10 +19,7 @@ import { UserModule } from './user.module';
                 POSTGRES_DATABASE: Joi.string().required(),
                 ACCESS_KEY_ID: Joi.string().required(),
                 SECRET_ACCESS_KEY: Joi.string().required(),
-                REGION: Joi.string().required(),
-                BASE_PATH: Joi.string().required(),
-                BUCKET: Joi.string().required(),
-                FILE_SIZE: Joi.string().required()
+                REGION: Joi.string().required()
             }),
             load: [configuration]
         }),
