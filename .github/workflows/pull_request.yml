@@ -19,10 +19,7 @@ jobs:
                   echo ACCESS_KEY_ID=${{ secrets.ACCESS_KEY_ID }} >> .env
                   echo SECRET_ACCESS_KEY=${{ secrets.SECRET_ACCESS_KEY }} >> .env
                   echo REGION=${{ secrets.REGION }} >> .env
-                  echo BASE_PATH=${{ secrets.BASE_PATH }} >> .env
-                  echo FILE_SIZE=${{ secrets.FILE_SIZE }} >> .env
                   cat .env
-
             - name: Inject slug/short variables
               uses: rlespinasse/github-slug-action@v3.x
 
