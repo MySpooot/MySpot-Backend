@@ -31,10 +31,4 @@ class AppModule {}
     SwaggerModule.setup('api', app, document);
 
     await app.listen(process.env.PORT || 3001);
-
-    /** 일단 주석처리 */
-    // if (process.env.NODE_ENV === 'dev')
-    //     setInterval(() => {
-    //         https.get('https://nestjs-map.herokuapp.com/');
-    //     }, 1200000);
 })();

@@ -10,7 +10,6 @@ import { UserModule } from './user.module';
 @Module({
     imports: [
         ConfigModule.forRoot({
-            // ENV를 이곳에 적용한다.
             envFilePath: '.env',
             validationSchema: Joi.object({
                 POSTGRES_HOST: Joi.string().required(),
