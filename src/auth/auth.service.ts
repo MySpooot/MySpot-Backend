@@ -23,11 +23,34 @@ export class AuthService {
     async login({ origin }: PostLoginHeaders, { code }: PostLoginBody): Promise<PostLoginResponse> {
         let kakaoRedirectUrl: string | undefined;
 
-        if (origin.includes('local')) {
-            kakaoRedirectUrl = this.configService.get('kakao.localRedirectUrl');
-        } else {
+        // @TODO 주석 테스트 기간엔 냅둠 추후 제거
+
+        console.log('****** origin ****** :: ', origin);
+        console.log(' **** process.env.NODE_ENV **** ::', process.env.NODE_ENV);
+
+        // dev인 경우
+        if (process.env.NODE_ENV === 'dev') {
+            console.log(' !! DEV !!');
             kakaoRedirectUrl = this.configService.get('kakao.devRedirectUrl');
         }
+        // prod인 경우
+        else if (process.env.NODE_ENV === 'prod') {
+            console.log(' !! PROD !!');
+            // @ TODO
+        }
+        // local인 경우
+        else {
+            console.log(' !! LOCAL !!');
+            kakaoRedirectUrl = this.configService.get('kakao.localRedirectUrl');
+        }
+
+        console.log(' **** kakaoRedirectUrl **** ', kakaoRedirectUrl);
+
+        // if (origin.includes('local')) {
+        //     kakaoRedirectUrl = this.configService.get('kakao.localRedirectUrl');
+        // } else {
+        //     kakaoRedirectUrl = this.configService.get('kakao.devRedirectUrl');
+        // }
 
         const data = await this.getKakaoData(kakaoRedirectUrl, code);
 
