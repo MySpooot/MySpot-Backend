@@ -26,16 +26,17 @@ export class AuthService {
         // @TODO 주석 테스트 기간엔 냅둠 추후 제거
 
         console.log('****** origin ****** :: ', origin);
+        console.log('****** process.env.stage ****** :: ', process.env.stage);
         console.log(' **** process.env.NODE_ENV **** ::', process.env.NODE_ENV);
 
-        // dev인 경우
-        if (process.env.NODE_ENV === 'dev') {
-            console.log(' !! DEV !!');
+        // 환경 dev인 경우
+        if (process.env.stage === 'dev') {
+            console.log(' !! stage DEV !!');
             kakaoRedirectUrl = this.configService.get('kakao.devRedirectUrl');
         }
-        // prod인 경우
-        else if (process.env.NODE_ENV === 'prod') {
-            console.log(' !! PROD !!');
+        // 환경 prod인 경우
+        else if (process.env.stage === 'prod') {
+            console.log(' !! stage PROD !!');
             // @ TODO
         }
         // local인 경우
