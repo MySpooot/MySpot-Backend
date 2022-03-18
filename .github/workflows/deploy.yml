@@ -13,12 +13,6 @@ jobs:
             - name: Checkout Branch
               uses: actions/checkout@v2
 
-            - name: Install Serverless Framework
-              run: yarn add global serverless
-
-            - name: Serverless AWS authentication
-              run: sls config credentials --provider aws --key ${{ secrets.ACCESS_KEY_ID }} --secret ${{ secrets.SECRET_ACCESS_KEY }}
-
             - name: Create .env file
               run: |
                   touch .env
@@ -31,6 +25,8 @@ jobs:
                   echo BUCKET=${{ secrets.BUCKET }} >> .env
                   echo BASE_PATH=${{ secrets.BASE_PATH }} >> .env
                   echo FILE_SIZE=${{ secrets.FILE_SIZE }} >> .env
+                  echo ACCESS_KEY_ID=${{ secrets.ACCESS_KEY_ID }} >> .env
+                  echo SECRET_ACCESS_KEY=${{ secrets.SECRET_ACCESS_KEY }} >> .env
                   cat .env
 
             - name: Create .env host - dev
@@ -68,10 +64,10 @@ jobs:
 
             - name: Build and Deploy - DEV
               if: github.ref == 'refs/heads/dev'
-              env:
-                  CI: false
-                  ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
-                  SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+              # env:
+              #     CI: false
+              #     ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+              #     SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
               run: |
                   yarn deploy:dev
 
