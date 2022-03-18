@@ -1,79 +1,79 @@
-# name: MySpot API Push and Deploy
+name: MySpot API Push and Deploy
 
-# on:
-#     push:
-#         branches:
-#             - master
-#             - dev
+on:
+    push:
+        branches:
+            - master
+            - dev
 
-# jobs:
-#     Build_Deploy:
-#         runs-on: ubuntu-20.04
-#         steps:
-#             - name: Checkout Branch
-#               uses: actions/checkout@v2
+jobs:
+    Build_Deploy:
+        runs-on: ubuntu-20.04
+        steps:
+            - name: Checkout Branch
+              uses: actions/checkout@v2
 
-#             - name: Create .env file
-#               run: |
-#                   touch .env
-#                   echo POSTGRES_USERNAME=${{ secrets.POSTGRES_USERNAME }} >> .env
-#                   echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
-#                   echo POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE }} >> .env
-#                   echo POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} >> .env
-#                   echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
-#                   echo REGION=${{ secrets.REGION }} >> .env
-#                   echo BUCKET=${{ secrets.BUCKET }} >> .env
-#                   echo BASE_PATH=${{ secrets.BASE_PATH }} >> .env
-#                   echo FILE_SIZE=${{ secrets.FILE_SIZE }} >> .env
-#                   cat .env
+            - name: Create .env file
+              run: |
+                  touch .env
+                  echo POSTGRES_USERNAME=${{ secrets.POSTGRES_USERNAME }} >> .env
+                  echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
+                  echo POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE }} >> .env
+                  echo POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} >> .env
+                  echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
+                  echo REGION=${{ secrets.REGION }} >> .env
+                  echo BUCKET=${{ secrets.BUCKET }} >> .env
+                  echo BASE_PATH=${{ secrets.BASE_PATH }} >> .env
+                  echo FILE_SIZE=${{ secrets.FILE_SIZE }} >> .env
+                  cat .env
 
-#             - name: Create .env host - dev
-#               if: github.ref == 'refs/heads/dev'
-#               run: |
-#                   echo POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} >> .env
-#                   echo POSTGRES_PORT=${{ secrets.POSTGRES_HOST }} >> .env
-#                   cat .env
+            - name: Create .env host - dev
+              if: github.ref == 'refs/heads/dev'
+              run: |
+                  echo POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} >> .env
+                  echo POSTGRES_PORT=${{ secrets.POSTGRES_HOST }} >> .env
+                  cat .env
 
-#             - name: Create .env host - prod
-#               if: github.ref == 'refs/heads/master'
-#               run: |
-#                   echo POSTGRES_HOST=${{ secrets.POSTGRES_HOST_PROD }} >> .env
-#                   echo POSTGRES_PORT=${{ secrets.POSTGRES_HOST_PROD }} >> .env
-#                   cat .env
+            - name: Create .env host - prod
+              if: github.ref == 'refs/heads/master'
+              run: |
+                  echo POSTGRES_HOST=${{ secrets.POSTGRES_HOST_PROD }} >> .env
+                  echo POSTGRES_PORT=${{ secrets.POSTGRES_HOST_PROD }} >> .env
+                  cat .env
 
-#             - name: Inject slug/short variables
-#               uses: rlespinasse/github-slug-action@v3.x
+            - name: Inject slug/short variables
+              uses: rlespinasse/github-slug-action@v3.x
 
-#             - name: Install NodeJS
-#               uses: actions/setup-node@v1
-#               with:
-#                   node-version: 14
+            - name: Install NodeJS
+              uses: actions/setup-node@v1
+              with:
+                  node-version: 14
 
-#             - name: Cache node_modules
-#               uses: actions/cache@v1
-#               with:
-#                   path: node_modules
-#                   key: ${{ runner.OS }}-build-${{ hashFiles('**/yarn.lock') }}
-#                   restore-keys: |
-#                       ${{ runner.OS }}-build-
-#                       ${{ runner.OS }}-
-#             - name: Install Packages
-#               run: yarn install
+            - name: Cache node_modules
+              uses: actions/cache@v1
+              with:
+                  path: node_modules
+                  key: ${{ runner.OS }}-build-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.OS }}-build-
+                      ${{ runner.OS }}-
+            - name: Install Packages
+              run: yarn install
 
-#             - name: Build and Deploy - SERVERLESS
-#               if: github.ref == 'refs/heads/serverless'
-#               env:
-#                   CI: false
-#                   ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
-#                   SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
-#               run: |
-#                   yarn deploy:dev
+            - name: Build and Deploy - DEV
+              if: github.ref == 'refs/heads/dev'
+              env:
+                  CI: false
+                  ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+                  SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+              run: |
+                  yarn deploy:dev
 
-#             - name: Build and Deploy - PROD
-#               if: github.ref == 'refs/heads/master'
-#               env:
-#                   CI: false
-#                   ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
-#                   SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
-#               run: |
-#                   yarn deploy:prod
+            - name: Build and Deploy - PROD
+              if: github.ref == 'refs/heads/master'
+              env:
+                  CI: false
+                  ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+                  SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+              run: |
+                  yarn deploy:prod
