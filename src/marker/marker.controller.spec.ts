@@ -1,12 +1,11 @@
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { JwtService } from '@nestjs/jwt';
 import { Connection } from 'typeorm';
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 
 import configuration from '../configuration';
-import { AuthUser, UserLevel } from '../lib/user_decorator';
+import { AuthUser } from '../lib/user_decorator';
 import { User } from '../entities/user.entity';
 import { MarkerController } from './marker.controller';
 import { MarkerModule } from './marker.module';
@@ -22,7 +21,6 @@ describe('MarkerController', () => {
 
     let users: User[];
     let me: AuthUser[];
-    let jwtToken: string;
 
     beforeAll(async () => {
         const app: TestingModule = await Test.createTestingModule({
@@ -45,7 +43,6 @@ describe('MarkerController', () => {
 
         connection = app.get(Connection);
         markerController = app.get(MarkerController);
-        jwtToken = app.get(JwtService).sign({ userId: 1, userLevel: UserLevel.User });
 
         // create users
         users = await connection.getRepository(User).save(seedUsers());
@@ -279,13 +276,12 @@ describe('MarkerController', () => {
     describe('DELETE /map/marker/:markerId/like', () => {
         let map: Map;
         let marker: Marker;
-        let like: MapMarkerLike;
 
         beforeAll(async () => {
             map = await connection.getRepository(Map).save(seedDeleteMarkerLike.maps(users[0].id));
             await connection.getRepository(UserAccessibleMap).save(seedDeleteMarkerLike.accessible(map.id, users[0].id));
             marker = await connection.getRepository(Marker).save(seedDeleteMarkerLike.marker(map.id, users[0].id));
-            like = await connection.getRepository(MapMarkerLike).save(seedDeleteMarkerLike.like(marker.id, users[0].id));
+            await connection.getRepository(MapMarkerLike).save(seedDeleteMarkerLike.like(marker.id, users[0].id));
         });
 
         it('should throw Invalid Marker Like Id', async () => {
