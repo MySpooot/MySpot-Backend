@@ -44,7 +44,7 @@ export class MarkerController {
     @UseGuards(JwtAuthGuard)
     @ApiHeader({ name: 'Authorization', required: true })
     @ApiOkResponse()
-    getMarkerLike(@User_() user: AuthUser, @Param() param: PostMarkerLikeParam) {
+    insertMarkerLike(@User_() user: AuthUser, @Param() param: PostMarkerLikeParam) {
         return this.markerService.insertMarkerLike(user, param);
     }
 
