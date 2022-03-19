@@ -148,6 +148,6 @@ describe('MapController (e2e)', () => {
             .set({ Authorization: jwtToken })
             .send({ code: '1234' })
             .expect(201)
-            .expect(JSON.stringify(await mapService.getMapCodeMatch({ mapId: 50 }, { code: '1234' })));
+            .expect(JSON.stringify(await mapService.getMapCodeMatch({}, { mapId: 50 }, { code: '1234' })));
     });
 });

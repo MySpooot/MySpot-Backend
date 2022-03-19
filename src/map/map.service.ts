@@ -19,7 +19,7 @@ import { DeleteUserFavoriteMapParam } from './dto/delete_user_favorite_map.dto';
 import { UserAccessibleMap, UserAccessibleMapActive } from '../entities/user_accessible_map.entity';
 import { GetMapDetailHeaders, GetMapDetailParam, GetMapDetailResponse } from './dto/get_map_detail.dto';
 import { GetMapCodeParam, GetMapCodeResponse } from './dto/get_map_code.dto';
-import { PostMapCodeMatchBody, PostMapCodeMatchParam } from './dto/post_map_code_match.dto';
+import { PostMapCodeMatchBody, PostMapCodeMatchHeaders, PostMapCodeMatchParam } from './dto/post_map_code_match.dto';
 
 @Injectable()
 export class MapService {
@@ -183,11 +183,30 @@ export class MapService {
         return GetMapCodeResponse.from(mapCode);
     }
 
-    // map code 일치시 true 반환
-    async getMapCodeMatch({ mapId }: PostMapCodeMatchParam, { code }: PostMapCodeMatchBody) {
+    // map code 검증
+    async getMapCodeMatch({ authorization }: PostMapCodeMatchHeaders, { mapId }: PostMapCodeMatchParam, { code }: PostMapCodeMatchBody) {
         const mapCode = await this.connection.getRepository(Map).findOne({ id: mapId, active: MapActive.Active });
 
-        // 입력한 코드랑 맵 코드가 동일할 시 true 틀리면 false
-        return code === mapCode.code;
+        let userId: number | undefined;
+
+        try {
+            // userId가 있는 경우 userId를 빼옴
+            if (authorization) userId = await this.jwtService.verify(authorization, this.configService.get('jwt.secret')).userId;
+        } catch (e) {
+            console.error(e);
+        }
+
+        // 코드 일치하는 경우
+        if (code === mapCode.code) {
+            // 로그인 유저인 경우
+            if (userId) {
+                await this.connection.getRepository(UserAccessibleMap).insert({ map_id: mapId, user_id: userId });
+                return true;
+            }
+            // 비로그인 유저인 경우
+            else return true;
+        }
+        // 코드 불일치하는 경우
+        else return false;
     }
 }
