@@ -315,12 +315,23 @@ export const seedGetMapCode = {
 };
 
 /** POST /map/:mapId/code/match */
-export const seedPostMapCodeMatch = {
+export const seedPostMapCodeMatchNotLoginUser = {
     map: (userId: number) => ({
         user_id: userId,
         name: 'private_map',
         is_private: true,
         code: '1313',
+        active: MapActive.Active
+    })
+};
+
+/** POST /map/:mapId/code/match */
+export const seedPostMapCodeMatchLoginUser = {
+    map: (userId: number) => ({
+        user_id: userId,
+        name: 'private_map',
+        is_private: true,
+        code: '9991',
         active: MapActive.Active
     })
 };

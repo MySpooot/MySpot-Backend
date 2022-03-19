@@ -30,7 +30,9 @@ import {
     seedDeleteUserFavoriteMap,
     seedDetailLoginUser,
     seedDetailNotLoginUser,
-    seedPostMapCodeMatch
+    seedGetMapCode,
+    seedPostMapCodeMatchNotLoginUser,
+    seedPostMapCodeMatchLoginUser
 } from './map.seed';
 
 describe('MapController', () => {
@@ -420,28 +422,58 @@ describe('MapController', () => {
     /** GET /map/code */
     describe('GET /map/code', () => {
         it('should return code', async () => {
-            const map = await connection.getRepository(Map).save(seedDetailNotLoginUser.map(users[8].id));
+            const map = await connection.getRepository(Map).save(seedGetMapCode.map(users[8].id));
 
             const result = await mapController.getMapCode({ mapId: map.id });
 
             expect(result).toBeDefined();
             expect(result.code).toEqual(map.code);
+
+            await connection.getRepository(Map).clear();
         });
     });
 
     /** POST /map/:mapId/code/match */
     describe('POST /map/:mapId/code/match', () => {
         it('should return true if code is match, or return false if code is not match', async () => {
-            const map = await connection.getRepository(Map).save(seedPostMapCodeMatch.map(users[7].id));
+            const map = await connection.getRepository(Map).save(seedPostMapCodeMatchNotLoginUser.map(users[7].id));
 
             // true
-            const resultTrue = await mapController.getMapCodeMatch({ mapId: map.id }, { code: '1313' });
+            const resultTrue = await mapController.getMapCodeMatch({}, { mapId: map.id }, { code: '1313' });
 
             expect(resultTrue).toBeDefined();
             expect(resultTrue).toEqual(true);
 
             // false
-            const resultFalse = await mapController.getMapCodeMatch({ mapId: map.id }, { code: '4444' });
+            const resultFalse = await mapController.getMapCodeMatch({}, { mapId: map.id }, { code: '4444' });
+
+            expect(resultFalse).toBeDefined();
+            expect(resultFalse).toEqual(false);
+
+            await connection.getRepository(UserAccessibleMap).clear();
+            await connection.getRepository(Map).clear();
+        });
+
+        it('should insert accessible if login user and code is match', async () => {
+            const map = await connection.getRepository(Map).save(seedPostMapCodeMatchLoginUser.map(users[0].id));
+
+            const beforeAccessible = await connection.getRepository(UserAccessibleMap).findOne({ map_id: map.id, user_id: users[0].id });
+
+            // true
+            const resultTrue = await mapController.getMapCodeMatch({ authorization: jwtToken }, { mapId: map.id }, { code: '9991' });
+
+            const afterAccessible = await connection.getRepository(UserAccessibleMap).findOne({ map_id: map.id, user_id: users[0].id });
+
+            expect(resultTrue).toBeDefined();
+            expect(resultTrue).toEqual(true);
+            expect(beforeAccessible).toBeUndefined();
+            expect(afterAccessible).toBeDefined();
+            expect(afterAccessible.active).toEqual(UserAccessibleMapActive.Active);
+            expect(afterAccessible.map_id).toEqual(map.id);
+            expect(afterAccessible.user_id).toEqual(users[0].id);
+
+            // false
+            const resultFalse = await mapController.getMapCodeMatch({}, { mapId: map.id }, { code: '4444' });
 
             expect(resultFalse).toBeDefined();
             expect(resultFalse).toEqual(false);

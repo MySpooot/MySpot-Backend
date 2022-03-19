@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class PostMapCodeMatchParam {
     @ApiProperty()
@@ -7,6 +7,14 @@ export class PostMapCodeMatchParam {
     @IsNotEmpty()
     readonly mapId: number;
 }
+
+export class PostMapCodeMatchHeaders {
+    @ApiProperty({ required: false })
+    @IsOptional()
+    @IsString()
+    readonly authorization?: string;
+}
+
 export class PostMapCodeMatchBody {
     @ApiProperty()
     @IsString()
