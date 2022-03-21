@@ -3120,6 +3120,21 @@ aws-sdk@^2.1092.0:
     uuid "3.3.2"
     xml2js "0.4.19"
 
+aws-sdk@^2.713.0:
+  version "2.1096.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1096.0.tgz#d41d6c6afe44b00977d4fe4c68e9450941d72931"
+  integrity sha512-q+hotU57U8bGpz1pf5CkO4z630ay0xGJ9HedahKPZ0Xk3/X0GH+QFYPBWJ5IMTtO30bjfPH0zTaL2vJmMXLBrQ==
+  dependencies:
+    buffer "4.9.2"
+    events "1.1.1"
+    ieee754 "1.1.13"
+    jmespath "0.16.0"
+    querystring "0.2.0"
+    sax "1.2.1"
+    url "0.10.3"
+    uuid "3.3.2"
+    xml2js "0.4.19"
+
 aws-sdk@^2.814.0:
   version "2.1086.0"
   resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1086.0.tgz#49e782f8017d1962651061606b6ac0f901af8fe6"
@@ -8357,6 +8372,13 @@ neo-async@^2.6.2:
   version "2.6.2"
   resolved "https://registry.npmjs.org/neo-async/-/neo-async-2.6.2.tgz"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
+
+nest-aws@^1.0.0-alpha.0:
+  version "1.0.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/nest-aws/-/nest-aws-1.0.0-alpha.0.tgz#248e9d3d16d3b24f2cef094d66cc088a8ae3b5d1"
+  integrity sha512-M6ekpvLejfSdIuL1s9TUuw9ifmwIB+9nHZ0gZYkWfvFcdcr0vj2Ks7Din6M7n3FQlYdvgZjAqp4LTiIff7f53Q==
+  dependencies:
+    aws-sdk "^2.713.0"
 
 nested-error-stacks@^2.0.0:
   version "2.1.0"
