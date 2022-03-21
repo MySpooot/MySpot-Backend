@@ -16,6 +16,11 @@ export default () => ({
             expiresIn: '30d'
         }
     },
+    aws: {
+        access_key_id: process.env.ACCESS_KEY_ID,
+        secret_access_key: process.env.SECRET_ACCESS_KEY,
+        region: process.env.REGION
+    },
     stage: process.env.stage || 'dev',
     typeorm:
         process.env.NODE_ENV === 'test'
