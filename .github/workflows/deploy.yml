@@ -71,8 +71,8 @@ jobs:
               if: github.ref == 'refs/heads/dev'
               env:
                   CI: false
-                  ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-                  SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
               run: |
                   yarn deploy:dev
 
@@ -80,7 +80,7 @@ jobs:
               if: github.ref == 'refs/heads/master'
               env:
                   CI: false
-                  ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
-                  SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
               run: |
                   yarn deploy:prod
