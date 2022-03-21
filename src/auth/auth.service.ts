@@ -29,20 +29,19 @@ export class AuthService {
         console.log('****** process.env.stage ****** :: ', process.env.stage);
         console.log(' **** process.env.NODE_ENV **** ::', process.env.NODE_ENV);
 
-        // 환경 dev인 경우
-        if (process.env.stage === 'dev') {
-            console.log(' !! stage DEV !!');
-            kakaoRedirectUrl = this.configService.get('kakao.devRedirectUrl');
-        }
-        // 환경 prod인 경우
-        else if (process.env.stage === 'prod') {
-            console.log(' !! stage PROD !!');
-            // @ TODO
-        }
-        // local인 경우
-        else {
-            console.log(' !! LOCAL !!');
+        if (origin.includes('local')) {
             kakaoRedirectUrl = this.configService.get('kakao.localRedirectUrl');
+        } else {
+            // 환경 dev인 경우
+            if (process.env.stage === 'dev') {
+                console.log(' !! stage DEV !!');
+                kakaoRedirectUrl = this.configService.get('kakao.devRedirectUrl');
+            }
+            // 환경 prod인 경우
+            else if (process.env.stage === 'prod') {
+                console.log(' !! stage PROD !!');
+                // @ TODO
+            }
         }
 
         console.log(' **** kakaoRedirectUrl **** ', kakaoRedirectUrl);
