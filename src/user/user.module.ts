@@ -16,7 +16,7 @@ import { UserService } from './user.service';
         AwsModule.forRootAsync({
             imports: [ConfigModule],
             useFactory: (configService: ConfigService) => ({
-                region: 'ap-northeast-2',
+                region: configService.get('aws.region'),
                 accessKeyId: configService.get('aws.access_key_id'),
                 secretAccessKey: configService.get('aws.secret_access_key')
             }),
