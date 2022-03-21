@@ -17,8 +17,8 @@ export default () => ({
         }
     },
     aws: {
-        access_key_id: process.env.ACCESS_KEY_ID,
-        secret_access_key: process.env.SECRET_ACCESS_KEY,
+        access_key_id: process.env.AWS_ACCESS_KEY_ID,
+        secret_access_key: process.env.AWS_SECRET_ACCESS_KEY,
         region: process.env.REGION
     },
     stage: process.env.stage || 'dev',

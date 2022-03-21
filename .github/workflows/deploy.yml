@@ -13,6 +13,13 @@ jobs:
             - name: Checkout Branch
               uses: actions/checkout@v2
 
+            # - name: Configure AWS Credentials
+            #   uses: aws-actions/configure-aws-credentials@v1
+            #   with:
+            #       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            #       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            #       aws-region: ap-northeast-2
+
             - name: Create .env file
               run: |
                   touch .env
@@ -21,9 +28,9 @@ jobs:
                   echo POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE }} >> .env
                   echo POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} >> .env
                   echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
-                  echo REGION=${{ secrets.REGION }} >> .env
-                  echo ACCESS_KEY_ID=${{ secrets.ACCESS_KEY_ID }} >> .env
-                  echo SECRET_ACCESS_KEY=${{ secrets.SECRET_ACCESS_KEY }} >> .env
+                  # echo REGION=${{ secrets.REGION }} >> .env
+                  # echo ACCESS_KEY_ID=${{ secrets.ACCESS_KEY_ID }} >> .env
+                  # echo SECRET_ACCESS_KEY=${{ secrets.SECRET_ACCESS_KEY }} >> .env
                   cat .env
 
             - name: Create .env host - dev
@@ -63,8 +70,8 @@ jobs:
               if: github.ref == 'refs/heads/dev'
               env:
                   CI: false
-                  ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
-                  SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+                  ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
               run: |
                   yarn deploy:dev
 
