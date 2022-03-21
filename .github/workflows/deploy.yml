@@ -13,31 +13,15 @@ jobs:
             - name: Checkout Branch
               uses: actions/checkout@v2
 
-            # - name: Configure AWS Credentials
-            #   uses: aws-actions/configure-aws-credentials@v1
-            #   with:
-            #       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            #       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            #       aws-region: ap-northeast-2
-
-            - name: Create .env file
+            - name: Create .env host - dev
+              if: github.ref == 'refs/heads/dev'
               run: |
-                  touch .env
+                  echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
                   echo POSTGRES_USERNAME=${{ secrets.POSTGRES_USERNAME }} >> .env
                   echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
                   echo POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE }} >> .env
                   echo POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} >> .env
-                  echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
-                  # echo REGION=${{ secrets.REGION }} >> .env
-                  # echo ACCESS_KEY_ID=${{ secrets.ACCESS_KEY_ID }} >> .env
-                  # echo SECRET_ACCESS_KEY=${{ secrets.SECRET_ACCESS_KEY }} >> .env
-                  cat .env
-
-            - name: Create .env host - dev
-              if: github.ref == 'refs/heads/dev'
-              run: |
                   echo POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} >> .env
-                  echo POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} >> .env
                   cat .env
 
             - name: Create .env host - prod
