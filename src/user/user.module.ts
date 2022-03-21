@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AwsModule } from 'nest-aws';
 
@@ -13,14 +13,10 @@ import { UserService } from './user.service';
         TypeOrmModule.forFeature([User]),
         JwtAuthModule,
         ConfigModule,
-        AwsModule.forRootAsync({
-            imports: [ConfigModule],
-            useFactory: (configService: ConfigService) => ({
-                region: configService.get('aws.region'),
-                accessKeyId: configService.get('aws.access_key_id'),
-                secretAccessKey: configService.get('aws.secret_access_key')
-            }),
-            inject: [ConfigService]
+        AwsModule.forRoot({
+            region: process.env.REGION,
+            accessKeyId: process.env.ACCESS_KEY_ID,
+            secretAccessKey: process.env.SECRET_ACCESS_KEY
         })
     ],
     controllers: [UserController],
