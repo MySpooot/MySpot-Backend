@@ -11,6 +11,7 @@ export class CommonController {
     @ApiHeader({ name: 'Authorization', required: false })
     @ApiOkResponse({ type: 'string' })
     getServerStatus() {
+        console.log('123');
         return this.commonService.getServerStatus();
     }
 }
