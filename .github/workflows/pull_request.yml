@@ -11,7 +11,7 @@ jobs:
             - name: Checkout Branch
               uses: actions/checkout@v2
 
-            - name: Generate Environment Variables - dev
+            - name: Generate Environment Variables
               uses: SpicyPizza/create-envfile@v1
               with:
                   envkey_JWT_SECRET: ${{ secrets.JWT_SECRET }}
