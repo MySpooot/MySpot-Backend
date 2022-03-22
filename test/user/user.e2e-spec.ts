@@ -66,7 +66,6 @@ describe('UserController (e2e)', () => {
             .expect(JSON.stringify(await userService.updateUserNickname(seedUpdateNicknameMe, body)));
     });
 
-    // @TODO 추후 주석 젝서
     it('POST /user/upload', async () => {
         await connection.getRepository(User).save(seedImageUploadUser);
         const jwtToken = app.get(JwtService).sign(seedImageUploadMe);
