@@ -30,6 +30,21 @@ jobs:
             - name: Inject slug/short variables
               uses: rlespinasse/github-slug-action@v3.x
 
+            - name: Slack Notification on Start
+              uses: tokorom/action-slack-incoming-webhook@main
+              env:
+                  INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+              with:
+                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|API Stage Deploy Started::${{ env.GITHUB_REF_SLUG }}>*'
+                  attachments: |
+                      [
+                        {
+                          "title": "배포가 시작되었습니다.",
+                          "author_name": "${{ github.actor }}",
+                          "author_icon": "${{ github.event.sender.avatar_url }}"
+                        }
+                      ]
+
             - name: Install NodeJS
               uses: actions/setup-node@v1
               with:
@@ -56,3 +71,36 @@ jobs:
               if: github.ref == 'refs/heads/master'
               run: |
                   yarn deploy:prod
+
+             - name: Slack Notification on SUCCESS
+              if: ${{ success() }}
+              uses: tokorom/action-slack-incoming-webhook@main
+              env:
+                  INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+              with:
+                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|API Stage Deploy Succeed::${{ env.GITHUB_REF_SLUG }}>*' 
+                  attachments: |
+                      [
+                        {
+                          "title": "배포가 완료되었습니다.",
+                          "color": "good",
+                          "author_name": "${{ github.actor }}",
+                          "author_icon": "${{ github.event.sender.avatar_url }}"
+                        }
+                      ]
+            - name: Slack Notification on Failure
+              if: ${{ failure() }}
+              uses: tokorom/action-slack-incoming-webhook@main
+              env:
+                  INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+              with:
+                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|API Stage Deploy Failure::${{ env.GITHUB_REF_SLUG }}>*' 
+                  attachments: |
+                      [
+                        {
+                          "title": "배포가 실패하였습니다.",
+                          "color": "danger",
+                          "author_name": "${{ github.actor }}",
+                          "author_icon": "${{ github.event.sender.avatar_url }}"
+                        }
+                      ]
