@@ -11,15 +11,24 @@ jobs:
             - name: Checkout Branch
               uses: actions/checkout@v2
 
-            - name: Create .env file
-              run: |
-                  touch .env
-                  echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
-                  echo BUCKET=${{ secrets.BUCKET }} >> .env
-                  echo ACCESS_KEY_ID=${{ secrets.ACCESS_KEY_ID }} >> .env
-                  echo SECRET_ACCESS_KEY=${{ secrets.SECRET_ACCESS_KEY }} >> .env
-                  echo REGION=${{ secrets.REGION }} >> .env
-                  cat .env
+            - name: Generate Environment Variables - dev
+              uses: SpicyPizza/create-envfile@v1
+              with:
+                  envkey_JWT_SECRET: ${{ secrets.JWT_SECRET }}
+                  envkey_AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  envkey_AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  file_name: .env
+
+            # - name: Create .env file
+            #   run: |
+            #       touch .env
+            #       echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
+            #       echo BUCKET=${{ secrets.BUCKET }} >> .env
+            #       echo AWS_ACCESS_KEY_ID=${{ secrets.ACCESS_KEY_ID }} >> .env
+            #       echo SECRET_ACCESS_KEY=${{ secrets.SECRET_ACCESS_KEY }} >> .env
+            #       echo REGION=${{ secrets.REGION }} >> .env
+            #       cat .env
+
             - name: Inject slug/short variables
               uses: rlespinasse/github-slug-action@v3.x
 
@@ -48,3 +57,40 @@ jobs:
 
             - name: Build
               run: yarn build
+
+            # - name: Slack Notification on SUCCESS
+            #   if: ${{ success() }}
+            #   uses: tokorom/action-slack-incoming-webhook@main
+            #   env:
+            #       INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+            #   with:
+            #       text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|API Stage Pre-Check Succeed::${{ env.GITHUB_REF_SLUG }}>*'
+            #       attachments: |
+            #           [
+            #             {
+            #               "title": "사전 검증이 성공하였습니다.",
+            #               "text": "↑ PR LINK",
+            #               "title_link": "${{ github.event.repository.html_url }}/pull/${{ github.event.number }}",
+            #               "color": "good",
+            #               "author_name": "${{ github.actor }}",
+            #               "author_icon": "${{ github.event.sender.avatar_url }}"
+            #             }
+            #           ]
+            # - name: Slack Notification on Failure
+            #   if: ${{ failure() }}
+            #   uses: tokorom/action-slack-incoming-webhook@main
+            #   env:
+            #       INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+            #   with:
+            #       text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|API Stage Pre-Check Failure::${{ env.GITHUB_REF_SLUG }}>*'
+            #       attachments: |
+            #           [
+            #             {
+            #               "title": "사전 검증에 실패하였습니다.",
+            #               "text": "↑ PR LINK",
+            #               "title_link": "${{ github.event.repository.html_url }}/pull/${{ github.event.number }}",
+            #               "color": "danger",
+            #               "author_name": "${{ github.actor }}",
+            #               "author_icon": "${{ github.event.sender.avatar_url }}"
+            #             }
+            #           ]
