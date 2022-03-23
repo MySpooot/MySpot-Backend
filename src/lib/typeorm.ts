@@ -11,10 +11,11 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
 
         if (!options) throw new Error('Typeorm config not found');
 
-        options.username ??= this.configService.get('database.username');
-        options.password ??= this.configService.get('database.password');
-        options.database ??= this.configService.get('database.database');
-        options.host ??= this.configService.get('database.host');
+        options.username ??= this.configService.get('POSTGRES_USERNAME');
+        options.password ??= this.configService.get('POSTGRES_PASSWORD');
+        options.database ??= this.configService.get('POSTGRES_DATABASE');
+        options.port ??= this.configService.get('POSTGRES_PORT');
+        options.host ??= this.configService.get('POSTGRES_HOST');
 
         return options as TypeOrmModuleOptions;
     }
