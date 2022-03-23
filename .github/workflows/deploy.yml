@@ -21,7 +21,7 @@ jobs:
               env:
                   INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
               with:
-                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|API Stage Deploy Started::${{ env.GITHUB_REF_SLUG }}>*' #Required True 인 값이다..
+                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|MySpot API Deploy Started::${{ env.GITHUB_REF_SLUG }}>*'
                   attachments: |
                       [
                         {
@@ -57,19 +57,17 @@ jobs:
                   envkey_POSTGRES_USERNAME: ${{ secrets.POSTGRES_USERNAME_DEV }}
                   envkey_POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD_DEV }}
                   envkey_POSTGRES_DATABASE: ${{ secrets.POSTGRES_DATABASE_DEV }}
-                  envkey_POSTGRES_PORT: ${{ secrets.POSTGRES_DATABASE_DEV }}
+                  envkey_POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
                   envkey_POSTGRES_HOST: ${{ secrets.POSTGRES_HOST_DEV }}
                   file_name: .env
 
             - name: Build and Deploy - DEV
               if: github.ref == 'refs/heads/dev'
-              run: |
-                  yarn deploy:dev
+              run: yarn deploy:dev
 
             - name: Build and Deploy - PROD
               if: github.ref == 'refs/heads/master'
-              run: |
-                  yarn deploy:prod
+              run: yarn deploy:prod
 
             - name: Slack Notification on SUCCESS
               if: ${{ success() }}
@@ -77,7 +75,7 @@ jobs:
               env:
                   INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
               with:
-                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|API Stage Deploy Succeed::${{ env.GITHUB_REF_SLUG }}>*' #Required True 인 값이다..
+                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|MySpot API Deploy Succeed::${{ env.GITHUB_REF_SLUG }}>*'
                   attachments: |
                       [
                         {
@@ -93,7 +91,7 @@ jobs:
               env:
                   INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
               with:
-                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|API Stage Deploy Failure::${{ env.GITHUB_REF_SLUG }}>*' #Required True 인 값이다..
+                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|MySpot API Deploy Failure::${{ env.GITHUB_REF_SLUG }}>*'
                   attachments: |
                       [
                         {
