@@ -16,7 +16,7 @@ export class AuthController {
     @ApiHeader({ name: 'Authorization', required: false })
     @ApiOkResponse({ type: PostLoginResponse })
     login(@Headers() headers: PostLoginHeaders, @Body() body: PostLoginBody) {
-        console.log('tests');
+        console.log('tests333');
         return this.authService.login(headers, body);
     }
 
