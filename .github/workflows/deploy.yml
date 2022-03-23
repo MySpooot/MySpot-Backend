@@ -13,25 +13,23 @@ jobs:
             - name: Checkout Branch
               uses: actions/checkout@v2
 
-            - name: Create .env file
+            # Github Repository Secrets를 통해 환경 변수 파일을 생성합니다.
+            - name: Generate Environment Variables File for Production
               run: |
-                  touch .env
-                  echo POSTGRES_PORT=${{ secrets.POSTGRES_PORT_DEV }} >> .env
-                  echo POSTGRES_USERNAME=${{ secrets.POSTGRES_USERNAME_DEV }} >> .env
-                  echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD_DEV }} >> .env
-                  echo POSTGRES_DATABASE=${{ secrets.MYSQL_DATABASE_DEV }} >> .env
-                  echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
-                  cat .env
-            - name: Create .env host - dev
-              if: github.ref == 'refs/heads/dev'
-              run: |
-                  echo POSTGRES_HOST=${{ secrets.POSTGRES_HOST_DEV }} >> .env
-                  cat .env
-            - name: Create .env host - prod
-              if: github.ref == 'refs/heads/master'
-              run: |
-                  echo POSTGRES_HOST=${{ secrets.POSTGRES_HOST_PROD }} >> .env
-                  cat .env
+                  echo "POSTGRES_PORT_DEV=$POSTGRES_PORT_DEV" >> .env
+                  echo "POSTGRES_USERNAME_DEV=$POSTGRES_USERNAME_DEV" >> .env
+                  echo "POSTGRES_PASSWORD_DEV=$POSTGRES_PASSWORD_DEV" >> .env
+                  echo "POSTGRES_DATABASE_DEV=$POSTGRES_DATABASE_DEV" >> .env
+                  echo "POSTGRES_HOST_DEV=$POSTGRES_HOST_DEV" >> .env
+                  echo "JWT_SECRET=$JWT_SECRET" >> .env
+              env:
+                  POSTGRES_PORT: ${{ secrets.POSTGRES_PORT_DEV }}
+                  POSTGRES_USERNAME: ${{ secrets.POSTGRES_USERNAME_DEV }}
+                  POSTGRES_PASSWORD_DEV: ${{ secrets.POSTGRES_PASSWORD_DEV }}
+                  POSTGRES_DATABASE_DEV: ${{ secrets.POSTGRES_DATABASE_DEV }}
+                  POSTGRES_HOST_DEV: ${{ secrets.POSTGRES_HOST_DEV }}
+                  JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
             - name: Inject slug/short variables
               uses: rlespinasse/github-slug-action@v3.x
 
@@ -59,9 +57,7 @@ jobs:
               with:
                   path: node_modules
                   key: ${{ runner.OS }}-build-${{ hashFiles('**/yarn.lock') }}
-                  restore-keys: |
-                      ${{ runner.OS }}-build-
-                      ${{ runner.OS }}-
+
             - name: Install Packages
               run: yarn install
 
@@ -69,10 +65,17 @@ jobs:
               if: github.ref == 'refs/heads/dev'
               env:
                   CI: false
+                  POSTGRES_PORT: ${{ secrets.POSTGRES_PORT_DEV }}
+                  POSTGRES_USERNAME: ${{ secrets.POSTGRES_USERNAME_DEV }}
+                  POSTGRES_PASSWORD_DEV: ${{ secrets.POSTGRES_PASSWORD_DEV }}
+                  POSTGRES_DATABASE_DEV: ${{ secrets.POSTGRES_DATABASE_DEV }}
+                  POSTGRES_HOST_DEV: ${{ secrets.POSTGRES_HOST_DEV }}
+                  JWT_SECRET: ${{ secrets.JWT_SECRET }}
                   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
               run: |
                   yarn deploy:dev
+
             - name: Build and Deploy - PROD
               if: github.ref == 'refs/heads/master'
               env:
