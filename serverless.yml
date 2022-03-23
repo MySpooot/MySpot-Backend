@@ -16,8 +16,6 @@ provider:
     apiName: ${self:service}-${self:provider.stage}
     memorySize: 512
     timeout: 10
-    # tracing: ?? 이 옵션 뭐지 ㅋㅋㅋㅋㅋㅋㅋ
-    #     lambda: true
     deploymentBucket: myspot-serverless-deployment
     deploymentPrefix: myspot
     environment:
@@ -25,7 +23,6 @@ provider:
         stage: ${self:provider.stage}
     iamManagedPolicies:
         - arn:aws:iam::aws:policy/AmazonS3FullAccess
-
     lambdaHashingVersion: 20201221
 
 package:
@@ -42,14 +39,14 @@ custom:
             - 'image/png'
             - 'image/jpg'
             - 'multipart/form-data'
-
-    # deploymentSettings:
-    #     type: AllAtOnce # shifts all the traffic to the new version, useful when you only need to execute the validation hooks.
-    #     alias: ${self.custom.stage}
+    deploymentSettings: # shifts all the traffic to the new version, useful when you only need to execute the validation hooks.
+        type: AllAtOnce
+        alias: ${self:provider.stage}
 
 functions:
     Auth:
         handler: src/auth/lambda.handler
+        deploymentSettings: ${self:custom.deploymentSettings}
         events:
             - http:
                   method: post
@@ -68,6 +65,7 @@ functions:
 
     Common: # lambda function name
         handler: src/common/lambda.handler
+        deploymentSettings: ${self:custom.deploymentSettings}
         events:
             - http:
                   method: get
@@ -76,6 +74,7 @@ functions:
 
     Map:
         handler: src/map/lambda.handler
+        deploymentSettings: ${self:custom.deploymentSettings}
         events:
             - http:
                   method: get
@@ -137,73 +136,76 @@ functions:
                   path: /map/favorite/{favoriteMapId}
                   cors: ${self.custom.cors}
 
-    #     Marker:
-    #         handler: src/marker/lambda.handler
-    #         events:
-    #             - http:
-    #                   method: get
-    #                   path: /map/{mapId}/marker
-    #                   cors: ${self.custom.cors}
+        Marker:
+            handler: src/marker/lambda.handler
+            deploymentSettings: ${self:custom.deploymentSettings}
+            events:
+                - http:
+                      method: get
+                      path: /map/{mapId}/marker
+                      cors: ${self.custom.cors}
 
-    #             - http:
-    #                   method: post
-    #                   path: /map/{mapId}/marker
-    #                   cors: ${self.custom.cors}
+                - http:
+                      method: post
+                      path: /map/{mapId}/marker
+                      cors: ${self.custom.cors}
 
-    #             - http:
-    #                   method: delete
-    #                   path: /map/marker/{markerId}
-    #                   cors: ${self.custom.cors}
+                - http:
+                      method: delete
+                      path: /map/marker/{markerId}
+                      cors: ${self.custom.cors}
 
-    #             - http:
-    #                   method: post
-    #                   path: /map/marker/{markerId}/like
-    #                   cors: ${self.custom.cors}
+                - http:
+                      method: post
+                      path: /map/marker/{markerId}/like
+                      cors: ${self.custom.cors}
 
-    #             - http:
-    #                   method: delete
-    #                   path: /map/marker/{markerId}/like
-    #                   cors: ${self.custom.cors}
+                - http:
+                      method: delete
+                      path: /map/marker/{markerId}/like
+                      cors: ${self.custom.cors}
 
-    #             - http:
-    #                   method: get
-    #                   path: /map/marker/location
-    #                   cors: ${self.custom.cors}
+                - http:
+                      method: get
+                      path: /map/marker/location
+                      cors: ${self.custom.cors}
 
-    #             - http:
-    #                   method: post
-    #                   path: /map/marker/location
-    #                   cors: ${self.custom.cors}
+                - http:
+                      method: post
+                      path: /map/marker/location
+                      cors: ${self.custom.cors}
 
-    #             - http:
-    #                   method: delete
-    #                   path: /map/marker/location/{addressId}
-    #                   cors: ${self.custom.cors}
+                - http:
+                      method: delete
+                      path: /map/marker/location/{addressId}
+                      cors: ${self.custom.cors}
 
-    #     Reply:
-    #         handler: src/reply/lambda.handler
-    #         events:
-    #             - http:
-    #                   method: get
-    #                   path: /map/marker/{markerId}/replies
-    #                   cors: ${self.custom.cors}
+        Reply:
+            handler: src/reply/lambda.handler
+            deploymentSettings: ${self:custom.deploymentSettings}
+            events:
+                - http:
+                      method: get
+                      path: /map/marker/{markerId}/replies
+                      cors: ${self.custom.cors}
 
-    #             - http:
-    #                   method: post
-    #                   path: /map/marker/{markerId}/replies
-    #                   cors: ${self.custom.cors}
+                - http:
+                      method: post
+                      path: /map/marker/{markerId}/replies
+                      cors: ${self.custom.cors}
 
-    #             - http:
-    #                   method: put
-    #                   path: /map/marker/replies/{replyId}
-    #                   cors: ${self.custom.cors}
+                - http:
+                      method: put
+                      path: /map/marker/replies/{replyId}
+                      cors: ${self.custom.cors}
 
-    #             - http:
-    #                   method: delete
-    #                   path: /map/marker/replies/{replyId}
-    #                   cors: ${self.custom.cors}
+                - http:
+                      method: delete
+                      path: /map/marker/replies/{replyId}
+                      cors: ${self.custom.cors}
     User:
         handler: src/user/lambda.handler
+        deploymentSettings: ${self:custom.deploymentSettings}
         events:
             - http:
                   method: put
