@@ -1,11 +1,11 @@
 export default () => ({
-    database: {
-        username: process.env.POSTGRES_USERNAME || '',
-        password: process.env.POSTGRES_PASSWORD || '',
-        database: process.env.POSTGRES_DATABASE || '',
-        host: process.env.POSTGRES_HOST || '',
-        port: process.env.POSTGRES_PORT || ''
-    },
+    // database: {
+    //     username: process.env.POSTGRES_USERNAME || '',
+    //     password: process.env.POSTGRES_PASSWORD || '',
+    //     database: process.env.POSTGRES_DATABASE || '',
+    //     host: process.env.POSTGRES_HOST || '',
+    //     port: process.env.POSTGRES_PORT || ''
+    // },
     kakao: {
         clientId: '025b493068d0d400f8c6b9f91b175936',
         localRedirectUrl: 'http://localhost:3000',
@@ -22,22 +22,28 @@ export default () => ({
         region: process.env.REGION
     },
     stage: process.env.stage || 'dev',
-    typeorm:
-        process.env.NODE_ENV === 'test'
-            ? {
-                  type: 'sqlite',
-                  database: ':memory:',
-                  autoLoadEntities: true,
-                  logging: process.env.NODE_ENV === 'test',
-                  synchronize: true
+    typeorm: process.env.stage
+        ? {
+              type: 'postgres',
+              autoLoadEntities: true,
+              synchronize: false,
+              bigNumberStrings: false
+          }
+        : process.env.NODE_ENV === 'dev'
+        ? {
+              type: 'postgres',
+              autoLoadEntities: true,
+              synchronize: false,
+              bigNumberStrings: false,
+              ssl: {
+                  rejectUnauthorized: false
               }
-            : {
-                  type: 'postgres',
-                  autoLoadEntities: true,
-                  synchronize: false,
-                  bigNumberStrings: false,
-                  ssl: {
-                      rejectUnauthorized: false
-                  }
-              }
+          }
+        : {
+              type: 'sqlite',
+              database: ':memory:',
+              autoLoadEntities: true,
+              logging: process.env.NODE_ENV === 'local',
+              synchronize: true
+          }
 });
