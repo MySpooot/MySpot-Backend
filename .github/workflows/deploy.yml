@@ -13,22 +13,18 @@ jobs:
             - name: Checkout Branch
               uses: actions/checkout@v2
 
-            # Github Repository Secrets를 통해 환경 변수 파일을 생성합니다.
-            - name: Generate Environment Variables File for Production
-              run: |
-                  echo "POSTGRES_PORT_DEV=$POSTGRES_PORT" >> .env
-                  echo "POSTGRES_USERNAME_DEV=$POSTGRES_USERNAME_DEV" >> .env
-                  echo "POSTGRES_PASSWORD_DEV=$POSTGRES_PASSWORD_DEV" >> .env
-                  echo "POSTGRES_DATABASE_DEV=$POSTGRES_DATABASE_DEV" >> .env
-                  echo "POSTGRES_HOST_DEV=$POSTGRES_HOST_DEV" >> .env
-                  echo "JWT_SECRET=$JWT_SECRET" >> .env
-              env:
-                  POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
-                  POSTGRES_USERNAME: ${{ secrets.POSTGRES_USERNAME_DEV }}
-                  POSTGRES_PASSWORD_DEV: ${{ secrets.POSTGRES_PASSWORD_DEV }}
-                  POSTGRES_DATABASE_DEV: ${{ secrets.POSTGRES_DATABASE_DEV }}
-                  POSTGRES_HOST_DEV: ${{ secrets.POSTGRES_HOST_DEV }}
-                  JWT_SECRET: ${{ secrets.JWT_SECRET }}
+            - name: Generate Environment Variables
+              uses: SpicyPizza/create-envfile@v1
+              with:
+                  envkey_JWT_SECRET: ${{ secrets.JWT_SECRET }}
+                  envkey_AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  envkey_AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  envkey_POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+                  envkey_POSTGRES_USERNAME: ${{ secrets.POSTGRES_USERNAME_DEV }}
+                  envkey_POSTGRES_DATABASE: ${{ secrets.POSTGRES_DATABASE_DEV }}
+                  envkey_POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD_DEV }}
+                  envkey_POSTGRES_HOST: ${{ secrets.POSTGRES_HOST_DEV }}
+                  file_name: .env
 
             - name: Inject slug/short variables
               uses: rlespinasse/github-slug-action@v3.x
@@ -64,26 +60,12 @@ jobs:
             - name: Build and Deploy - DEV
               if: github.ref == 'refs/heads/dev'
               env:
-                  CI: true
-                  POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
-                  POSTGRES_USERNAME: ${{ secrets.POSTGRES_USERNAME_DEV }}
-                  POSTGRES_PASSWORD_DEV: ${{ secrets.POSTGRES_PASSWORD_DEV }}
-                  POSTGRES_DATABASE_DEV: ${{ secrets.POSTGRES_DATABASE_DEV }}
-                  POSTGRES_HOST_DEV: ${{ secrets.POSTGRES_HOST_DEV }}
-                  JWT_SECRET: ${{ secrets.JWT_SECRET }}
+                  CI: false
                   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
               run: |
                   yarn deploy:dev
 
-            - name: Build and Deploy - PROD
-              if: github.ref == 'refs/heads/master'
-              env:
-                  CI: false
-                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-              run: |
-                  yarn deploy:prod
             - name: Slack Notification on SUCCESS
               if: ${{ success() }}
               uses: tokorom/action-slack-incoming-webhook@main
@@ -100,6 +82,7 @@ jobs:
                           "author_icon": "${{ github.event.sender.avatar_url }}"
                         }
                       ]
+
             - name: Slack Notification on Failure
               if: ${{ failure() }}
               uses: tokorom/action-slack-incoming-webhook@main
