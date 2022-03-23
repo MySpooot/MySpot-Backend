@@ -63,7 +63,7 @@ functions:
                   path: /auth/user/{userId}
                   cors: ${self.custom.cors}
 
-    Common: # lambda function name
+    Common:
         handler: src/common/lambda.handler
         deploymentSettings: ${self:custom.deploymentSettings}
         events:
