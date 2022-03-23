@@ -137,71 +137,71 @@ functions:
                   path: /map/favorite/{favoriteMapId}
                   cors: ${self.custom.cors}
 
-    Marker:
-        handler: src/marker/lambda.handler
-        events:
-            - http:
-                  method: get
-                  path: /map/{mapId}/marker
-                  cors: ${self.custom.cors}
+    #     Marker:
+    #         handler: src/marker/lambda.handler
+    #         events:
+    #             - http:
+    #                   method: get
+    #                   path: /map/{mapId}/marker
+    #                   cors: ${self.custom.cors}
 
-            - http:
-                  method: post
-                  path: /map/{mapId}/marker
-                  cors: ${self.custom.cors}
+    #             - http:
+    #                   method: post
+    #                   path: /map/{mapId}/marker
+    #                   cors: ${self.custom.cors}
 
-            - http:
-                  method: delete
-                  path: /map/marker/{markerId}
-                  cors: ${self.custom.cors}
+    #             - http:
+    #                   method: delete
+    #                   path: /map/marker/{markerId}
+    #                   cors: ${self.custom.cors}
 
-            - http:
-                  method: post
-                  path: /map/marker/{markerId}/like
-                  cors: ${self.custom.cors}
+    #             - http:
+    #                   method: post
+    #                   path: /map/marker/{markerId}/like
+    #                   cors: ${self.custom.cors}
 
-            - http:
-                  method: delete
-                  path: /map/marker/{markerId}/like
-                  cors: ${self.custom.cors}
+    #             - http:
+    #                   method: delete
+    #                   path: /map/marker/{markerId}/like
+    #                   cors: ${self.custom.cors}
 
-            - http:
-                  method: get
-                  path: /map/marker/location
-                  cors: ${self.custom.cors}
+    #             - http:
+    #                   method: get
+    #                   path: /map/marker/location
+    #                   cors: ${self.custom.cors}
 
-            - http:
-                  method: post
-                  path: /map/marker/location
-                  cors: ${self.custom.cors}
+    #             - http:
+    #                   method: post
+    #                   path: /map/marker/location
+    #                   cors: ${self.custom.cors}
 
-            - http:
-                  method: delete
-                  path: /map/marker/location/{addressId}
-                  cors: ${self.custom.cors}
+    #             - http:
+    #                   method: delete
+    #                   path: /map/marker/location/{addressId}
+    #                   cors: ${self.custom.cors}
 
-    Reply:
-        handler: src/reply/lambda.handler
-        events:
-            - http:
-                  method: get
-                  path: /map/marker/{markerId}/replies
-                  cors: ${self.custom.cors}
+    #     Reply:
+    #         handler: src/reply/lambda.handler
+    #         events:
+    #             - http:
+    #                   method: get
+    #                   path: /map/marker/{markerId}/replies
+    #                   cors: ${self.custom.cors}
 
-            - http:
-                  method: post
-                  path: /map/marker/{markerId}/replies
-                  cors: ${self.custom.cors}
+    #             - http:
+    #                   method: post
+    #                   path: /map/marker/{markerId}/replies
+    #                   cors: ${self.custom.cors}
 
-            - http:
-                  method: put
-                  path: /map/marker/replies/{replyId}
-                  cors: ${self.custom.cors}
+    #             - http:
+    #                   method: put
+    #                   path: /map/marker/replies/{replyId}
+    #                   cors: ${self.custom.cors}
 
-            - http:
-                  method: delete
-                  path: /map/marker/replies/{replyId}
-                  cors: ${self.custom.cors}
+    #             - http:
+    #                   method: delete
+    #                   path: /map/marker/replies/{replyId}
+    #                   cors: ${self.custom.cors}
     User:
         handler: src/user/lambda.handler
         events:
