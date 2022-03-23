@@ -16,14 +16,14 @@ jobs:
             # Github Repository Secrets를 통해 환경 변수 파일을 생성합니다.
             - name: Generate Environment Variables File for Production
               run: |
-                  echo "POSTGRES_PORT_DEV=$POSTGRES_PORT_DEV" >> .env
+                  echo "POSTGRES_PORT_DEV=$POSTGRES_PORT" >> .env
                   echo "POSTGRES_USERNAME_DEV=$POSTGRES_USERNAME_DEV" >> .env
                   echo "POSTGRES_PASSWORD_DEV=$POSTGRES_PASSWORD_DEV" >> .env
                   echo "POSTGRES_DATABASE_DEV=$POSTGRES_DATABASE_DEV" >> .env
                   echo "POSTGRES_HOST_DEV=$POSTGRES_HOST_DEV" >> .env
                   echo "JWT_SECRET=$JWT_SECRET" >> .env
               env:
-                  POSTGRES_PORT: ${{ secrets.POSTGRES_PORT_DEV }}
+                  POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
                   POSTGRES_USERNAME: ${{ secrets.POSTGRES_USERNAME_DEV }}
                   POSTGRES_PASSWORD_DEV: ${{ secrets.POSTGRES_PASSWORD_DEV }}
                   POSTGRES_DATABASE_DEV: ${{ secrets.POSTGRES_DATABASE_DEV }}
@@ -65,7 +65,7 @@ jobs:
               if: github.ref == 'refs/heads/dev'
               env:
                   CI: true
-                  POSTGRES_PORT: ${{ secrets.POSTGRES_PORT_DEV }}
+                  POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
                   POSTGRES_USERNAME: ${{ secrets.POSTGRES_USERNAME_DEV }}
                   POSTGRES_PASSWORD_DEV: ${{ secrets.POSTGRES_PASSWORD_DEV }}
                   POSTGRES_DATABASE_DEV: ${{ secrets.POSTGRES_DATABASE_DEV }}
