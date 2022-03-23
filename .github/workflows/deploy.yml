@@ -64,7 +64,7 @@ jobs:
             - name: Build and Deploy - DEV
               if: github.ref == 'refs/heads/dev'
               env:
-                  CI: false
+                  CI: true
                   POSTGRES_PORT: ${{ secrets.POSTGRES_PORT_DEV }}
                   POSTGRES_USERNAME: ${{ secrets.POSTGRES_USERNAME_DEV }}
                   POSTGRES_PASSWORD_DEV: ${{ secrets.POSTGRES_PASSWORD_DEV }}
