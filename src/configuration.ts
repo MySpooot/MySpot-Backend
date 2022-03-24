@@ -36,8 +36,10 @@ export default () => ({
                   autoLoadEntities: true,
                   synchronize: false,
                   bigNumberStrings: false,
-                  ssl: {
-                      rejectUnauthorized: false
+                  extra: {
+                      ssl: {
+                          rejectUnauthorized: false
+                      }
                   }
               }
 });

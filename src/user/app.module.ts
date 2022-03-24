@@ -29,6 +29,8 @@ import { UserModule } from './user.module';
             useClass: TypeOrmConfigService
         }),
         UserModule
-    ]
+    ],
+    controllers: [],
+    providers: []
 })
 export class AppModule {}

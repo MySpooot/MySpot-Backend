@@ -26,6 +26,8 @@ import { ReplyModule } from './reply.module';
             useClass: TypeOrmConfigService
         }),
         ReplyModule
-    ]
+    ],
+    controllers: [],
+    providers: []
 })
 export class AppModule {}

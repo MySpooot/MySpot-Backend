@@ -26,6 +26,8 @@ import { MarkerModule } from './marker.module';
             useClass: TypeOrmConfigService
         }),
         MarkerModule
-    ]
+    ],
+    controllers: [],
+    providers: []
 })
 export class AppModule {}
