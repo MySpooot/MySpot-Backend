@@ -24,7 +24,7 @@ jobs:
             - name: Create .env host - dev
               if: github.ref == 'refs/heads/dev'
               run: |
-                  echo POSTGRES_HOST=${{ secrets.MYSQL_HOST_DEV }} >> .env
+                  echo POSTGRES_HOST=${{ secrets.POSTGRES_HOST_DEV }} >> .env
                   cat .env
             - name: Create .env host - prod
               if: github.ref == 'refs/heads/master'
