@@ -3,7 +3,7 @@ name: My Spot API Push and Deploy
 on:
     push:
         branches:
-            # - master
+            - master
             - dev
 
 jobs:
@@ -13,24 +13,24 @@ jobs:
             - name: Checkout Branch
               uses: actions/checkout@v2
 
-            - name: Generate Environment Variables
+            - name: Create .env file
+              run: |
+                  touch .env
+                  echo POSTGRES_USERNAME=${{ secrets.POSTGRES_USERNAME_DEV }} >> .env
+                  echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD_DEV }} >> .env
+                  echo POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE_DEV }} >> .env
+                  echo POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} >> .env
+                  cat .env
+            - name: Create .env host - dev
               if: github.ref == 'refs/heads/dev'
-              uses: SpicyPizza/create-envfile@v1
-              with:
-                  envkey_POSTGRES_HOST: ${{ secrets.POSTGRES_HOST_DEV }}
-                  envkey_POSTGRES_USERNAME: ${{ secrets.POSTGRES_USERNAME_DEV }}
-                  envkey_POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD_DEV }}
-                  envkey_POSTGRES_DATABASE: ${{ secrets.POSTGRES_DATABASE_DEV }}
-                  envkey_POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
-                  envkey_JWT_SECRET: ${{ secrets.JWT_SECRET }}
-                  file_name: .env
-
+              run: |
+                  echo POSTGRES_HOST=${{ secrets.MYSQL_HOST_DEV }} >> .env
+                  cat .env
             - name: Create .env host - prod
               if: github.ref == 'refs/heads/master'
               run: |
-                  echo POSTGRES_HOST=${{ secrets.POSTGRES_HOST_PROD }} >> .env
+                  echo MYSQL_HOST=${{ secrets.MYSQL_HOST_PROD }} >> .env
                   cat .env
-
             - name: Inject slug/short variables
               uses: rlespinasse/github-slug-action@v3.x
 
@@ -39,7 +39,7 @@ jobs:
               env:
                   INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
               with:
-                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|My Spot API Deploy Started::${{ env.GITHUB_REF_SLUG }}>*'
+                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|My Spot API Deploy Started::${{ env.GITHUB_REF_SLUG }}>*' #Required True 인 값이다..
                   attachments: |
                       [
                         {
@@ -51,14 +51,16 @@ jobs:
             - name: Install NodeJS
               uses: actions/setup-node@v1
               with:
-                  node-version: 16
+                  node-version: 14
 
             - name: Cache node_modules
               uses: actions/cache@v1
               with:
                   path: node_modules
                   key: ${{ runner.OS }}-build-${{ hashFiles('**/yarn.lock') }}
-
+                  restore-keys: |
+                      ${{ runner.OS }}-build-
+                      ${{ runner.OS }}-
             - name: Install Packages
               run: yarn install
 
@@ -70,7 +72,6 @@ jobs:
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
               run: |
                   yarn deploy:dev
-
             - name: Build and Deploy - PROD
               if: github.ref == 'refs/heads/master'
               env:
@@ -79,14 +80,13 @@ jobs:
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
               run: |
                   yarn deploy:prod
-
             - name: Slack Notification on SUCCESS
               if: ${{ success() }}
               uses: tokorom/action-slack-incoming-webhook@main
               env:
                   INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
               with:
-                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|My Spot API  Deploy Succeed::${{ env.GITHUB_REF_SLUG }}>*'
+                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|My Spot API Deploy Succeed::${{ env.GITHUB_REF_SLUG }}>*' #Required True 인 값이다..
                   attachments: |
                       [
                         {
@@ -96,14 +96,13 @@ jobs:
                           "author_icon": "${{ github.event.sender.avatar_url }}"
                         }
                       ]
-
             - name: Slack Notification on Failure
               if: ${{ failure() }}
               uses: tokorom/action-slack-incoming-webhook@main
               env:
                   INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
               with:
-                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|My Spot API Deploy Failure::${{ env.GITHUB_REF_SLUG }}>*'
+                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|My Spot API Deploy Failure::${{ env.GITHUB_REF_SLUG }}>*' #Required True 인 값이다..
                   attachments: |
                       [
                         {
