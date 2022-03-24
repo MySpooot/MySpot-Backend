@@ -1,6 +1,6 @@
 service: MySpotApi
 configValidationMode: warn
-useDotenv: warn
+useDotenv: true
 plugins:
     - serverless-plugin-typescript
     - serverless-plugin-optimize
