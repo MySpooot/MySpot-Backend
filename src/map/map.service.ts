@@ -27,7 +27,6 @@ export class MapService {
 
     // select my maps
     async getUserMaps({ userId }: AuthUser, { offset = 0, limit = 6 }: GetUserMapsQuery) {
-        console.log(';asdfasdfdddd');
         //@TODO 정렬기준, offset, limit 정하기
         const myMaps = await this.connection
             .getRepository(Map)
