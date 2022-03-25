@@ -30,8 +30,8 @@ provider:
         POSTGRES_HOST: ${env:POSTGRES_HOST}
         POSTGRES_PORT: ${env:POSTGRES_PORT}
         JWT_SECRET: ${env:JWT_SECRET}
-        AWS_KEY: ${env:AWS_ACCESS_KEY_ID}
-        AWS_SECRET_KEY: ${env:AWS_SECRET_ACCESS_KEY}
+        A_KEY: ${env:AWS_ACCESS_KEY_ID}
+        A_S_KEY: ${env:AWS_SECRET_ACCESS_KEY}
 
     iamManagedPolicies:
         - arn:aws:iam::aws:policy/AmazonS3FullAccess
@@ -66,8 +66,8 @@ custom:
             - POSTGRES_PORT
             - JWT_SECRET
             - REGION
-            - AWS_KEY
-            - AWS_SECRET_KEY
+            - A_KEY
+            - A_S_KEY
 
 functions:
     Auth:

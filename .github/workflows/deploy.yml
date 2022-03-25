@@ -21,8 +21,8 @@ jobs:
                   echo POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} >> .env
                   echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
                   echo REGION=${{ secrets.REGION }} >> .env
-                  echo AWS_KEY=${{ secrets.AWS_ACCESS_KEY_ID }} >> .env
-                  echo AWS_SECRET_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> .env
+                  echo A_KEY=${{ secrets.AWS_ACCESS_KEY_ID }} >> .env
+                  echo A_S_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> .env
                   cat .env
             - name: Create .env host - dev
               if: github.ref == 'refs/heads/dev'

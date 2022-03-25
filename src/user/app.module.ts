@@ -17,8 +17,8 @@ import { UserModule } from './user.module';
                 POSTGRES_USERNAME: Joi.string().required(),
                 POSTGRES_PASSWORD: Joi.string().required(),
                 POSTGRES_DATABASE: Joi.string().required(),
-                AWS_KEY: Joi.string().required(),
-                AWS_SECRET_KEY: Joi.string().required(),
+                A_KEY: Joi.string().required(),
+                A_S_KEY: Joi.string().required(),
                 REGION: Joi.string().required()
             }),
             load: [configuration]

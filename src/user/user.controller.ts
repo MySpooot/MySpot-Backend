@@ -12,8 +12,8 @@ import { PutUserNicknameBody, PutUserNicknameResponse } from './dto/put_user_nic
 import { UserService } from './user.service';
 
 AWS.config.update({
-    accessKeyId: process.env.AWS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_KEY,
+    accessKeyId: process.env.A_KEY,
+    secretAccessKey: process.env.A_S_KEY,
     region: process.env.REGION
 });
 const s3 = new AWS.S3();
