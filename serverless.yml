@@ -43,6 +43,7 @@ custom:
         origin: '*'
         headers: '*'
         allowCredentials: false
+    # gateway에서 허용애햐 할 content-type 정의
     apigwBinary:
         types: #list of mime-types
             - 'image/jpeg'
@@ -52,6 +53,7 @@ custom:
     deploymentSettings: # shifts all the traffic to the new version, useful when you only need to execute the validation hooks.
         type: AllAtOnce
         alias: ${self:provider.stage}
+    # .env 파일을 읽기 위함.
     dotenv:
         path: .env
         include:
@@ -61,6 +63,8 @@ custom:
             - POSTGRES_HOST
             - POSTGRES_PORT
             - JWT_SECRET
+            - AWS_ACCESS_KEY_ID
+            - AWS_SECRET_ACCESS_KEY
 
 functions:
     Auth:
