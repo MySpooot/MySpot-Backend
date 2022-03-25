@@ -66,6 +66,8 @@ custom:
             - POSTGRES_PORT
             - JWT_SECRET
             - REGION
+            - AWS_KEY
+            - AWS_SECRET_KEY
 
 functions:
     Auth:
