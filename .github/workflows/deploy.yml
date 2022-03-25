@@ -1,4 +1,4 @@
-name: My Spot API Push and Deploy
+name: MySpot API Push and Deploy
 
 on:
     push:
@@ -43,7 +43,7 @@ jobs:
               env:
                   INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
               with:
-                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|My Spot API Deploy Started::${{ env.GITHUB_REF_SLUG }}>*' #Required True 인 값이다..
+                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|MySpot API Deploy Started::${{ env.GITHUB_REF_SLUG }}>*'
                   attachments: |
                       [
                         {
@@ -91,7 +91,7 @@ jobs:
               env:
                   INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
               with:
-                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|My Spot API Deploy Succeed::${{ env.GITHUB_REF_SLUG }}>*' #Required True 인 값이다..
+                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|MySpot API Deploy Succeed::${{ env.GITHUB_REF_SLUG }}>*'
                   attachments: |
                       [
                         {
@@ -107,7 +107,7 @@ jobs:
               env:
                   INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
               with:
-                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|My Spot API Deploy Failure::${{ env.GITHUB_REF_SLUG }}>*' #Required True 인 값이다..
+                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|MySpot API Deploy Failure::${{ env.GITHUB_REF_SLUG }}>*'
                   attachments: |
                       [
                         {

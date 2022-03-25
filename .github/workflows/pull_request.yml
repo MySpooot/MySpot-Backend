@@ -54,7 +54,7 @@ jobs:
               env:
                   INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
               with:
-                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|API Stage Pre-Check Succeed::${{ env.GITHUB_REF_SLUG }}>*'
+                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|MySpot API  Pre-Check Succeed::${{ env.GITHUB_REF_SLUG }}>*'
                   attachments: |
                       [
                         {
@@ -72,7 +72,7 @@ jobs:
               env:
                   INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
               with:
-                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|API Stage Pre-Check Failure::${{ env.GITHUB_REF_SLUG }}>*'
+                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|MySpot API Pre-Check Failure::${{ env.GITHUB_REF_SLUG }}>*'
                   attachments: |
                       [
                         {
