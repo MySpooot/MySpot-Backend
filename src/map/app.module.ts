@@ -26,6 +26,8 @@ import { MapModule } from './map.module';
             useClass: TypeOrmConfigService
         }),
         MapModule
-    ]
+    ],
+    controllers: [],
+    providers: []
 })
 export class AppModule {}

@@ -13,7 +13,7 @@ import { MarkerModule } from './marker.module';
             envFilePath: '.env',
             validationSchema: Joi.object({
                 POSTGRES_HOST: Joi.string().required(),
-                POSTGRES_PORT: Joi.string().required(),
+                POSTGRES_PORT: Joi.number().required(),
                 POSTGRES_USERNAME: Joi.string().required(),
                 POSTGRES_PASSWORD: Joi.string().required(),
                 POSTGRES_DATABASE: Joi.string().required()
@@ -26,6 +26,8 @@ import { MarkerModule } from './marker.module';
             useClass: TypeOrmConfigService
         }),
         MarkerModule
-    ]
+    ],
+    controllers: [],
+    providers: []
 })
 export class AppModule {}

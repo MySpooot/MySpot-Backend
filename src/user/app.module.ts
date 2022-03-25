@@ -17,8 +17,8 @@ import { UserModule } from './user.module';
                 POSTGRES_USERNAME: Joi.string().required(),
                 POSTGRES_PASSWORD: Joi.string().required(),
                 POSTGRES_DATABASE: Joi.string().required(),
-                ACCESS_KEY_ID: Joi.string().required(),
-                SECRET_ACCESS_KEY: Joi.string().required(),
+                A_KEY: Joi.string().required(),
+                A_S_KEY: Joi.string().required(),
                 REGION: Joi.string().required()
             }),
             load: [configuration]
@@ -29,6 +29,8 @@ import { UserModule } from './user.module';
             useClass: TypeOrmConfigService
         }),
         UserModule
-    ]
+    ],
+    controllers: [],
+    providers: []
 })
 export class AppModule {}

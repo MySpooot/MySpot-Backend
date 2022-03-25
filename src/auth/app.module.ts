@@ -27,6 +27,8 @@ import { AuthModule } from './auth.module';
             useClass: TypeOrmConfigService
         }),
         AuthModule
-    ]
+    ],
+    controllers: [],
+    providers: []
 })
 export class AppModule {}

@@ -66,11 +66,10 @@ describe('UserController (e2e)', () => {
             .expect(JSON.stringify(await userService.updateUserNickname(seedUpdateNicknameMe, body)));
     });
 
-    // // @TODO 추후 주석 젝서
-    // it('POST /user/upload', async () => {
-    //     await connection.getRepository(User).save(seedImageUploadUser);
-    //     const jwtToken = app.get(JwtService).sign(seedImageUploadMe);
+    it('POST /user/upload', async () => {
+        await connection.getRepository(User).save(seedImageUploadUser);
+        const jwtToken = app.get(JwtService).sign(seedImageUploadMe);
 
-    //     return request(app.getHttpServer()).post('/user/upload').attach('file', 'test/user/cat.png').set({ Authorization: jwtToken }).expect(201);
-    // });
+        return request(app.getHttpServer()).post('/user/upload').attach('file', 'test/user/cat.png').set({ Authorization: jwtToken }).expect(201);
+    });
 });

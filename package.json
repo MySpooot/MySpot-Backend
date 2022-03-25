@@ -19,7 +19,7 @@
         "test:cov": "jest --coverage",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "test:e2e": "jest --config ./test/jest-e2e.json",
-        "deploy:dev": "cross-env SLS_DEBUG=* serverless deploy -v --stage dev"
+        "deploy:dev": "cross-env SLS_DEBUG=* serverless deploy -v --stage dev --force"
     },
     "dependencies": {
         "@nestjs/axios": "^0.0.3",
@@ -37,10 +37,12 @@
         "aws-serverless-express": "^3.4.0",
         "class-transformer": "^0.5.1",
         "class-validator": "^0.13.2",
+        "dotenv": "^16.0.0",
         "joi": "^17.5.0",
         "jsonwebtoken": "^8.5.1",
         "multer": "^1.4.4",
         "multer-s3": "^2.10.0",
+        "nest-aws": "^1.0.0-alpha.0",
         "passport": "^0.5.0",
         "passport-jwt": "^4.0.0",
         "pg": "^8.7.1",
@@ -73,7 +75,9 @@
         "run-script-webpack-plugin": "0.0.11",
         "serverless": "^2.5.0",
         "serverless-apigw-binary": "^0.4.4",
+        "serverless-dotenv-plugin": "^3.12.2",
         "serverless-offline": "^8.5.0",
+        "serverless-plugin-canary-deployments": "^0.6.0",
         "serverless-plugin-optimize": "^4.2.1-rc.1",
         "serverless-plugin-typescript": "^2.1.1",
         "source-map-support": "^0.5.20",
