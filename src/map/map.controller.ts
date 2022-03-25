@@ -26,7 +26,6 @@ export class MapController {
     @ApiHeader({ name: 'Authorization', required: true })
     @ApiOkResponse({ type: [GetUserMapsResponse] })
     getUserMaps(@User_() user: AuthUser, @Query() query: GetUserMapsQuery) {
-        console.log(';asdfasdf');
         return this.mapService.getUserMaps(user, query);
     }
 
