@@ -15,17 +15,16 @@ jobs:
 
             - name: Create .env file
               run: |
-                  touch .env
-                  echo "POSTGRES_USERNAME=${{ secrets.POSTGRES_USERNAME_DEV }}" >> .env
-                  echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD_DEV }}" >> .env
-                  echo "POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE_DEV }}" >> .env
-                  echo "POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}" >> .env
-                  echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+                  echo POSTGRES_USERNAME=${{ secrets.POSTGRES_USERNAME_DEV }} >> .env
+                  echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD_DEV }} >> .env
+                  echo POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE_DEV }} >> .env
+                  echo POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} >> .env
+                  echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
                   cat .env
             - name: Create .env host - dev
               if: github.ref == 'refs/heads/dev'
               run: |
-                  echo "POSTGRES_HOST=${{ secrets.POSTGRES_HOST_DEV }}" >> .env
+                  echo POSTGRES_HOST=${{ secrets.POSTGRES_HOST_DEV }} >> .env
                   cat .env
             - name: Create .env host - prod
               if: github.ref == 'refs/heads/master'
