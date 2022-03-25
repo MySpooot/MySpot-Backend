@@ -1,11 +1,13 @@
 service: MySpotApi
 configValidationMode: warn
 useDotenv: true
+
 plugins:
     - serverless-plugin-typescript
     - serverless-plugin-optimize
     - serverless-plugin-canary-deployments
     - serverless-apigw-binary
+    - serverless-dotenv-plugin
     - serverless-offline
 
 provider:
@@ -22,6 +24,13 @@ provider:
     environment:
         NODE_ENV: production
         stage: ${self:provider.stage}
+        POSTGRES_USERNAME: ${env:POSTGRES_USERNAME}
+        POSTGRES_PASSWORD: ${env:POSTGRES_PASSWORD}
+        POSTGRES_DATABASE: ${env:POSTGRES_DATABASE}
+        POSTGRES_HOST: ${env:POSTGRES_HOST}
+        POSTGRES_PORT: ${env:POSTGRES_PORT}
+        JWT_SECRET: ${env:JWT_SECRET}
+
     iamManagedPolicies:
         - arn:aws:iam::aws:policy/AmazonS3FullAccess
     lambdaHashingVersion: 20201221
@@ -43,6 +52,15 @@ custom:
     deploymentSettings: # shifts all the traffic to the new version, useful when you only need to execute the validation hooks.
         type: AllAtOnce
         alias: ${self:provider.stage}
+    dotenv:
+        path: .env
+        include:
+            - POSTGRES_USERNAME
+            - POSTGRES_PASSWORD
+            - POSTGRES_DATABASE
+            - POSTGRES_HOST
+            - POSTGRES_PORT
+            - JWT_SECRET
 
 functions:
     Auth:
