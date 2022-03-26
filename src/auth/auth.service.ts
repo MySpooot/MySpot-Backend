@@ -21,30 +21,30 @@ export class AuthService {
 
     // login
     async login({ origin }: PostLoginHeaders, { code }: PostLoginBody): Promise<PostLoginResponse> {
-        let kakaoRedirectUrl: string | undefined;
+        // let kakaoRedirectUrl: string | undefined;
 
-        // @TODO 주석 테스트 기간엔 냅둠 추후 제거
+        // // @TODO 주석 테스트 기간엔 냅둠 추후 제거
 
-        console.log('****** origin ****** :: ', origin);
-        console.log('****** process.env.stage ****** :: ', process.env.stage);
-        console.log(' **** process.env.NODE_ENV **** ::', process.env.NODE_ENV);
+        // console.log('****** origin ****** :: ', origin);
+        // console.log('****** process.env.stage ****** :: ', process.env.stage);
+        // console.log(' **** process.env.NODE_ENV **** ::', process.env.NODE_ENV);
 
-        if (origin.includes('local')) {
-            kakaoRedirectUrl = this.configService.get('kakao.localRedirectUrl');
-        } else {
-            // 환경 dev인 경우
-            if (process.env.stage === 'dev') {
-                console.log(' !! stage DEV !!');
-                kakaoRedirectUrl = this.configService.get('kakao.devRedirectUrl');
-            }
-            // 환경 prod인 경우
-            else if (process.env.stage === 'prod') {
-                console.log(' !! stage PROD !!');
-                // @ TODO
-            }
-        }
+        // if (origin.includes('local')) {
+        //     kakaoRedirectUrl = this.configService.get('kakao.localRedirectUrl');
+        // } else {
+        //     // 환경 dev인 경우
+        //     if (process.env.stage === 'dev') {
+        //         console.log(' !! stage DEV !!');
+        //         kakaoRedirectUrl = this.configService.get('kakao.devRedirectUrl');
+        //     }
+        //     // 환경 prod인 경우
+        //     else if (process.env.stage === 'prod') {
+        //         console.log(' !! stage PROD !!');
+        //         // @ TODO
+        //     }
+        // }
 
-        console.log(' **** kakaoRedirectUrl **** ', kakaoRedirectUrl);
+        // console.log(' **** kakaoRedirectUrl **** ', kakaoRedirectUrl);
 
         // if (origin.includes('local')) {
         //     kakaoRedirectUrl = this.configService.get('kakao.localRedirectUrl');
@@ -52,7 +52,7 @@ export class AuthService {
         //     kakaoRedirectUrl = this.configService.get('kakao.devRedirectUrl');
         // }
 
-        const data = await this.getKakaoData(kakaoRedirectUrl, code);
+        const data = await this.getKakaoData(this.configService.get('kakao.devRedirectUrl'), code);
 
         if (!data) throw new BadRequestException('Kakao Api Error');
 

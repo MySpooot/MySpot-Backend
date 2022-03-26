@@ -1,10 +1,4 @@
 export default () => ({
-    kakao: {
-        clientId: '025b493068d0d400f8c6b9f91b175936',
-        localRedirectUrl: 'http://localhost:3000',
-        devRedirectUrl: 'https://myspot.netlify.app'
-        // @TODO prod redirect url
-    },
     jwt: {
         signOptions: {
             expiresIn: '30d'
@@ -36,5 +30,7 @@ export default () => ({
                           rejectUnauthorized: false
                       }
                   }
-              }
+              },
+    kakaoRedirectUrl:
+        process.env.stage === 'prod' ? 'https://myspot.co.kr' : process.env.stage === 'dev' ? 'https://myspot.netlify.app' : 'http://localhost:3000'
 });
