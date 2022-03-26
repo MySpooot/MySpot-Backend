@@ -13,6 +13,7 @@ plugins:
 provider:
     name: aws
     runtime: nodejs14.x
+    stage: ${opt:stage, 'dev'}
     region: ap-northeast-2
     endpointType: REGIONAL
     stackName: ${self:service}-${self:provider.stage}
