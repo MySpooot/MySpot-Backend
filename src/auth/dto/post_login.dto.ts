@@ -8,6 +8,13 @@ export class PostLoginBody {
     readonly code: string;
 }
 
+export class PostLoginHeaders {
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsNotEmpty()
+    readonly origin: string;
+}
+
 export class PostLoginResponse {
     @ApiProperty({ required: false })
     token?: string;
