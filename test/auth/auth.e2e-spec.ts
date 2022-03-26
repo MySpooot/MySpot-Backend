@@ -59,7 +59,7 @@ describe('AuthController (e2e)', () => {
         const body = {
             code: '1234'
         };
-        return request(app.getHttpServer()).post('/auth/login').set({ origin: 'dev' }).send(body).expect(201);
+        return request(app.getHttpServer()).post('/auth/login').send(body).expect(201);
     });
 
     it('GET /auth/me', async () => {

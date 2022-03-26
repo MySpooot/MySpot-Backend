@@ -6,7 +6,7 @@ import { Connection } from 'typeorm';
 
 import { User, UserActive, UserProvider } from '../entities/user.entity';
 import { UserLevel, AuthUser } from '../lib/user_decorator';
-import { PostLoginBody, PostLoginHeaders, PostLoginResponse } from './dto/post_login.dto';
+import { PostLoginBody, PostLoginResponse } from './dto/post_login.dto';
 import { GetMeResponse } from './dto/get_me.dto';
 import { PutUserBody, PutUserParam, PutUserResponse } from './dto/put_user.dto';
 
@@ -20,39 +20,8 @@ export class AuthService {
     ) {}
 
     // login
-    async login({ origin }: PostLoginHeaders, { code }: PostLoginBody): Promise<PostLoginResponse> {
-        let kakaoRedirectUrl: string | undefined;
-
-        // @TODO 주석 테스트 기간엔 냅둠 추후 제거
-
-        console.log('****** origin ****** :: ', origin);
-        console.log('****** process.env.stage ****** :: ', process.env.stage);
-        console.log(' **** process.env.NODE_ENV **** ::', process.env.NODE_ENV);
-
-        if (origin.includes('local')) {
-            kakaoRedirectUrl = this.configService.get('kakao.localRedirectUrl');
-        } else {
-            // 환경 dev인 경우
-            if (process.env.stage === 'dev') {
-                console.log(' !! stage DEV !!');
-                kakaoRedirectUrl = this.configService.get('kakao.devRedirectUrl');
-            }
-            // 환경 prod인 경우
-            else if (process.env.stage === 'prod') {
-                console.log(' !! stage PROD !!');
-                // @ TODO
-            }
-        }
-
-        console.log(' **** kakaoRedirectUrl **** ', kakaoRedirectUrl);
-
-        // if (origin.includes('local')) {
-        //     kakaoRedirectUrl = this.configService.get('kakao.localRedirectUrl');
-        // } else {
-        //     kakaoRedirectUrl = this.configService.get('kakao.devRedirectUrl');
-        // }
-
-        const data = await this.getKakaoData(kakaoRedirectUrl, code);
+    async login({ code }: PostLoginBody): Promise<PostLoginResponse> {
+        const data = await this.getKakaoData(this.configService.get('kakao.redirectUrl'), code);
 
         if (!data) throw new BadRequestException('Kakao Api Error');
 
