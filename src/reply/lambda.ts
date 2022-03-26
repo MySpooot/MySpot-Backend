@@ -24,6 +24,7 @@ export const bootstrapServer = async (module: any) => {
                 transformOptions: { enableImplicitConversion: true }
             })
         );
+        // @TODO prod origin setting
         app.enableCors({
             origin: '*',
             allowedHeaders: '*'
