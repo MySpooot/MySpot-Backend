@@ -42,7 +42,17 @@ package:
     individually: true
 
 custom:
-    # @TODO prod 환경 구축 후 origin access 제한
+    # @TODO
+    # cors:
+    #         dev:
+    #             origins: ['http://localhost:3000', 'https://localhost:3000', 'https://myspot.netlify.app', 'http://myspot.netlify.app']
+    #             headers: '*'
+    #             allowCredentials: false
+    #         prod:
+    #             origins: ['https://myspot.co.kr', 'http://myspot.co.kr']
+    #             headers: '*'
+    #             allowCredentials: false
+
     cors:
         origin: '*'
         headers: '*'
@@ -79,6 +89,7 @@ functions:
             - http:
                   method: post
                   path: /auth/login
+                  # TODO cors: ${self:custom.cors.${self:provider.stage}}
                   cors: ${self.custom.cors}
 
             - http:
