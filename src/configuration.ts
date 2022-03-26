@@ -3,7 +3,7 @@ export default () => ({
         clientId: '025b493068d0d400f8c6b9f91b175936',
         localRedirectUrl: 'http://localhost:3000',
         devRedirectUrl: 'https://myspot.netlify.app',
-        prodRedirectUrl: 'https://myspot.co.kr/'
+        prodRedirectUrl: 'https://myspot.co.kr'
     },
     jwt: {
         signOptions: {
