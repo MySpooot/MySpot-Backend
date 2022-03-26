@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class PostLoginBody {
     @ApiProperty()
@@ -10,9 +10,9 @@ export class PostLoginBody {
 
 export class PostLoginHeaders {
     @ApiProperty()
-    @IsString()
+    @IsOptional()
     @IsNotEmpty()
-    readonly origin: string;
+    readonly origin?: string;
 }
 
 export class PostLoginResponse {

@@ -52,7 +52,7 @@ export class AuthService {
         //     kakaoRedirectUrl = this.configService.get('kakao.devRedirectUrl');
         // }
 
-        const data = await this.getKakaoData(this.configService.get('kakao.devRedirectUrl'), code);
+        const data = await this.getKakaoData(this.configService.get('kakaoRedirectUrl'), code);
 
         if (!data) throw new BadRequestException('Kakao Api Error');
 
