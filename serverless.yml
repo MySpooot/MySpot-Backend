@@ -42,21 +42,20 @@ package:
     individually: true
 
 custom:
-    # @TODO
-    # cors:
-    #         dev:
-    #             origins: ['http://localhost:3000', 'https://localhost:3000', 'https://myspot.netlify.app', 'http://myspot.netlify.app']
-    #             headers: '*'
-    #             allowCredentials: false
-    #         prod:
-    #             origins: ['https://myspot.co.kr', 'http://myspot.co.kr']
-    #             headers: '*'
-    #             allowCredentials: false
-
     cors:
-        origin: '*'
-        headers: '*'
-        allowCredentials: false
+        dev:
+            origins: ['http://localhost:3000', 'https://localhost:3000', 'https://myspot.netlify.app', 'http://myspot.netlify.app']
+            headers: '*'
+            allowCredentials: false
+        prod:
+            origins: ['https://myspot.co.kr', 'http://myspot.co.kr']
+            headers: '*'
+            allowCredentials: false
+
+    #     cors:
+    #         origin: '*'
+    #         headers: '*'
+    #         allowCredentials: false
     # gateway에서 허용애햐 할 content-type 정의
     apigwBinary:
         types: #list of mime-types
