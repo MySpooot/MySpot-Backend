@@ -1,16 +1,13 @@
 export default () => ({
-    // database: {
-    //     username: process.env.POSTGRES_USERNAME || '',
-    //     password: process.env.POSTGRES_PASSWORD || '',
-    //     database: process.env.POSTGRES_DATABASE || '',
-    //     host: process.env.POSTGRES_HOST || '',
-    //     port: process.env.POSTGRES_PORT || ''
-    // },
+    stage: process.env.stage || 'dev',
     kakao: {
         clientId: '025b493068d0d400f8c6b9f91b175936',
-        localRedirectUrl: 'http://localhost:3000',
-        devRedirectUrl: 'https://myspot.netlify.app',
-        prodRedirectUrl: 'https://myspot.co.kr/'
+        redirectUrl:
+            process.env.stage === 'prod'
+                ? 'https://myspot.co.kr/'
+                : process.env.stage === 'dev'
+                ? 'https://myspot.netlify.app'
+                : 'http://localhost:3000'
     },
     jwt: {
         signOptions: {
@@ -22,7 +19,6 @@ export default () => ({
         secret_access_key: process.env.AWS_SECRET_ACCESS_KEY,
         region: process.env.REGION
     },
-    stage: process.env.stage || 'dev',
     typeorm:
         process.env.NODE_ENV === 'test'
             ? {
