@@ -68,7 +68,7 @@ describe('AuthController', () => {
             jest.spyOn(authService, 'getKakaoData').mockImplementation(() => Promise.resolve(undefined));
             jest.spyOn(authService, 'loginProcess').mockImplementation(() => Promise.resolve(undefined));
 
-            await expect(authController.login({ code: '1234' })).rejects.toThrow('Kakao Api Error');
+            await expect(authController.login({ origin: 'dev' }, { code: '1234' })).rejects.toThrow('Kakao Api Error');
 
             jest.spyOn(authService, 'getKakaoData').mockRestore();
             jest.spyOn(authService, 'loginProcess').mockRestore();
@@ -79,7 +79,7 @@ describe('AuthController', () => {
             jest.spyOn(authService, 'getKakaoData').mockImplementation(() => Promise.resolve(seedKakaoErrorData));
             jest.spyOn(authService, 'loginProcess').mockImplementation(() => Promise.resolve(undefined));
 
-            await expect(authController.login({ code: '1234' })).rejects.toThrow('Kakao Login Error');
+            await expect(authController.login({ origin: 'dev' }, { code: '1234' })).rejects.toThrow('Kakao Login Error');
 
             jest.spyOn(authService, 'getKakaoData').mockRestore();
             jest.spyOn(authService, 'loginProcess').mockRestore();
@@ -90,7 +90,7 @@ describe('AuthController', () => {
             jest.spyOn(authService, 'getKakaoData').mockImplementation(() => Promise.resolve(seedKakaoData));
             jest.spyOn(authService, 'loginProcess').mockImplementation(() => Promise.resolve(undefined));
 
-            await authController.login({ code: '1234' });
+            await authController.login({ origin: 'dev' }, { code: '1234' });
 
             expect(authService.loginProcess).toHaveBeenCalled();
 
@@ -103,7 +103,7 @@ describe('AuthController', () => {
             jest.spyOn(authService, 'getKakaoData').mockImplementation(() => Promise.resolve(seedKakaoGetUserData));
             jest.spyOn(authService, 'getKakaoUser').mockImplementation(() => Promise.resolve(undefined));
 
-            await expect(authController.login({ code: '1234' })).rejects.toThrow('User Profile Is Not Exist');
+            await expect(authController.login({ origin: 'dev' }, { code: '1234' })).rejects.toThrow('User Profile Is Not Exist');
 
             jest.spyOn(authService, 'getKakaoData').mockRestore();
             jest.spyOn(authService, 'getKakaoUser').mockRestore();
@@ -114,7 +114,7 @@ describe('AuthController', () => {
             jest.spyOn(authService, 'getKakaoData').mockImplementation(() => Promise.resolve(seedAlreadyRegistered.kakaoData()));
             jest.spyOn(authService, 'getKaKaoUserData').mockImplementation(() => Promise.resolve(seedAlreadyRegistered.kakaoUserData(users[1])));
 
-            const result = await authController.login({ code: '1234' });
+            const result = await authController.login({ origin: 'dev' }, { code: '1234' });
 
             expect(result).toBeDefined();
             expect(result.token).toBeDefined(); // token 존재
@@ -133,7 +133,7 @@ describe('AuthController', () => {
 
             const beforeUserCount = await connection.getRepository(User).findAndCount();
 
-            const result = await authController.login({ code: '1234' });
+            const result = await authController.login({ origin: 'dev' }, { code: '1234' });
 
             const afterUserCount = await connection.getRepository(User).findAndCount();
 
@@ -152,7 +152,7 @@ describe('AuthController', () => {
 
             const beforeUser = await connection.getRepository(User).findOne({ sns_id: seedFirstRegister.kakaoUserData().snsId });
 
-            const result = await authController.login({ code: '1234' });
+            const result = await authController.login({ origin: 'dev' }, { code: '1234' });
 
             const afterUser = await connection.getRepository(User).findOne({ sns_id: seedFirstRegister.kakaoUserData().snsId });
 

@@ -8,6 +8,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
 
     createTypeOrmOptions() {
         const options = this.configService.get('typeorm');
+        console.log('typeorm.lib.. env', process.env.stage);
         console.log('options', options);
 
         if (!options) throw new Error('Typeorm config not found');

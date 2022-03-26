@@ -1,11 +1,11 @@
-import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { ApiHeader, ApiOkResponse } from '@nestjs/swagger';
 
 import { JwtAuthGuard } from '../lib/jwt';
 import { AuthUser, User_ } from '../lib/user_decorator';
 import { AuthService } from './auth.service';
 import { GetMeResponse } from './dto/get_me.dto';
-import { PostLoginBody, PostLoginResponse } from './dto/post_login.dto';
+import { PostLoginBody, PostLoginHeaders, PostLoginResponse } from './dto/post_login.dto';
 import { PutUserBody, PutUserParam, PutUserResponse } from './dto/put_user.dto';
 
 @Controller('/auth')
@@ -15,8 +15,8 @@ export class AuthController {
     @Post('/login')
     @ApiHeader({ name: 'Authorization', required: false })
     @ApiOkResponse({ type: PostLoginResponse })
-    login(@Body() body: PostLoginBody) {
-        return this.authService.login(body);
+    login(@Headers() headers: PostLoginHeaders, @Body() body: PostLoginBody) {
+        return this.authService.login(headers, body);
     }
 
     @Get('/me')
