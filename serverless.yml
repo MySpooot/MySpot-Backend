@@ -42,11 +42,15 @@ package:
     individually: true
 
 custom:
-    # @TODO prod 환경 구축 후 origin access 제한
     cors:
-        origin: '*'
-        headers: '*'
-        allowCredentials: false
+        dev:
+            origin: '*'
+            headers: '*'
+            allowCredentials: false
+        prod:
+            origins: ['https://myspot.co.kr', 'http://myspot.co.kr']
+            headers: '*'
+            allowCredentials: false
     # gateway에서 허용애햐 할 content-type 정의
     apigwBinary:
         types: #list of mime-types
@@ -79,17 +83,17 @@ functions:
             - http:
                   method: post
                   path: /auth/login
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
             - http:
                   method: get
                   path: /auth/me
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
             - http:
                   method: put
                   path: /auth/user/{userId}
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
     Common:
         handler: src/common/lambda.handler
@@ -98,7 +102,7 @@ functions:
             - http:
                   method: get
                   path: /common/status
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
     Map:
         handler: src/map/lambda.handler
@@ -107,62 +111,62 @@ functions:
             - http:
                   method: get
                   path: /map
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
             - http:
                   method: post
                   path: /map
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
             - http:
                   method: delete
                   path: /map/{mapId}
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
             - http:
                   method: get
                   path: /map/{mapId}/detail
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
             - http:
                   method: get
                   path: /map/{mapId}/code
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
             - http:
                   method: post
                   path: /map/{mapId}/code/match
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
             - http:
                   method: get
                   path: /map/recent
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
             - http:
                   method: post
                   path: /map/recent/{recentMapId}
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
             - http:
                   method: delete
                   path: /map/recent/{recentMapId}
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
             - http:
                   method: get
                   path: /map/favorite
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
             - http:
                   method: post
                   path: /map/favorite/{favoriteMapId}
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
             - http:
                   method: delete
                   path: /map/favorite/{favoriteMapId}
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
     Marker:
         handler: src/marker/lambda.handler
@@ -171,42 +175,42 @@ functions:
             - http:
                   method: get
                   path: /map/{mapId}/marker
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
             - http:
                   method: post
                   path: /map/{mapId}/marker
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
             - http:
                   method: delete
                   path: /map/marker/{markerId}
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
             - http:
                   method: post
                   path: /map/marker/{markerId}/like
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
             - http:
                   method: delete
                   path: /map/marker/{markerId}/like
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
             - http:
                   method: get
                   path: /map/marker/location
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
             - http:
                   method: post
                   path: /map/marker/location
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
             - http:
                   method: delete
                   path: /map/marker/location/{addressId}
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
     Reply:
         handler: src/reply/lambda.handler
@@ -215,22 +219,22 @@ functions:
             - http:
                   method: get
                   path: /map/marker/{markerId}/replies
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
             - http:
                   method: post
                   path: /map/marker/{markerId}/replies
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
             - http:
                   method: put
                   path: /map/marker/replies/{replyId}
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
             - http:
                   method: delete
                   path: /map/marker/replies/{replyId}
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
     User:
         handler: src/user/lambda.handler
         deploymentSettings: ${self:custom.deploymentSettings}
@@ -238,9 +242,9 @@ functions:
             - http:
                   method: put
                   path: /user
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
 
             - http:
                   method: post
                   path: /user/upload
-                  cors: ${self.custom.cors}
+                  cors: ${self:custom.cors.${self:provider.stage}}
