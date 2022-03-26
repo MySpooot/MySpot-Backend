@@ -8,7 +8,6 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
 
     createTypeOrmOptions() {
         const options = this.configService.get('typeorm');
-        console.log('options', options);
 
         if (!options) throw new Error('Typeorm config not found');
 

@@ -15,8 +15,6 @@ export const bootstrapServer = async (module: any) => {
         const expressApp = express();
         // const isProd = process.env.stage === 'prod';
 
-        console.log('marker stage', process.env.stage);
-
         const app = await NestFactory.create(module, new ExpressAdapter(expressApp));
         app.useGlobalPipes(
             new ValidationPipe({
@@ -25,6 +23,7 @@ export const bootstrapServer = async (module: any) => {
                 transformOptions: { enableImplicitConversion: true }
             })
         );
+        // @TODO prod origin setting
         app.enableCors({
             origin: '*',
             allowedHeaders: '*'
