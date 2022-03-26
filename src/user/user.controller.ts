@@ -40,7 +40,12 @@ export class UserController {
         FileInterceptor('file', {
             storage: multerS3({
                 s3: s3,
-                bucket: process.env.NODE_ENV !== 'test' ? 'myspot-dev/user/thumbnail' : 'myspot-dev/test',
+                bucket:
+                    process.env.NODE_ENV === 'test'
+                        ? 'myspot-dev/test'
+                        : process.env.stage === 'dev'
+                        ? 'myspot-dev/user/thumbnail'
+                        : 'myspot-prod/user/thumbnail',
                 acl: 'public-read',
                 contentType: multerS3.AUTO_CONTENT_TYPE,
                 key: (_, __, cb) => {
