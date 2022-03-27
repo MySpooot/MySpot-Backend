@@ -28,15 +28,13 @@ export const bootstrapServer = async (module: any) => {
 
         await app.init();
 
-        // allowed api gateway content-type
         cachedServer = ServerlessExpress({
             app: expressApp,
+            // allowed api gateway content-type
             binarySettings: {
                 contentTypes: ['image/jpeg', 'image/png', 'image/jpg', 'multipart/form-data']
             }
         });
-
-        cachedServer = ServerlessExpress({ app: expressApp });
     }
 
     return cachedServer;
