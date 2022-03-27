@@ -9,6 +9,7 @@ let cachedServer;
 export const bootstrapServer = async (module: any) => {
     if (!cachedServer) {
         const expressApp = express();
+        const isProd = process.env.stage === 'prod';
 
         const app = await NestFactory.create(module, new ExpressAdapter(expressApp));
         app.useGlobalPipes(
@@ -16,13 +17,15 @@ export const bootstrapServer = async (module: any) => {
                 whitelist: true,
                 transform: true,
                 transformOptions: { enableImplicitConversion: true },
-                // disableErrorMessages: If set to true, validation errors will not be returned to the client.
+                /**
+                 * @todo prod error handling
+                 * disableErrorMessages: If set to true, validation errors will not be returned to the client.
+                 */
                 disableErrorMessages: false
             })
         );
-        // @TODO prod origin setting
         app.enableCors({
-            origin: '*',
+            origin: isProd ? /myspot\.co\.kr$/ : '*',
             allowedHeaders: '*'
         });
 
