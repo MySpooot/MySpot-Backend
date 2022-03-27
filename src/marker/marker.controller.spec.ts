@@ -13,7 +13,19 @@ import { Map, MapActive } from '../entities/map.entity';
 import { Marker, MarkerActive } from '../entities/marker.entity';
 import { UserAccessibleMap } from '../entities/user_accessible_map.entity';
 import { MapMarkerLike, MapMarkerLikeActive } from '../entities/map_marker_like.entity';
-import { seedDeleteMarker, seedGetMarkers, seedMe, seedPostMarker, seedPostMarkerLike, seedUsers, seedDeleteMarkerLike } from './marker.seed';
+import {
+    seedDeleteMarker,
+    seedGetMarkers,
+    seedMe,
+    seedPostMarker,
+    seedPostMarkerLike,
+    seedUsers,
+    seedDeleteMarkerLike,
+    seedGetMyLocations,
+    seedPostMyLocations,
+    seedDeleteMyLocation
+} from './marker.seed';
+import { MyLocation, MyLocationActive } from '../entities/my_location.entity';
 
 describe('MarkerController', () => {
     let markerController: MarkerController;
@@ -305,6 +317,174 @@ describe('MarkerController', () => {
             await connection.getRepository(MapMarkerLike).clear();
             await connection.getRepository(Marker).clear();
             await connection.getRepository(UserAccessibleMap).clear();
+            await connection.getRepository(Map).clear();
+        });
+    });
+
+    describe('GET /map/marker/location', () => {
+        let maps: Map[];
+        let markers: Marker[];
+
+        beforeAll(async () => {
+            maps = await connection.getRepository(Map).save(seedGetMyLocations.maps(users[0].id));
+            await connection.getRepository(UserAccessibleMap).save(
+                seedGetMyLocations.accessible(
+                    maps.map(x => x.id),
+                    users[0].id
+                )
+            );
+            markers = await connection.getRepository(Marker).save(
+                seedGetMyLocations.markers(
+                    maps.map(x => x.id),
+                    users[0].id
+                )
+            );
+            await connection.getRepository(MyLocation).save(
+                seedGetMyLocations.locations(
+                    markers.map(x => x.address_id),
+                    markers.map(x => x.name),
+                    markers.map(x => x.address),
+                    markers.map(x => x.road_address),
+                    users[0].id
+                )
+            );
+        });
+
+        it('should return my locations according to offset, limit', async () => {
+            const result = await markerController.getMyLocations(me[0], { offset: 0, limit: 5 });
+            console.log(result);
+
+            expect(result).toBeDefined();
+            expect(result).toHaveLength(5);
+
+            // marker 값이 location에 올바르게 저장되었는지 test
+            expect(
+                result.map(x => {
+                    return {
+                        name: x.name,
+                        addressId: x.addressId,
+                        address: x.address,
+                        roadAddress: x.roadAddress
+                    };
+                })
+            ).toEqual(
+                markers
+                    .filter(x => x.active === MarkerActive.Active)
+                    .map(x => {
+                        return {
+                            name: x.name,
+                            addressId: x.address_id,
+                            address: x.address,
+                            roadAddress: x.road_address
+                        };
+                    })
+                    .slice(0, 5)
+            );
+        });
+
+        afterAll(async () => {
+            await connection.getRepository(MyLocation).clear();
+            await connection.getRepository(Marker).clear();
+            await connection.getRepository(UserAccessibleMap).clear();
+            await connection.getRepository(Map).clear();
+        });
+    });
+
+    describe('POST /map/marker/location', () => {
+        let maps: Map[];
+        let markers: Marker[];
+
+        beforeAll(async () => {
+            maps = await connection.getRepository(Map).save(seedPostMyLocations.maps(users[0].id));
+
+            markers = await connection.getRepository(Marker).save(
+                seedPostMyLocations.markers(
+                    maps.map(x => x.id),
+                    users[0].id
+                )
+            );
+
+            await connection.getRepository(MyLocation).save(
+                seedPostMyLocations.locations(
+                    markers.map(x => x.address_id),
+                    markers.map(x => x.name),
+                    users[0].id
+                )
+            );
+        });
+
+        it('should update active if location is already exist and status is inactive', async () => {
+            const beforeLocation = await connection.getRepository(MyLocation).findOne({ address_id: markers[0].address_id });
+
+            await markerController.insertMyLocation(me[0], { locationName: markers[0].name, addressId: markers[0].address_id });
+
+            const afterLocation = await connection.getRepository(MyLocation).findOne({ address_id: markers[0].address_id });
+
+            expect(beforeLocation).toBeDefined();
+            expect(beforeLocation.active).toEqual(MyLocationActive.Inactive);
+            expect(afterLocation).toBeDefined();
+            expect(afterLocation.active).toEqual(MyLocationActive.Active);
+        });
+
+        it('just return if  if location is already exist and status is active', async () => {
+            const beforeLocation = await connection.getRepository(MyLocation).findOne({ address_id: markers[1].address_id });
+
+            await markerController.insertMyLocation(me[0], { locationName: markers[1].name, addressId: markers[1].address_id });
+
+            const afterLocation = await connection.getRepository(MyLocation).findOne({ address_id: markers[1].address_id });
+
+            expect(beforeLocation).toBeDefined();
+            expect(beforeLocation.active).toEqual(MyLocationActive.Active);
+            expect(afterLocation).toBeDefined();
+            expect(afterLocation.active).toEqual(MyLocationActive.Active);
+        });
+
+        it('should insert location', async () => {
+            const beforeLocation = await connection.getRepository(MyLocation).findOne({ address_id: markers[2].address_id });
+
+            await markerController.insertMyLocation(me[0], { locationName: markers[2].name, addressId: markers[2].address_id });
+
+            const afterLocation = await connection.getRepository(MyLocation).findOne({ address_id: markers[2].address_id });
+
+            expect(beforeLocation).toBeUndefined();
+            expect(afterLocation).toBeDefined();
+            expect(afterLocation.active).toEqual(MyLocationActive.Active);
+        });
+
+        afterAll(async () => {
+            await connection.getRepository(MyLocation).clear();
+            await connection.getRepository(Marker).clear();
+            await connection.getRepository(Map).clear();
+        });
+    });
+
+    describe('DELETE /map/marker/location/:locationId', () => {
+        let map: Map;
+        let marker: Marker;
+        let location: MyLocation;
+
+        beforeAll(async () => {
+            map = await connection.getRepository(Map).save(seedDeleteMyLocation.map(users[0].id));
+            marker = await connection.getRepository(Marker).save(seedDeleteMyLocation.marker(map.id, users[0].id));
+            location = await connection.getRepository(MyLocation).save(seedDeleteMyLocation.location(marker.address_id, marker.name, users[0].id));
+        });
+
+        it('should delete my location', async () => {
+            const beforeDelete = await connection.getRepository(MyLocation).findOne({ user_id: location.user_id, address_id: location.address_id });
+
+            await markerController.deleteMyLocation(me[0], { addressId: location.address_id });
+
+            const afterDelete = await connection.getRepository(MyLocation).findOne({ user_id: location.user_id, address_id: location.address_id });
+
+            expect(beforeDelete).toBeDefined();
+            expect(beforeDelete.active).toEqual(MyLocationActive.Active);
+            expect(afterDelete).toBeDefined();
+            expect(afterDelete.active).toEqual(MyLocationActive.Inactive);
+        });
+
+        afterAll(async () => {
+            await connection.getRepository(MyLocation).clear();
+            await connection.getRepository(Marker).clear();
             await connection.getRepository(Map).clear();
         });
     });
