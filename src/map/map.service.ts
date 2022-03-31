@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 
 import { AuthUser } from '../lib/user_decorator';
 import { GetUserMapsQuery, GetUserMapsResponse } from './dto/get_user_maps.dto';
-import { PostUserMapBody } from './dto/post_user_map.dto';
+import { PostUserMapBody, PostUserMapResponse } from './dto/post_user_map.dto';
 import { DeleteUserMapParam } from './dto/delete_user_map.dto';
 import { GetUserRecentMapsQuery, GetUserRecentMapsResponse } from './dto/get_user_recent_maps.dto';
 import { UserRecentMap, UserRecentMapActive } from '../entities/user_recent_map.entity';
@@ -46,6 +46,10 @@ export class MapService {
 
         // 2. accessible insert
         await this.connection.getRepository(UserAccessibleMap).insert({ user_id: userId, map_id: insertMap.generatedMaps[0].id });
+
+        const createdMap = await this.connection.getRepository(Map).findOne({ where: { id: insertMap.generatedMaps[0].id } });
+
+        return PostUserMapResponse.from(createdMap);
     }
 
     // delete my map

@@ -120,17 +120,19 @@ describe('MapController', () => {
     });
 
     /** POST /map */
-    describe('POST /map', () => {
+    describe.only('POST /map', () => {
         // public map
         it('should insert public map and insert accessible', async () => {
             const maps = await connection.getRepository(Map).save(seedPostUserPublicMap.maps(users[0].id));
 
-            await connection.getRepository(UserAccessibleMap).save(
+            const result = await connection.getRepository(UserAccessibleMap).save(
                 seedPostUserPublicMap.accessible(
                     maps.map(x => x.id),
                     users[0].id
                 )
             );
+
+            expect(result).toBeDefined();
 
             await mapController.insertUserMap(me[1], { mapName: 'test_map', isPrivate: false });
 
@@ -154,12 +156,14 @@ describe('MapController', () => {
         it('should insert private map and insert accessible', async () => {
             const maps = await connection.getRepository(Map).save(seedPostUserPrivateMap.maps(users[0].id));
 
-            await connection.getRepository(UserAccessibleMap).save(
+            const result = await connection.getRepository(UserAccessibleMap).save(
                 seedPostUserPrivateMap.accessible(
                     maps.map(x => x.id),
                     users[0].id
                 )
             );
+
+            expect(result).toBeDefined();
 
             await mapController.insertUserMap(me[1], { mapName: 'test_private_map', isPrivate: true });
 
