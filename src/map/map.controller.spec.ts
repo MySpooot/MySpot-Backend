@@ -120,7 +120,7 @@ describe('MapController', () => {
     });
 
     /** POST /map */
-    describe.only('POST /map', () => {
+    describe('POST /map', () => {
         // public map
         it('should insert public map and insert accessible', async () => {
             const maps = await connection.getRepository(Map).save(seedPostUserPublicMap.maps(users[0].id));
