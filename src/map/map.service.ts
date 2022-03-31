@@ -47,7 +47,7 @@ export class MapService {
         // 2. accessible insert
         await this.connection.getRepository(UserAccessibleMap).insert({ user_id: userId, map_id: insertMap.generatedMaps[0].id });
 
-        const createdMap = await this.connection.getRepository(Map).findOne({ where: { id: insertMap.generatedMaps[0].id } });
+        const createdMap = await this.connection.getRepository(Map).findOne({ id: insertMap.generatedMaps[0].id });
 
         return PostUserMapResponse.from(createdMap);
     }
