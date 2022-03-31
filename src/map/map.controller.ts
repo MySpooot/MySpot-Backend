@@ -6,7 +6,7 @@ import { MapService } from './map.service';
 import { User_, AuthUser } from '../lib/user_decorator';
 import { DeleteUserMapParam } from './dto/delete_user_map.dto';
 import { GetUserMapsQuery, GetUserMapsResponse } from './dto/get_user_maps.dto';
-import { PostUserMapBody } from './dto/post_user_map.dto';
+import { PostUserMapBody, PostUserMapResponse } from './dto/post_user_map.dto';
 import { GetUserRecentMapsQuery, GetUserRecentMapsResponse } from './dto/get_user_recent_maps.dto';
 import { PostUserRecentMapParam } from './dto/post_user_recent_map.dto';
 import { DeleteUserRecentMapParam } from './dto/delete_user_recent_map.dto';
@@ -32,7 +32,7 @@ export class MapController {
     @Post()
     @UseGuards(JwtAuthGuard)
     @ApiHeader({ name: 'Authorization', required: true })
-    @ApiOkResponse()
+    @ApiOkResponse({ type: [PostUserMapResponse] })
     insertUserMap(@User_() user: AuthUser, @Body() body: PostUserMapBody) {
         return this.mapService.insertUserMap(user, body);
     }
