@@ -125,7 +125,7 @@ describe('MapController', () => {
         it('should insert public map and insert accessible', async () => {
             const maps = await connection.getRepository(Map).save(seedPostUserPublicMap.maps(users[0].id));
 
-            const data = await connection.getRepository(UserAccessibleMap).save(
+            await connection.getRepository(UserAccessibleMap).save(
                 seedPostUserPublicMap.accessible(
                     maps.map(x => x.id),
                     users[0].id
@@ -134,7 +134,7 @@ describe('MapController', () => {
 
             const result = await mapController.insertUserMap(me[1], { mapName: 'test_map', isPrivate: false });
 
-            expect(result).toEqual({ id: ++data.at(-1).map_id });
+            expect(result).toEqual({ id: ++maps.at(-1).id });
 
             const map = await connection.getRepository(Map).findOne({ user_id: 2, active: MapActive.Active, name: 'test_map' });
 
@@ -156,7 +156,7 @@ describe('MapController', () => {
         it('should insert private map and insert accessible', async () => {
             const maps = await connection.getRepository(Map).save(seedPostUserPrivateMap.maps(users[0].id));
 
-            const data = await connection.getRepository(UserAccessibleMap).save(
+            await connection.getRepository(UserAccessibleMap).save(
                 seedPostUserPrivateMap.accessible(
                     maps.map(x => x.id),
                     users[0].id
@@ -165,7 +165,7 @@ describe('MapController', () => {
 
             const result = await mapController.insertUserMap(me[1], { mapName: 'test_private_map', isPrivate: true });
 
-            expect(result).toEqual({ id: ++data.at(-1).map_id });
+            expect(result).toEqual({ id: ++maps.at(-1).id });
 
             const map = await connection.getRepository(Map).findOne({ user_id: 2, active: MapActive.Active, name: 'test_private_map' });
 
