@@ -132,7 +132,9 @@ describe('MapController', () => {
                 )
             );
 
-            await mapController.insertUserMap(me[1], { mapName: 'test_map', isPrivate: false });
+            const result = await mapController.insertUserMap(me[1], { mapName: 'test_map', isPrivate: false });
+
+            expect(result).toEqual({ id: ++maps.at(-1).id });
 
             const map = await connection.getRepository(Map).findOne({ user_id: 2, active: MapActive.Active, name: 'test_map' });
 
@@ -161,7 +163,9 @@ describe('MapController', () => {
                 )
             );
 
-            await mapController.insertUserMap(me[1], { mapName: 'test_private_map', isPrivate: true });
+            const result = await mapController.insertUserMap(me[1], { mapName: 'test_private_map', isPrivate: true });
+
+            expect(result).toEqual({ id: ++maps.at(-1).id });
 
             const map = await connection.getRepository(Map).findOne({ user_id: 2, active: MapActive.Active, name: 'test_private_map' });
 
