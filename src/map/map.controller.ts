@@ -32,7 +32,7 @@ export class MapController {
     @Post()
     @UseGuards(JwtAuthGuard)
     @ApiHeader({ name: 'Authorization', required: true })
-    @ApiOkResponse({ type: [PostUserMapResponse] })
+    @ApiOkResponse({ type: PostUserMapResponse })
     insertUserMap(@User_() user: AuthUser, @Body() body: PostUserMapBody) {
         return this.mapService.insertUserMap(user, body);
     }
