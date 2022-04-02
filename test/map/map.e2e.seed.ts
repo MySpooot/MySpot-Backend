@@ -1,5 +1,5 @@
 import { User, UserActive } from '../../src/entities/user.entity';
-import { AuthUser, UserLevel } from '../../src/lib/user_decorator';
+import { UserLevel } from '../../src/lib/user_decorator';
 import { Map, MapActive } from '../../src/entities/map.entity';
 import { UserFavoriteMap, UserFavoriteMapActive } from '../../src/entities/user_favorite_map.entity';
 import { UserAccessibleMap, UserAccessibleMapActive } from '../../src/entities/user_accessible_map.entity';
@@ -16,16 +16,6 @@ export const seedUsers = () =>
             } as User)
     );
 
-export const seedMe = () =>
-    [...new Array(10).keys()].map(
-        i =>
-            ({
-                userId: i + 1,
-                userLevel: UserLevel.User
-            } as AuthUser)
-    );
-
-/** GET /map */
 export const seedE2eData = {
     maps: (userId: number) =>
         [...new Array(50).keys()].map(

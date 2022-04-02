@@ -99,6 +99,11 @@
             "json",
             "ts"
         ],
+        "modulePathIgnorePatterns": [
+            "main.ts$",
+            "app.module.ts$",
+            "lambda.ts$"
+        ],
         "rootDir": "src",
         "testRegex": ".*\\.spec\\.ts$",
         "transform": {

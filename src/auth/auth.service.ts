@@ -23,28 +23,18 @@ export class AuthService {
     async login({ origin }: PostLoginHeaders, { code }: PostLoginBody): Promise<PostLoginResponse> {
         let kakaoRedirectUrl: string | undefined;
 
-        // @TODO 주석 추후 제거
-        console.log('****** origin ****** :: ', origin);
-        console.log('****** process.env.stage ****** :: ', process.env.stage);
-        console.log(' **** process.env.NODE_ENV **** ::', process.env.NODE_ENV);
-
         if (origin.includes('local')) {
-            console.log(' !! stage LOCAL !!');
             kakaoRedirectUrl = this.configService.get('kakao.localRedirectUrl');
         } else {
             // 환경 dev인 경우
             if (process.env.stage === 'dev') {
-                console.log(' !! stage DEV !!');
                 kakaoRedirectUrl = this.configService.get('kakao.devRedirectUrl');
             }
             // 환경 prod인 경우
             else if (process.env.stage === 'prod') {
-                console.log(' !! stage PROD !!');
                 kakaoRedirectUrl = this.configService.get('kakao.prodRedirectUrl');
             }
         }
-
-        console.log('****** kakao redirect url !! *******', kakaoRedirectUrl);
 
         const data = await this.getKakaoData(kakaoRedirectUrl, code);
 
@@ -103,7 +93,6 @@ export class AuthService {
 
         // 가입함 + 닉네임 완료인 유저일 시
         if (user) {
-            console.log('가입함 + 닉네임 완료인 유저일 시 ');
             return {
                 token: this.jwtService.sign(
                     { userId: user.id, userLevel: user.level },
@@ -120,7 +109,6 @@ export class AuthService {
 
             // 가입은 했는데 닉네임을 입력하지 않은 유저인 경우, db에 insert하지 않고 바로 return
             if (pendingUser) {
-                console.log('가입은 했는데 닉네임을 입력하지 않은 유저인 경우, db에 insert하지 않고 바로 return');
                 return {
                     id: pendingUser.id,
                     nickname: kakaoUser.name, // 카카오 닉네임을 return한다. (프론트에서 사용)
@@ -128,7 +116,6 @@ export class AuthService {
                 };
             } else {
                 // 아예 첫 가입인 유저인 경우
-                console.log('아예 첫 가입인 유저인 경우');
                 const newUser = await this.connection.getRepository(User).insert({
                     sns_id: kakaoUser.snsId,
                     thumbnail: kakaoUser.thumbnail,
