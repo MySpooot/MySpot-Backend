@@ -8,11 +8,10 @@ import request from 'supertest';
 
 import configuration from '../../src/configuration';
 import { User } from '../../src/entities/user.entity';
-
 import { MapService } from '../../src/map/map.service';
 import { MapModule } from '../../src/map/map.module';
 import { UserLevel } from '../../src//lib/user_decorator';
-import { seedE2eData, seedMe, seedUsers } from './map.e2e.seed';
+import { seedE2eData, seedUsers } from './map.e2e.seed';
 import { Map } from '../../src/entities/map.entity';
 import { UserAccessibleMap } from '../../src/entities/user_accessible_map.entity';
 import { UserRecentMap } from '../../src/entities/user_recent_map.entity';
@@ -62,8 +61,6 @@ describe('MapController (e2e)', () => {
         jwtToken = app.get(JwtService).sign({ userId: 1, userLevel: UserLevel.User });
 
         users = await connection.getRepository(User).save(seedUsers());
-
-        seedMe();
 
         maps = await connection.getRepository(Map).save(seedE2eData.maps(users[0].id));
 

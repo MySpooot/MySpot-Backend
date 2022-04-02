@@ -352,7 +352,6 @@ describe('MarkerController', () => {
 
         it('should return my locations according to offset, limit', async () => {
             const result = await markerController.getMyLocations(me[0], { offset: 0, limit: 5 });
-            console.log(result);
 
             expect(result).toBeDefined();
             expect(result).toHaveLength(5);
