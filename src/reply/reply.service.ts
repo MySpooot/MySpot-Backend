@@ -53,7 +53,7 @@ export class ReplyService {
             .getRepository(MapMarkerReply)
             .createQueryBuilder('map_marker_reply')
             .innerJoinAndSelect('map_marker_reply.marker', 'marker')
-            .innerJoinAndSelect('map_marker_reply.user', 'user') // @TODO 확인 후 필요없으면 제거.
+            .innerJoinAndSelect('map_marker_reply.user', 'user')
             .where('map_marker_reply.id=:id', { id: insertResult.identifiers[0].id })
             .getOne();
 

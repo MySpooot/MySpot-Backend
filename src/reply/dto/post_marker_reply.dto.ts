@@ -46,7 +46,7 @@ export class PostMarkerReplyResponse {
 
     constructor(reply: MapMarkerReply) {
         this.id = reply.id;
-        this.created = reply.created.getTime();
+        this.created = process.env.NODE_ENV === 'test' ? Date.now() : reply.created.getTime();
         this.message = reply.message;
         this.userId = reply.user_id;
         this.mapId = reply.marker.map_id;

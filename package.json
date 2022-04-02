@@ -102,7 +102,12 @@
         "modulePathIgnorePatterns": [
             "main.ts$",
             "app.module.ts$",
-            "lambda.ts$"
+            "lambda.ts$",
+            "typeorm.ts$",
+            "jwt.ts$",
+            "server.ts$",
+            "user_decorator.ts$",
+            "configuration.ts$"
         ],
         "rootDir": "src",
         "testRegex": ".*\\.spec\\.ts$",
