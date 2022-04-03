@@ -10,7 +10,7 @@ export const seedUsers = () =>
     [...new Array(50).keys()].map(
         i =>
             ({
-                nickname: `user_${i}`,
+                nickname: `user_${i + 1}`,
                 sns_id: i + 1,
                 level: UserLevel.User,
                 active: UserActive.Active

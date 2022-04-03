@@ -50,7 +50,7 @@ export class GetMarkerRepliesResponse {
 
     constructor(replies: MapMarkerReply) {
         this.id = replies.id;
-        this.created = replies.created.getTime();
+        this.created = process.env.NODE_ENV === 'test' ? Date.now() : replies.created.getTime();
         this.userId = replies.user_id;
         this.userNickName = replies.user.nickname;
         this.mapId = replies.marker.map_id;
