@@ -107,7 +107,7 @@ describe('MarkerController', () => {
         let marker: Marker;
 
         beforeAll(async () => {
-            map = await connection.getRepository(Map).save(seedPostMarker.maps(users[0].id));
+            map = await connection.getRepository(Map).save(seedPostMarker.map(users[0].id));
             await connection.getRepository(UserAccessibleMap).save(seedPostMarker.accessible(map.id, users[0].id));
             marker = await connection.getRepository(Marker).save(seedPostMarker.marker(map.id, users[0].id));
         });
@@ -205,7 +205,7 @@ describe('MarkerController', () => {
         let marker: Marker;
 
         beforeAll(async () => {
-            map = await connection.getRepository(Map).save(seedDeleteMarker.maps(users[0].id));
+            map = await connection.getRepository(Map).save(seedDeleteMarker.map(users[0].id));
             await connection.getRepository(UserAccessibleMap).save(seedDeleteMarker.accessible(map.id, users[0].id));
             marker = await connection.getRepository(Marker).save(seedDeleteMarker.marker(map.id, users[0].id));
         });
@@ -243,7 +243,7 @@ describe('MarkerController', () => {
         let marker: Marker;
 
         beforeAll(async () => {
-            map = await connection.getRepository(Map).save(seedPostMarkerLike.maps(users[0].id));
+            map = await connection.getRepository(Map).save(seedPostMarkerLike.map(users[0].id));
             await connection.getRepository(UserAccessibleMap).save(seedPostMarkerLike.accessible(map.id, users[0].id));
             marker = await connection.getRepository(Marker).save(seedPostMarkerLike.marker(map.id, users[0].id));
         });
@@ -290,7 +290,7 @@ describe('MarkerController', () => {
         let marker: Marker;
 
         beforeAll(async () => {
-            map = await connection.getRepository(Map).save(seedDeleteMarkerLike.maps(users[0].id));
+            map = await connection.getRepository(Map).save(seedDeleteMarkerLike.map(users[0].id));
             await connection.getRepository(UserAccessibleMap).save(seedDeleteMarkerLike.accessible(map.id, users[0].id));
             marker = await connection.getRepository(Marker).save(seedDeleteMarkerLike.marker(map.id, users[0].id));
             await connection.getRepository(MapMarkerLike).save(seedDeleteMarkerLike.like(marker.id, users[0].id));

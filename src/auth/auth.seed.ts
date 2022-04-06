@@ -1,7 +1,7 @@
 import { User, UserActive } from '../entities/user.entity';
 import { AuthUser, UserLevel } from '../lib/user_decorator';
 
-export const seedUsers = () =>
+export const seedUsers = (): Partial<User>[] =>
     [...new Array(10).keys()].map(
         i =>
             ({
@@ -13,33 +13,28 @@ export const seedUsers = () =>
     );
 
 export const seedPendingUser = {
-    user: (userLength: number) =>
-        ({
-            nickname: undefined,
-            sns_id: userLength + 1,
-            level: UserLevel.User,
-            active: UserActive.Pending
-        } as User)
+    user: (userLength: number): Partial<User> => ({
+        nickname: undefined,
+        sns_id: userLength + 1,
+        level: UserLevel.User,
+        active: UserActive.Pending
+    })
 };
 
 export const seedPendingUserForUpdate = {
-    user: (userLength: number) =>
-        ({
-            nickname: undefined,
-            sns_id: userLength + 1,
-            level: UserLevel.User,
-            active: UserActive.Pending
-        } as User)
+    user: (userLength: number): Partial<User> => ({
+        nickname: undefined,
+        sns_id: userLength + 1,
+        level: UserLevel.User,
+        active: UserActive.Pending
+    })
 };
 
-export const seedMe = () =>
-    [...new Array(10).keys()].map(
-        i =>
-            ({
-                userId: i + 1,
-                userLevel: UserLevel.User
-            } as AuthUser)
-    );
+export const seedMe = (): AuthUser[] =>
+    [...new Array(10).keys()].map(i => ({
+        userId: i + 1,
+        userLevel: UserLevel.User
+    }));
 
 /** POST /auth/login */
 export const seedKakaoErrorData = {
