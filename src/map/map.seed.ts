@@ -5,18 +5,15 @@ import { UserFavoriteMap, UserFavoriteMapActive } from '../entities/user_favorit
 import { UserAccessibleMap, UserAccessibleMapActive } from '../entities/user_accessible_map.entity';
 import { UserRecentMapActive, UserRecentMap } from '../entities/user_recent_map.entity';
 
-export const seedUsers = () =>
-    [...new Array(10).keys()].map(
-        i =>
-            ({
-                nickname: `user_${i + 1}`,
-                sns_id: i + 1,
-                level: UserLevel.User,
-                active: UserActive.Active
-            } as User)
-    );
+export const seedUsers = (): Partial<User>[] =>
+    [...new Array(10).keys()].map(i => ({
+        nickname: `user_${i + 1}`,
+        sns_id: i + 1,
+        level: UserLevel.User,
+        active: UserActive.Active
+    }));
 
-export const seedMe = () =>
+export const seedMe = (): AuthUser[] =>
     [...new Array(10).keys()].map(
         i =>
             ({
@@ -27,85 +24,67 @@ export const seedMe = () =>
 
 /** GET /map */
 export const seedGetUserMaps = {
-    maps: (userId: number) =>
-        [...new Array(20).keys()].map(
-            i =>
-                ({
-                    user_id: userId,
-                    name: `map_name_${i + 1}`,
-                    is_private: i % 3 > 0 ? true : false,
-                    code: i % 3 > 0 ? '1234' : undefined,
-                    active: i % 10 > 0 ? MapActive.Active : MapActive.Inactive
-                } as Map)
-        ),
-    accessible: (mapId: number[], userId: number) =>
-        [...new Array(20).keys()].map(
-            i =>
-                ({
-                    user_id: userId,
-                    map_id: mapId[i],
-                    active: i % 10 > 0 ? UserAccessibleMapActive.Active : UserAccessibleMapActive.Inactive
-                } as UserAccessibleMap)
-        )
+    maps: (userId: number): Partial<Map>[] =>
+        [...new Array(20).keys()].map(i => ({
+            user_id: userId,
+            name: `map_name_${i + 1}`,
+            is_private: i % 3 > 0 ? true : false,
+            code: i % 3 > 0 ? '1234' : undefined,
+            active: i % 10 > 0 ? MapActive.Active : MapActive.Inactive
+        })),
+    accessible: (mapId: number[], userId: number): Partial<UserAccessibleMap>[] =>
+        [...new Array(20).keys()].map(i => ({
+            user_id: userId,
+            map_id: mapId[i],
+            active: i % 10 > 0 ? UserAccessibleMapActive.Active : UserAccessibleMapActive.Inactive
+        }))
 };
 
 /** POST /map public map */
 export const seedPostUserPublicMap = {
-    maps: (userId: number) =>
-        [...new Array(5).keys()].map(
-            i =>
-                ({
-                    user_id: userId,
-                    name: `map_name_${i + 1}`,
-                    is_private: i % 3 > 0 ? true : false,
-                    code: i % 3 > 0 ? '1234' : undefined,
-                    active: i % 10 > 0 ? MapActive.Active : MapActive.Inactive
-                } as Map)
-        ),
-    accessible: (mapId: number[], userId: number) =>
-        [...new Array(5).keys()].map(
-            i =>
-                ({
-                    user_id: userId,
-                    map_id: mapId[i],
-                    active: i % 10 > 0 ? UserAccessibleMapActive.Active : UserAccessibleMapActive.Inactive
-                } as UserAccessibleMap)
-        )
+    maps: (userId: number): Partial<Map>[] =>
+        [...new Array(5).keys()].map(i => ({
+            user_id: userId,
+            name: `map_name_${i + 1}`,
+            is_private: i % 3 > 0 ? true : false,
+            code: i % 3 > 0 ? '1234' : undefined,
+            active: i % 10 > 0 ? MapActive.Active : MapActive.Inactive
+        })),
+    accessible: (mapId: number[], userId: number): Partial<UserAccessibleMap>[] =>
+        [...new Array(5).keys()].map(i => ({
+            user_id: userId,
+            map_id: mapId[i],
+            active: i % 10 > 0 ? UserAccessibleMapActive.Active : UserAccessibleMapActive.Inactive
+        }))
 };
 
 /** POST /map private map */
 export const seedPostUserPrivateMap = {
-    maps: (userId: number) =>
-        [...new Array(5).keys()].map(
-            i =>
-                ({
-                    user_id: userId,
-                    name: `map_name_${i + 1}`,
-                    is_private: i % 3 > 0 ? true : false,
-                    code: i % 3 > 0 ? '1234' : undefined,
-                    active: i % 10 > 0 ? MapActive.Active : MapActive.Inactive
-                } as Map)
-        ),
-    accessible: (mapId: number[], userId: number) =>
-        [...new Array(5).keys()].map(
-            i =>
-                ({
-                    user_id: userId,
-                    map_id: mapId[i],
-                    active: i % 10 > 0 ? UserAccessibleMapActive.Active : UserAccessibleMapActive.Inactive
-                } as UserAccessibleMap)
-        )
+    maps: (userId: number): Partial<Map>[] =>
+        [...new Array(5).keys()].map(i => ({
+            user_id: userId,
+            name: `map_name_${i + 1}`,
+            is_private: i % 3 > 0 ? true : false,
+            code: i % 3 > 0 ? '1234' : undefined,
+            active: i % 10 > 0 ? MapActive.Active : MapActive.Inactive
+        })),
+    accessible: (mapId: number[], userId: number): Partial<UserAccessibleMap>[] =>
+        [...new Array(5).keys()].map(i => ({
+            user_id: userId,
+            map_id: mapId[i],
+            active: i % 10 > 0 ? UserAccessibleMapActive.Active : UserAccessibleMapActive.Inactive
+        }))
 };
 
 // DELETE /map
 export const seedDeleteUserMap = {
-    map: (userId: number) => ({
+    map: (userId: number): Partial<Map> => ({
         user_id: userId,
         name: 'delete_map',
         is_private: false,
         active: MapActive.Active
     }),
-    accessible: (mapId: number, userId: number) => ({
+    accessible: (mapId: number, userId: number): Partial<UserAccessibleMap> => ({
         user_id: userId,
         map_id: mapId,
         active: UserAccessibleMapActive.Active
@@ -114,18 +93,15 @@ export const seedDeleteUserMap = {
 
 /** GET /map/recent */
 export const seedGetUserRecentMap = {
-    maps: (userId: number) =>
-        [...new Array(20).keys()].map(
-            i =>
-                ({
-                    user_id: userId,
-                    name: `map_name_${i + 1}`,
-                    is_private: i % 3 > 0 ? true : false,
-                    code: i % 3 > 0 ? '1234' : undefined,
-                    active: i % 10 > 0 ? MapActive.Active : MapActive.Inactive
-                } as Map)
-        ),
-    recentMaps: (mapId: number[], userId: number) =>
+    maps: (userId: number): Partial<Map>[] =>
+        [...new Array(20).keys()].map(i => ({
+            user_id: userId,
+            name: `map_name_${i + 1}`,
+            is_private: i % 3 > 0 ? true : false,
+            code: i % 3 > 0 ? '1234' : undefined,
+            active: i % 10 > 0 ? MapActive.Active : MapActive.Inactive
+        })),
+    recentMaps: (mapId: number[], userId: number): Partial<UserRecentMap>[] =>
         [...new Array(20).keys()].map(
             i =>
                 ({
@@ -135,31 +111,28 @@ export const seedGetUserRecentMap = {
                     active: i % 10 > 0 ? UserRecentMapActive.Active : UserRecentMapActive.Inactive
                 } as UserRecentMap)
         ),
-    accessible: (mapId: number[], userId: number) =>
-        [...new Array(20).keys()].map(
-            i =>
-                ({
-                    user_id: userId,
-                    map_id: mapId[i],
-                    active: i % 10 > 0 ? UserAccessibleMapActive.Active : UserAccessibleMapActive.Inactive
-                } as UserAccessibleMap)
-        )
+    accessible: (mapId: number[], userId: number): Partial<UserAccessibleMap>[] =>
+        [...new Array(20).keys()].map(i => ({
+            user_id: userId,
+            map_id: mapId[i],
+            active: i % 10 > 0 ? UserAccessibleMapActive.Active : UserAccessibleMapActive.Inactive
+        }))
 };
 
 /** POST /map/recent/:recentMapId exist not exist map*/
 export const seedPostUserRecentMapNotExist = {
-    map: (userId: number) => ({
+    map: (userId: number): Partial<Map> => ({
         user_id: userId,
         name: 'map123',
         is_private: false,
         active: MapActive.Active
     }),
-    recentMap: (mapId: number, userId: number) => ({
+    recentMap: (mapId: number, userId: number): Partial<UserRecentMap> => ({
         user_id: userId,
         map_id: mapId,
         active: UserRecentMapActive.Active
     }),
-    accessible: (mapId: number, userId: number) => ({
+    accessible: (mapId: number, userId: number): Partial<UserAccessibleMap> => ({
         user_id: userId,
         map_id: mapId,
         active: UserAccessibleMapActive.Active
@@ -168,18 +141,18 @@ export const seedPostUserRecentMapNotExist = {
 
 /** POST /map/recent/:recentMapId exist recent map*/
 export const seedPostUserRecentMapExist = {
-    map: (userId: number) => ({
+    map: (userId: number): Partial<Map> => ({
         user_id: userId,
         name: 'map123',
         is_private: false,
         active: MapActive.Active
     }),
-    recentMap: (mapId: number, userId: number) => ({
+    recentMap: (mapId: number, userId: number): Partial<UserRecentMap> => ({
         user_id: userId,
         map_id: mapId,
         active: UserRecentMapActive.Active
     }),
-    accessible: (mapId: number, userId: number) => ({
+    accessible: (mapId: number, userId: number): Partial<UserAccessibleMap> => ({
         user_id: userId,
         map_id: mapId,
         active: UserAccessibleMapActive.Active
@@ -188,18 +161,18 @@ export const seedPostUserRecentMapExist = {
 
 /** DELETE /map/recent/:recentMapId */
 export const seedDeleteUserRecentMap = {
-    map: (userId: number) => ({
+    map: (userId: number): Partial<Map> => ({
         user_id: userId,
         name: 'map123',
         is_private: false,
         active: MapActive.Active
     }),
-    recentMap: (mapId: number, userId: number) => ({
+    recentMap: (mapId: number, userId: number): Partial<UserRecentMap> => ({
         user_id: userId,
         map_id: mapId,
         active: UserRecentMapActive.Active
     }),
-    accessible: (mapId: number, userId: number) => ({
+    accessible: (mapId: number, userId: number): Partial<UserAccessibleMap> => ({
         user_id: userId,
         map_id: mapId,
         active: UserAccessibleMapActive.Active
@@ -208,47 +181,38 @@ export const seedDeleteUserRecentMap = {
 
 /** GET /map/favorite */
 export const seedGetUserFavoriteMap = {
-    maps: (userId: number) =>
-        [...new Array(20).keys()].map(
-            i =>
-                ({
-                    user_id: userId,
-                    name: `map_name_${i + 1}`,
-                    is_private: i % 3 > 0 ? true : false,
-                    code: i % 3 > 0 ? '1234' : undefined,
-                    active: i % 10 > 0 ? MapActive.Active : MapActive.Inactive
-                } as Map)
-        ),
-    favoriteMaps: (mapId: number[], userId: number) =>
-        [...new Array(20).keys()].map(
-            i =>
-                ({
-                    user_id: userId,
-                    map_id: mapId[i],
-                    active: i % 10 > 0 ? UserFavoriteMapActive.Active : UserFavoriteMapActive.Inactive
-                } as UserFavoriteMap)
-        ),
-    accessible: (mapId: number[], userId: number) =>
-        [...new Array(20).keys()].map(
-            i =>
-                ({
-                    user_id: userId,
-                    map_id: mapId[i],
-                    active: i % 10 > 0 ? UserAccessibleMapActive.Active : UserAccessibleMapActive.Inactive
-                } as UserAccessibleMap)
-        )
+    maps: (userId: number): Partial<Map>[] =>
+        [...new Array(20).keys()].map(i => ({
+            user_id: userId,
+            name: `map_name_${i + 1}`,
+            is_private: i % 3 > 0 ? true : false,
+            code: i % 3 > 0 ? '1234' : undefined,
+            active: i % 10 > 0 ? MapActive.Active : MapActive.Inactive
+        })),
+    favoriteMaps: (mapId: number[], userId: number): Partial<UserFavoriteMap>[] =>
+        [...new Array(20).keys()].map(i => ({
+            user_id: userId,
+            map_id: mapId[i],
+            active: i % 10 > 0 ? UserFavoriteMapActive.Active : UserFavoriteMapActive.Inactive
+        })),
+    accessible: (mapId: number[], userId: number): Partial<UserAccessibleMap>[] =>
+        [...new Array(20).keys()].map(i => ({
+            user_id: userId,
+            map_id: mapId[i],
+            active: i % 10 > 0 ? UserAccessibleMapActive.Active : UserAccessibleMapActive.Inactive
+        }))
 };
 
 /** POST /map/favorite/:favoriteMapId */
 export const seedPostUserFavoriteMap = {
-    map: (userId: number) => ({
+    map: (userId: number): Partial<Map> => ({
         user_id: userId,
         name: 'map123',
         is_private: false,
         active: MapActive.Active
     }),
 
-    accessible: (mapId: number, userId: number) => ({
+    accessible: (mapId: number, userId: number): Partial<UserAccessibleMap> => ({
         user_id: userId,
         map_id: mapId,
         active: UserAccessibleMapActive.Active
@@ -257,20 +221,20 @@ export const seedPostUserFavoriteMap = {
 
 /** POST /map/favorite/:favoriteMapId */
 export const seedDeleteUserFavoriteMap = {
-    map: (userId: number) => ({
+    map: (userId: number): Partial<Map> => ({
         user_id: userId,
         name: 'map123',
         is_private: false,
         active: MapActive.Active
     }),
 
-    favoriteMap: (mapId: number, userId: number) => ({
+    favoriteMap: (mapId: number, userId: number): Partial<UserFavoriteMap> => ({
         user_id: userId,
         map_id: mapId,
         active: UserFavoriteMapActive.Active
     }),
 
-    accessible: (mapId: number, userId: number) => ({
+    accessible: (mapId: number, userId: number): Partial<UserAccessibleMap> => ({
         user_id: userId,
         map_id: mapId,
         active: UserAccessibleMapActive.Active
@@ -279,13 +243,13 @@ export const seedDeleteUserFavoriteMap = {
 
 /** GET /map/detail login user */
 export const seedDetailLoginUser = {
-    map: (userId: number) => ({
+    map: (userId: number): Partial<Map> => ({
         user_id: userId,
         name: 'map123',
         is_private: false,
         active: MapActive.Active
     }),
-    accessible: (mapId: number, userId: number) => ({
+    accessible: (mapId: number, userId: number): Partial<UserAccessibleMap> => ({
         user_id: userId,
         map_id: mapId,
         active: UserAccessibleMapActive.Active
@@ -294,7 +258,7 @@ export const seedDetailLoginUser = {
 
 /** GET /map/detail not login user */
 export const seedDetailNotLoginUser = {
-    map: (userId: number) => ({
+    map: (userId: number): Partial<Map> => ({
         user_id: userId,
         name: 'map123',
         is_private: true,
@@ -305,7 +269,7 @@ export const seedDetailNotLoginUser = {
 
 /** GET /map/code */
 export const seedGetMapCode = {
-    map: (userId: number) => ({
+    map: (userId: number): Partial<Map> => ({
         user_id: userId,
         name: 'private_map',
         is_private: true,
@@ -316,7 +280,7 @@ export const seedGetMapCode = {
 
 /** POST /map/:mapId/code/match */
 export const seedPostMapCodeMatchNotLoginUser = {
-    map: (userId: number) => ({
+    map: (userId: number): Partial<Map> => ({
         user_id: userId,
         name: 'private_map',
         is_private: true,
@@ -327,7 +291,7 @@ export const seedPostMapCodeMatchNotLoginUser = {
 
 /** POST /map/:mapId/code/match */
 export const seedPostMapCodeMatchLoginUser = {
-    map: (userId: number) => ({
+    map: (userId: number): Partial<Map> => ({
         user_id: userId,
         name: 'private_map',
         is_private: true,

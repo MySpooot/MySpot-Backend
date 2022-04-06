@@ -1,29 +1,29 @@
 import { AuthUser, UserLevel } from '../lib/user_decorator';
 import { User, UserActive } from '../entities/user.entity';
 
-export const seedUpdateNicknameUser = {
+export const seedUpdateNicknameUser: Partial<User> = {
     nickname: 'before_nickname',
     sns_id: 1,
     level: UserLevel.User,
     active: UserActive.Active
-} as User;
+};
 
-export const seedUpdateNicknameMe = {
+export const seedUpdateNicknameMe: AuthUser = {
     userId: 1,
     userLevel: UserLevel.User
-} as AuthUser;
+};
 
-export const seedImageUploadUser = {
+export const seedImageUploadUser: Partial<User> = {
     nickname: undefined,
     sns_id: 2,
     level: UserLevel.User,
     active: UserActive.Pending
-} as User;
+};
 
-export const seedImageUploadMe = {
+export const seedImageUploadMe: AuthUser = {
     userId: 2,
     userLevel: UserLevel.User
-} as AuthUser;
+};
 
 export const file = {
     fieldname: 'file',
