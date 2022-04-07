@@ -91,6 +91,7 @@ jobs:
                   CI: false
                   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  GIT_AUTH_TOKEN: ${{ secrets.GIT_AUTH_TOKEN }}
               run: |
                   yarn deploy:dev
 
@@ -100,6 +101,7 @@ jobs:
                   CI: false
                   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  GIT_AUTH_TOKEN: ${{ secrets.GIT_AUTH_TOKEN }}
               run: |
                   yarn deploy:prod
 
