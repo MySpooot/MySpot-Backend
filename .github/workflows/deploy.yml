@@ -25,6 +25,7 @@ jobs:
                   # A_KEY, A_S_KEY: serverless.yml에서 env파일 읽어올 때 AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY가 lambda에서 사용할 수 없는 변수명이기 때문에 다른 변수명 사용
                   echo A_KEY=${{ secrets.AWS_ACCESS_KEY_ID }} >> .env
                   echo A_S_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> .env
+                  echo GIT_AUTH_TOKEN=${{ secrets.GIT_AUTH_TOKEN }} >> .env
                   cat .env
             - name: Create .env host - DEV
               if: github.ref == 'refs/heads/dev'
@@ -43,6 +44,7 @@ jobs:
                   echo REGION=${{ secrets.REGION }} >> .env
                   echo A_KEY=${{ secrets.AWS_ACCESS_KEY_ID }} >> .env
                   echo A_S_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> .env
+                  echo GIT_AUTH_TOKEN=${{ secrets.GIT_AUTH_TOKEN }} >> .env
                   cat .env
             - name: Create .env host - PROD
               if: github.ref == 'refs/heads/master'
