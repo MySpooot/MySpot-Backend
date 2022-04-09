@@ -1,13 +1,13 @@
 {
     "name": "@myspooot/myspot-backend",
-    "version": "0.2.0-beta6",
-    "description": "My Spot Api V1",
+    "version": "1.0.0",
+    "description": "My Spot Api",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "files": [
         "dist/**/*"
     ],
-    "author": "myspot",
+    "author": "l01083582454@gmail.com",
     "license": "MIT",
     "repository": {
         "type": "git",
@@ -30,7 +30,7 @@
         "test:cov": "jest --coverage",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "test:e2e": "jest --config ./test/jest-e2e.json",
-        "deploy:dev": "cross-env SLS_DEBUG=* serverless deploy -v --stage dev && yarn build && yarn publish --new-version $npm_package_version",
+        "deploy:dev": "cross-env SLS_DEBUG=* serverless deploy -v --stage dev",
         "deploy:prod": "cross-env SLS_DEBUG=* serverless deploy -v --stage prod && yarn build && yarn publish --new-version $npm_package_version"
     },
     "dependencies": {
