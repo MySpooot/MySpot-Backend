@@ -136,14 +136,13 @@ export const seedPostMarkerLike = {
 
 /** DELETE /map/:mapId/marker/like */
 export const seedDeleteMarkerLike = {
-    map: (userId: number): Partial<Map> =>
-        ({
-            user_id: userId,
-            name: `map`,
-            is_private: true,
-            code: '1234',
-            active: MapActive.Active
-        } as Map),
+    map: (userId: number): Partial<Map> => ({
+        user_id: userId,
+        name: `map`,
+        is_private: true,
+        code: '1234',
+        active: MapActive.Active
+    }),
 
     accessible: (mapId: number, userId: number): Partial<UserAccessibleMap> => ({
         user_id: userId,

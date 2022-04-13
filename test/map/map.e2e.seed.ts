@@ -6,15 +6,12 @@ import { UserAccessibleMap, UserAccessibleMapActive } from '../../src/entities/u
 import { UserRecentMapActive, UserRecentMap } from '../../src/entities/user_recent_map.entity';
 
 export const seedUsers = (): Partial<User>[] =>
-    [...new Array(10).keys()].map(
-        i =>
-            ({
-                nickname: `user_${i + 1}`,
-                sns_id: i + 1,
-                level: UserLevel.User,
-                active: UserActive.Active
-            } as User)
-    );
+    [...new Array(10).keys()].map(i => ({
+        nickname: `user_${i + 1}`,
+        sns_id: i + 1,
+        level: UserLevel.User,
+        active: UserActive.Active
+    }));
 
 export const seedE2eData = {
     maps: (userId: number): Partial<Map>[] =>

@@ -2,15 +2,12 @@ import { User, UserActive } from '../entities/user.entity';
 import { AuthUser, UserLevel } from '../lib/user_decorator';
 
 export const seedUsers = (): Partial<User>[] =>
-    [...new Array(10).keys()].map(
-        i =>
-            ({
-                nickname: `user_${i + 1}`,
-                sns_id: i + 1,
-                level: UserLevel.User,
-                active: i % 5 > 0 ? UserActive.Active : UserActive.Inactive
-            } as User)
-    );
+    [...new Array(10).keys()].map(i => ({
+        nickname: `user_${i + 1}`,
+        sns_id: i + 1,
+        level: UserLevel.User,
+        active: i % 5 > 0 ? UserActive.Active : UserActive.Inactive
+    }));
 
 export const seedPendingUser = {
     user: (userLength: number): Partial<User> => ({
