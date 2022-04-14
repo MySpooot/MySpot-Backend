@@ -4,6 +4,9 @@ import { ExpressAdapter } from '@nestjs/platform-express';
 import ServerlessExpress from '@vendia/serverless-express';
 import express from 'express';
 
+import { CustomExceptionHandler } from './custom_exception_handler';
+import { CustomResponseInterCeptor } from './custom_response_interceptor';
+
 let cachedServer;
 
 export const bootstrapServer = async (module: any) => {
@@ -12,18 +15,16 @@ export const bootstrapServer = async (module: any) => {
         const isProd = process.env.stage === 'prod';
 
         const app = await NestFactory.create(module, new ExpressAdapter(expressApp));
+        app.useGlobalInterceptors(new CustomResponseInterCeptor());
         app.useGlobalPipes(
             new ValidationPipe({
                 whitelist: true,
                 transform: true,
                 transformOptions: { enableImplicitConversion: true },
-                /**
-                 * @todo prod error handling
-                 * disableErrorMessages: If set to true, validation errors will not be returned to the client.
-                 */
                 disableErrorMessages: false
             })
         );
+        app.useGlobalFilters(new CustomExceptionHandler());
         app.enableCors({
             origin: isProd ? /myspot\.co\.kr$/ : '*',
             allowedHeaders: '*'
