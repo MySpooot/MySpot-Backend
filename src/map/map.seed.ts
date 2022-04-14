@@ -14,13 +14,10 @@ export const seedUsers = (): Partial<User>[] =>
     }));
 
 export const seedMe = (): AuthUser[] =>
-    [...new Array(10).keys()].map(
-        i =>
-            ({
-                userId: i + 1,
-                userLevel: UserLevel.User
-            } as AuthUser)
-    );
+    [...new Array(10).keys()].map(i => ({
+        userId: i + 1,
+        userLevel: UserLevel.User
+    }));
 
 /** GET /map */
 export const seedGetUserMaps = {
@@ -102,15 +99,12 @@ export const seedGetUserRecentMap = {
             active: i % 10 > 0 ? MapActive.Active : MapActive.Inactive
         })),
     recentMaps: (mapId: number[], userId: number): Partial<UserRecentMap>[] =>
-        [...new Array(20).keys()].map(
-            i =>
-                ({
-                    user_id: userId,
-                    map_id: mapId[i],
-                    modified: i % 3 > 0 ? new Date() : new Date(Date.now() + 1000 * 60 * 60 * 24 * 14),
-                    active: i % 10 > 0 ? UserRecentMapActive.Active : UserRecentMapActive.Inactive
-                } as UserRecentMap)
-        ),
+        [...new Array(20).keys()].map(i => ({
+            user_id: userId,
+            map_id: mapId[i],
+            modified: i % 3 > 0 ? new Date() : new Date(Date.now() + 1000 * 60 * 60 * 24 * 14),
+            active: i % 10 > 0 ? UserRecentMapActive.Active : UserRecentMapActive.Inactive
+        })),
     accessible: (mapId: number[], userId: number): Partial<UserAccessibleMap>[] =>
         [...new Array(20).keys()].map(i => ({
             user_id: userId,
