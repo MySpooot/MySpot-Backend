@@ -15,7 +15,7 @@ export default () => ({
         secret_access_key: process.env.AWS_SECRET_ACCESS_KEY,
         region: process.env.REGION
     },
-    stage: process.env.stage || 'dev',
+    stage: process.env.stage || 'dev', // serverless deploy 환경
     typeorm:
         process.env.NODE_ENV === 'test'
             ? {

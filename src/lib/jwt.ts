@@ -10,7 +10,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         super({
             jwtFromRequest: ExtractJwt.fromHeader('authorization'), // 헤더에 담겨서 넘어올 시 이름
             ignoreExpiration: false, // 만료된 토큰의 사용 여부
-            secretOrKey: configService.get<JwtModuleOptions>('jwt')?.secret ?? configService.get('JWT_SECRET')
+            secretOrKey: configService.get<JwtModuleOptions>('jwt')?.secret ?? configService.get('JWT_SECRET') // JWT_SECRET은 git action에서 주입된다.
         });
     }
 
@@ -29,6 +29,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 export class JwtConfigService implements JwtOptionsFactory {
     constructor(private readonly configService: ConfigService) {}
 
+    // configuration.ts에 선언된 expiresIn가 존재하지 않는다면 error
     createJwtOptions() {
         const jwtOption = this.configService.get<JwtModuleOptions>('jwt');
 
