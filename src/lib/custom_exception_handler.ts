@@ -6,6 +6,11 @@ interface HttpExceptionResponseType {
     message: string;
 }
 
+/**
+ * httpException, 그 외의 모든 에러를 핸들링하는 클래스
+ * httpException과 그 외의 에러를 나눠준다.
+ * @Catch() 데코레이터의 파라미터가 없으므로 모든 exception을 catch한다.
+ */
 @Catch()
 export class CustomExceptionHandler extends BaseExceptionFilter {
     async catch(exception: any, host: ArgumentsHost) {
