@@ -2,6 +2,8 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import ServerlessExpress from '@vendia/serverless-express';
+import { LoggingInterceptor } from '@algoan/nestjs-logging-interceptor';
+import { Logger } from 'nestjs-pino';
 import express from 'express';
 
 import { CustomExceptionHandler } from './custom_exception_handler';
@@ -15,7 +17,9 @@ export const bootstrapServer = async (module: any) => {
         const isProd = process.env.stage === 'prod';
 
         const app = await NestFactory.create(module, new ExpressAdapter(expressApp));
-        app.useGlobalInterceptors(new CustomResponseInterCeptor());
+
+        app.useLogger(app.get(Logger));
+        app.useGlobalInterceptors(new CustomResponseInterCeptor(), new LoggingInterceptor());
         app.useGlobalPipes(
             new ValidationPipe({
                 whitelist: true,

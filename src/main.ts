@@ -1,6 +1,10 @@
 import { NestFactory } from '@nestjs/core';
+import { ExpressAdapter } from '@nestjs/platform-express';
 import { Module, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { LoggingInterceptor } from '@algoan/nestjs-logging-interceptor';
+import { Logger } from 'nestjs-pino';
+import express from 'express';
 
 import { AppModule as UserModule } from './user/app.module';
 import { AppModule as MapModule } from '../src/map/app.module';
@@ -40,8 +44,11 @@ class AppModule {}
  */
 
 (async () => {
-    const app = await NestFactory.create(AppModule);
-    app.useGlobalInterceptors(new CustomResponseInterCeptor());
+    const expressApp = express();
+    const app = await NestFactory.create(AppModule, new ExpressAdapter(expressApp));
+
+    app.useLogger(app.get(Logger));
+    app.useGlobalInterceptors(new CustomResponseInterCeptor(), new LoggingInterceptor());
     app.useGlobalPipes(
         new ValidationPipe({ whitelist: true, transform: true, transformOptions: { enableImplicitConversion: true }, disableErrorMessages: false })
     );
