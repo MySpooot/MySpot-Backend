@@ -1,14 +1,16 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TypeOrmConfigService } from '../lib/typeorm';
+import { LoggerModule } from 'nestjs-pino';
 import Joi from 'joi';
 
+import { TypeOrmConfigService } from '../lib/typeorm';
 import configuration from '../configuration';
 import { MarkerModule } from './marker.module';
 
 @Module({
     imports: [
+        LoggerModule.forRoot(),
         ConfigModule.forRoot({
             envFilePath: '.env',
             validationSchema: Joi.object({
