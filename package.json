@@ -1,6 +1,6 @@
 {
     "name": "@myspooot/myspot-backend",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "My Spot Api",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -121,6 +121,8 @@
             "jwt.ts$",
             "server.ts$",
             "user_decorator.ts$",
+            "custom_exception_handler.ts$",
+            "custom_response_interceptor.ts",
             "configuration.ts$"
         ],
         "rootDir": "src",
