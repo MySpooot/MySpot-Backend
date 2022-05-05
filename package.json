@@ -1,6 +1,6 @@
 {
     "name": "@myspooot/myspot-backend",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "My Spot Api",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
