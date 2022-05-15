@@ -110,7 +110,15 @@ export class MapService {
 
     // insert favorite map
     async insertUserFavoriteMap({ userId }: AuthUser, { favoriteMapId }: PostUserFavoriteMapParam) {
-        await this.connection.getRepository(UserFavoriteMap).insert({ user_id: userId, map_id: favoriteMapId });
+        const favoriteMap = await this.connection
+            .getRepository(UserFavoriteMap)
+            .findOne({ user_id: userId, map_id: favoriteMapId, active: UserFavoriteMapActive.Active });
+
+        if (favoriteMap) {
+            await this.connection.getRepository(UserFavoriteMap).update({ user_id: userId, map_id: favoriteMapId }, {});
+        } else {
+            await this.connection.getRepository(UserFavoriteMap).insert({ user_id: userId, map_id: favoriteMapId });
+        }
     }
 
     // delete favorite map

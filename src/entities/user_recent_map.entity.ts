@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 import { Map } from './map.entity';
 import { User } from './user.entity';
@@ -9,7 +9,6 @@ export enum UserRecentMapActive {
 }
 
 @Entity('user_recent_map')
-@Unique(['user_id', 'map_id'])
 export class UserRecentMap {
     @PrimaryGeneratedColumn('increment', { type: 'integer', unsigned: true })
     id: number;
