@@ -52,7 +52,7 @@ export class UserController {
                     cb(null, `${Date.now().toString()} - ${v4()}`);
                 }
             }),
-            limits: { fileSize: 1024 * 1024 },
+            limits: { fileSize: 1024 * 1024 * 5 },
             fileFilter: (_, file, cb) => {
                 if (file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
                     cb(null, true);
