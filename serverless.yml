@@ -54,9 +54,9 @@ custom:
     # gateway에서 허용애햐 할 content-type 정의
     apigwBinary:
         types: #list of mime-types
-            - 'image/jpeg'
-            - 'image/png'
-            - 'image/jpg'
+            # - 'image/jpeg'
+            # - 'image/png'
+            # - 'image/jpg'
             - 'multipart/form-data'
     deploymentSettings: # shifts all the traffic to the new version, useful when you only need to execute the validation hooks.
         type: AllAtOnce

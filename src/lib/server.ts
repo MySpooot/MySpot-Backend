@@ -40,7 +40,7 @@ export const bootstrapServer = async (module: any) => {
             app: expressApp,
             // allowed api gateway content-type
             binarySettings: {
-                contentTypes: ['image/jpeg', 'image/png', 'image/jpg', 'multipart/form-data']
+                contentTypes: ['multipart/form-data'] // 'image/jpeg', 'image/png', 'image/jpg',
             }
         });
     }
