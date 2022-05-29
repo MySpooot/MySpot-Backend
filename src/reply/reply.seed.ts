@@ -104,8 +104,6 @@ export const seedPutMarkerReplies = {
         code: '1234',
         active: MapActive.Active
     }),
-
-    // @Todo 리팩토링 시 Partial<EntityType>으로 전부 변경
     accessible: (mapId: number, userId: number): Partial<UserAccessibleMap> => ({
         user_id: userId,
         map_id: mapId,
@@ -139,8 +137,6 @@ export const seedDeleteMarkerReplies = {
         code: '1234',
         active: MapActive.Active
     }),
-
-    // @Todo 리팩토링 시 Partial<EntityType>으로 전부 변경
     accessible: (mapId: number, userId: number): Partial<UserAccessibleMap> => ({
         user_id: userId,
         map_id: mapId,
