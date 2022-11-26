@@ -37,6 +37,11 @@ provider:
     iamManagedPolicies:
         - arn:aws:iam::aws:policy/AmazonS3FullAccess
     lambdaHashingVersion: 20201221
+    vpc:
+        securityGroupIds:
+            - sg-0d5fc39997cdcdf9d
+        subnetIds:
+            - subnet-0ce8dfbead41fc03d
 
 package:
     individually: true
