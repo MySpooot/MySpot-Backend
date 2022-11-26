@@ -42,6 +42,7 @@ provider:
             - sg-0d5fc39997cdcdf9d
         subnetIds:
             - subnet-0ce8dfbead41fc03d
+            - subnet-0252fae41b5c2a9b8
 
 package:
     individually: true
