@@ -2,9 +2,11 @@ name: MySpot Api Pull Request
 
 on:
     pull_request:
-        types: [opened, reopened]
+        types: [opened, reopened, synchronize]
 
 jobs:
+    Test:
+      uses: ./.github/workflows/common.yml
     Check_App:
         needs: [Check_Test]
         runs-on: ubuntu-20.04
