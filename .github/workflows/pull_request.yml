@@ -6,6 +6,7 @@ on:
 
 jobs:
     Check_App:
+        needs: Check_Test
         runs-on: ubuntu-20.04
         steps:
             - name: Checkout Branch
@@ -48,39 +49,39 @@ jobs:
             - name: Build
               run: yarn build
 
-            - name: Slack Notification on SUCCESS
-              if: ${{ success() }}
-              uses: tokorom/action-slack-incoming-webhook@main
-              env:
-                  INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-              with:
-                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|MySpot API  Pre-Check Succeed::${{ env.GITHUB_REF_SLUG }}>*'
-                  attachments: |
-                      [
-                        {
-                          "title": "사전 검증이 성공하였습니다.",
-                          "text": "↑ PR LINK",
-                          "title_link": "${{ github.event.repository.html_url }}/pull/${{ github.event.number }}",
-                          "color": "good",
-                          "author_name": "${{ github.actor }}",
-                          "author_icon": "${{ github.event.sender.avatar_url }}"
-                        }
-                      ]
-            - name: Slack Notification on Failure
-              if: ${{ failure() }}
-              uses: tokorom/action-slack-incoming-webhook@main
-              env:
-                  INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-              with:
-                  text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|MySpot API Pre-Check Failure::${{ env.GITHUB_REF_SLUG }}>*'
-                  attachments: |
-                      [
-                        {
-                          "title": "사전 검증에 실패하였습니다.",
-                          "text": "↑ PR LINK",
-                          "title_link": "${{ github.event.repository.html_url }}/pull/${{ github.event.number }}",
-                          "color": "danger",
-                          "author_name": "${{ github.actor }}",
-                          "author_icon": "${{ github.event.sender.avatar_url }}"
-                        }
-                      ]
+            # - name: Slack Notification on SUCCESS
+            #   if: ${{ success() }}
+            #   uses: tokorom/action-slack-incoming-webhook@main
+            #   env:
+            #       INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+            #   with:
+            #       text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|MySpot API  Pre-Check Succeed::${{ env.GITHUB_REF_SLUG }}>*'
+            #       attachments: |
+            #           [
+            #             {
+            #               "title": "사전 검증이 성공하였습니다.",
+            #               "text": "↑ PR LINK",
+            #               "title_link": "${{ github.event.repository.html_url }}/pull/${{ github.event.number }}",
+            #               "color": "good",
+            #               "author_name": "${{ github.actor }}",
+            #               "author_icon": "${{ github.event.sender.avatar_url }}"
+            #             }
+            #           ]
+            # - name: Slack Notification on Failure
+            #   if: ${{ failure() }}
+            #   uses: tokorom/action-slack-incoming-webhook@main
+            #   env:
+            #       INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+            #   with:
+            #       text: '*<${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}|MySpot API Pre-Check Failure::${{ env.GITHUB_REF_SLUG }}>*'
+            #       attachments: |
+            #           [
+            #             {
+            #               "title": "사전 검증에 실패하였습니다.",
+            #               "text": "↑ PR LINK",
+            #               "title_link": "${{ github.event.repository.html_url }}/pull/${{ github.event.number }}",
+            #               "color": "danger",
+            #               "author_name": "${{ github.actor }}",
+            #               "author_icon": "${{ github.event.sender.avatar_url }}"
+            #             }
+            #           ]
