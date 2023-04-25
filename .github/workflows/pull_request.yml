@@ -7,8 +7,9 @@ on:
 jobs:
     Test:
       uses: ./.github/workflows/common.yml
+
     Check_App:
-        needs: [Check_Test]
+        needs: [Test]
         runs-on: ubuntu-20.04
         steps:
             - name: Checkout Branch
