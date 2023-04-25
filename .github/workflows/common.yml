@@ -1,0 +1,17 @@
+name: common jobs
+
+on:
+  workflow_call
+  
+
+jobs:
+    Check_Test:
+        runs-on: ubuntu-20.04
+        steps:
+            - name: Checkout Branch
+              uses: actions/checkout@v2
+
+            - name: Check IMAGE_TAG
+              run: echo test-check-test
+
+            
