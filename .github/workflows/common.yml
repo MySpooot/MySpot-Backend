@@ -1,5 +1,9 @@
 name: common jobs
 
+on:
+  workflow_call
+  
+
 jobs:
     Check_Test:
         runs-on: ubuntu-20.04
